@@ -73,6 +73,8 @@ FAVector3             : three-vector class using Double32_t
 FAVarAbs              : abstract base class for analysis variables
   FAVar               : analysis variable class template
 FAVarList             : a list of analysis variables
+  FAVarParticleA2     : a list of analysis variables for A2 particles
+    FAVarParticleA2KF : a list of analysis variables for A2 particles (kinematic fitting)
 
 FAUtils               : namespace with utility functions
 ```
