@@ -40,6 +40,13 @@ public:
     virtual void Print(Option_t* option = "") const;
     virtual void Clear(Option_t* option = "");
 
+    enum EA2Detector {
+        kNoDetector,        // no detector
+        kCBDetector,        // Crystal Ball
+        kTAPSDetector,      // TAPS
+        kTaggerDetector     // photon tagger
+    };
+
     ClassDef(FAParticleA2, 1)  // Class for presorted A2 analysis particles
 };
 
