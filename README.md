@@ -82,7 +82,7 @@ can be specified when the template class `FAEventT` is instantiated. The base pa
 classes are `FAParticle` and `FAParticleMC`, respectively. Additional event variables
 can be added to the custom event class.
 Example:
-```
+```C++
 class CustomEvent :
     public FAEventT<FAParticle, FAParticleMC>
 {
@@ -108,7 +108,6 @@ public:
 
     ClassDef(CustomEvent, 1) // my custom event
 };
-
 ```
 **NOTE:** The default constructor and the `Clear()` method should be overwritten
 in the custom event class to ensure that the class members are properly
