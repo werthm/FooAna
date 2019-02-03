@@ -68,3 +68,49 @@ FAParticleMC          : base MC particle class
   FAParticleMCA2      : base A2 MC particle class
 ```
 
+## User Guide
+
+### Writing a Custom Event Class
+Custom event classes can be easily created by using the template class `FAEventT`. This
+class derives from `FAEventBase`, which holds the most common event variables (event ID,
+timestamp, etc.). Classes created by `FAEventT` contain also two vectors for detected
+and generated (MC) particles. The exact types of the classes representing those particles
+can be specified when the template class `FAEventT` is instantiated. The base particle
+classes are `FAParticle` and `FAParticleMC`, respectively. Additional event variables
+can be added to the custom event class.
+Example:
+```
+class CustomEvent :
+    public FAEventT<FAParticle, FAParticleMC>
+{
+public:
+    Short_t someIndex;
+    Double32_t someVariable;
+
+    CustomEvent() : FAEventT(),
+                    someIndex(0), someVariable(0) { }
+    virtual void Print(Option_t* option = "") const
+    {
+        FAEventT::Print(option);
+        printf("Some index             : %d\n", someIndex);
+        printf("Some variable          : %f\n", someVariable);
+    }
+    virtual void Clear(Option_t* option = "")
+    {
+        FAEventT::Clear(option);
+        someIndex = -1;
+        someVariable = 0;
+    }
+    using FAEventT::operator=;
+
+    ClassDef(CustomEvent, 1) // my custom event
+};
+
+```
+**NOTE:** The default constructor and the `Clear()` method should be overwritten
+in the custom event class to ensure that the class members are properly
+initialized and cleared. Before this custom code, the parent constructor and `Clear()`
+method should be called.
+
+Tree writing and reading using a custom event class is illustrated in the example
+`examples/event`.
