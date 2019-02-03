@@ -66,6 +66,9 @@ FAParticle            : base particle class
 
 FAParticleMC          : base MC particle class
   FAParticleMCA2      : base A2 MC particle class
+
+FAVector3             : three-vector class using Double32_t
+  FAVector4           : four-vector class using Double32_t
 ```
 
 ## User Guide
