@@ -22,6 +22,8 @@
 #include "FAEventT.h"
 #include "FAParticle.h"
 #include "FAParticleMC.h"
+#include "FAVarFiller.h"
+#include "FAVar.h"
 
 #ifdef __ROOTCLING__
 #pragma link C++ class FAEventT<FAParticle, FAParticleMC>+;
@@ -55,7 +57,7 @@ public:
 };
 
 //______________________________________________________________________________
-void WriteCustomEvents(Int_t nEvent = 5)
+void WriteCustomEvents(Int_t nEvent = 5000)
 {
     // Example method showing how to write events.
 
@@ -138,13 +140,28 @@ void ReadCustomEvents()
     // configure reader
     TTreeReaderValue<CustomEvent> event(reader, "Event");
 
+    // set-up a FooAna analysis variable filler
+    FAVarFiller filler("MyFiller", "Example filler");
+    FAVar<Short_t> my_index(filler, "index", "My custom index", 0, 10, 0, 10);
+    FAVar<Double_t> my_variable(filler, "variable", "My custom variable", "some unit", 100, 0, 20);
+    filler.AddHistogram2D(&my_variable, &my_index);
+
+    // configure the filler
+    //filler.Init(FAVarFiller::kUnbinned);    // unbinned, i.e. a tree
+    filler.Init(FAVarFiller::kBinned);      // binned, i.e. histograms
+
     // loop over events
-    Long64_t n = 0;
     while (reader.Next())
     {
-        event->Print();
-        printf("\n");
-        n++;
+        // read variables
+        my_index = event->someIndex;
+        my_variable = event->someVariable;
+
+        // fill event
+        filler.Fill();
     }
+
+    // write output file
+    filler.WriteFile("events.root");
 }
 
