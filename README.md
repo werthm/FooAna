@@ -69,6 +69,8 @@ FAParticleMC          : base MC particle class
 
 FAVector3             : three-vector class using Double32_t
   FAVector4           : four-vector class using Double32_t
+
+FAUtils               : namespace with utility functions
 ```
 
 ## User Guide

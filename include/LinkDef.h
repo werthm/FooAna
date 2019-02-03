@@ -22,6 +22,7 @@
 #pragma link C++ nestedclasses;
 #pragma link C++ nestedtypedef;
 
+#pragma link C++ namespace FAUtils;
 #pragma link C++ class FAVector3+;
 #pragma link C++ class FAVector4+;
 #pragma link C++ class FAParticle+;
