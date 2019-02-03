@@ -25,6 +25,13 @@
 #pragma link C++ namespace FAUtils;
 #pragma link C++ class FAVector3+;
 #pragma link C++ class FAVector4+;
+#pragma link C++ class FAVarAbs+;
+#pragma link C++ class FAVar<Short_t>+;
+#pragma link C++ class FAVar<Int_t>+;
+#pragma link C++ class FAVar<Long64_t>+;
+#pragma link C++ class FAVar<Float_t>+;
+#pragma link C++ class FAVar<Double_t>+;
+#pragma link C++ class FAVarList+;
 #pragma link C++ class FAParticle+;
 #pragma link C++ class FAParticleA2+;
 #pragma link C++ class FAParticleA2KF+;
