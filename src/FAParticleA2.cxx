@@ -12,6 +12,7 @@
 
 
 #include "TMath.h"
+#include "TLorentzVector.h"
 
 #include "FAParticleA2.h"
 

@@ -14,9 +14,9 @@
 #ifndef FooAna_FAParticleA2
 #define FooAna_FAParticleA2
 
-#include "TLorentzVector.h"
-
 #include "FAParticle.h"
+
+class TLorentzVector;
 
 class FAParticleA2 : public FAParticle
 {
