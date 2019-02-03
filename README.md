@@ -136,7 +136,7 @@ processing. Especially switching from filling a tree (unbinned analysis) or hist
 Analysis variables `FAVar<Type>` can be either registered to the filler one-by-one
 or by combining them to a set and adding the corresponding list. Name, title, unit,
 range, and binning of the variables can all be specified and will be used when creating
-histogram or building the output tree. 2D-histograms of two variables can also be easily
+histograms or building the output tree. 2D-histograms of two variables can also be easily
 defined:
 ```C++
 // create the filler
@@ -166,7 +166,7 @@ my_index = ...
 my_variable = ...
 filler.Fill();
 ```
-The final tree or histograms will be written to a ROOT file by
+The final tree or histograms can be written to a ROOT file by calling
 ```C++
 filler.WriteFile("events.root");
 ```
@@ -174,10 +174,10 @@ A complete example can be found in the `ReadCustomEvent()` method in
 `examples/event/CustomEvent.C`.
 
 ### Plotting and Comparing Analysis Variables
-Analysis variables of several analyses can be compared by using `FAVarPlotter`. In a minimal example,
-the analysis variable is defined and two files created by `FAVarFiller` are added. `FAVarPlotter`
-provides then multiple ways for comparing the analysis variable in, e.g., different bins, using
-a simple and quick interface.
+Analysis variables of several analyses can be compared by using `FAVarPlotter`. In the following
+minimal example, the analysis variable is defined and two files created by `FAVarFiller` are
+added. `FAVarPlotter` provides then multiple ways for comparing the analysis variable in, e.g.,
+different bins, using a simple and quick interface.
 ```C++
 FAVarPlotter compare("my_variable");
 compare.AddEntry("file_1.root", "old analysis", kBlack);
