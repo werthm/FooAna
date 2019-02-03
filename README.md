@@ -75,6 +75,7 @@ FAVarAbs              : abstract base class for analysis variables
 FAVarList             : a list of analysis variables
   FAVarParticleA2     : a list of analysis variables for A2 particles
     FAVarParticleA2KF : a list of analysis variables for A2 particles (kinematic fitting)
+FAVarHistogram        : a histogram to be filled with analysis variables
 
 FAUtils               : namespace with utility functions
 ```

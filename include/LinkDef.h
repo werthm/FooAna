@@ -34,6 +34,7 @@
 #pragma link C++ class FAVarList+;
 #pragma link C++ class FAVarParticleA2+;
 #pragma link C++ class FAVarParticleA2KF+;
+#pragma link C++ class FAVarHistogram+;
 #pragma link C++ class FAParticle+;
 #pragma link C++ class FAParticleA2+;
 #pragma link C++ class FAParticleA2KF+;
