@@ -1,7 +1,20 @@
 FooAna
 ======
 
-Yet another analysis framework.
+Yet another analysis framework
+
+## Table of contents
+* [Release notes](#release-notes)
+* [Installation](#installation)
+* [Quick start](#quick-start)
+* [Class hierarchy](#class-hierarchy)
+* [User guide](#user-guide)
+
+## Release notes
+
+### 0.1.0
+February 10, 2019
+* initial release
 
 ## Installation
 
@@ -25,13 +38,7 @@ export ROOT_INCLUDE_PATH="/some/directory/FooAna/build/include:$ROOT_INCLUDE_PAT
 It is recommended to set the `LD_LIBRARY_PATH` and `ROOT_INCLUDE_PATH` variables
 in your shell configuration file.
 
-### Release Notes
-
-#### 0.1.0
-February 10, 2019
-* initial release
-
-## Quick Start
+## Quick start
 If `LD_LIBRARY_PATH` and `ROOT_INCLUDE_PATH` are set, root should be able to
 find the library automatically. If not, there are several ways to load the
 library:
@@ -54,7 +61,7 @@ root [0] .include /some/directory/FooAna/build/include
 root [1] .x FooAnaMacro.C++
 ```
 
-## Class Hierarchy
+## Class hierarchy
 ```
 FAEventBase           : abstract base event class
   FAEventT            : base event class template
@@ -92,7 +99,7 @@ FAUtilsA2             : namespace with utility functions related to the A2 exper
 
 ## User Guide
 
-### Writing a Custom Event Class
+### Writing a custom event class
 Custom event classes can be easily created by using the template class `FAEventT`. This
 class derives from `FAEventBase`, which holds the most common event variables (event ID,
 timestamp, etc.). Classes created by `FAEventT` contain also two vectors for detected
@@ -180,7 +187,7 @@ filler.WriteFile("events.root");
 A complete example can be found in the `ReadCustomEvent()` method in
 `examples/event/CustomEvent.C`.
 
-### Plotting and Comparing Analysis Variables
+### Plotting and comparing analysis variables
 Analysis variables of several analyses can be compared by using `FAVarPlotter`. In the following
 minimal example, the analysis variable is defined and two files created by `FAVarFiller` are
 added. `FAVarPlotter` provides then multiple ways for comparing the analysis variable in, e.g.,
