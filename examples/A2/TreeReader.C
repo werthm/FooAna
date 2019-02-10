@@ -30,6 +30,7 @@ void TreeReader(const Char_t* fin, const Char_t* fout)
     FAVar<Double_t> event_id(filler, "event_id", "event ID");
     FAVar<Float_t> weight(filler, "weight", "event weight");
     FAVar<Short_t> tagg_ch(filler, "tagg_ch", "tagger channel", 0, 304, 0, 304);
+    FAVar<Float_t> eg(filler, "eg", "E_{#gamma}", "MeV", 64, 120, 760);
 
     // create analysis particles
     const Int_t nPart = 2;
@@ -53,6 +54,12 @@ void TreeReader(const Char_t* fin, const Char_t* fout)
     FAVarFiller::EFillMode fillMode = FAVarFiller::kBinned;
     filler.Init(fillMode);
 
+    // load the tagger calibration
+    const Int_t nTaggCh = 328;
+    Double_t taggEnergy[nTaggCh];
+    FAUtilsA2::LoadTaggerCalibration("~/loc/calibration/Nov_18/Tagger_Energy/calib_short",
+                                     nTaggCh, taggEnergy);
+
     // read events
     while (reader.Next())
     {
@@ -60,6 +67,7 @@ void TreeReader(const Char_t* fin, const Char_t* fout)
         event_id = event->eventID;
         weight = event->weight;
         tagg_ch = event->taggCh;
+        eg = taggEnergy[event->taggCh];
 
         // read particles
         for (Int_t i = 0; i < nPart; i++)
