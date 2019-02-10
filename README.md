@@ -81,6 +81,7 @@ FAVarPlotter          : the histogram plotter class for analysis variables
 FAVarPlotterEntry     : an entry (histogram(s) from file) to be plotted by FAVarPlotter
 
 FAUtils               : namespace with utility functions
+FAUtilsA2             : namespace with utility functions related to the A2 experiment
 ```
 
 ## User Guide
