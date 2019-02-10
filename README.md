@@ -25,6 +25,12 @@ export ROOT_INCLUDE_PATH="/some/directory/FooAna/build/include:$ROOT_INCLUDE_PAT
 It is recommended to set the `LD_LIBRARY_PATH` and `ROOT_INCLUDE_PATH` variables
 in your shell configuration file.
 
+### Release Notes
+
+#### 0.1.0
+February 10, 2019
+* initial release
+
 ## Quick Start
 If `LD_LIBRARY_PATH` and `ROOT_INCLUDE_PATH` are set, root should be able to
 find the library automatically. If not, there are several ways to load the
