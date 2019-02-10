@@ -4,23 +4,12 @@
 
 //////////////////////////////////////////////////////////////////////////
 //                                                                      //
-// FAUtils                                                              //
+// FAVersion                                                            //
 //                                                                      //
-// This namespace contains some often used utility functions.           //
+// Version and other definitions.                                       //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef FooAna_FAUtils
-#define FooAna_FAUtils
-
-#include "TDataType.h"
-
-namespace FAUtils
-{
-    Char_t TreeDataTypeToChar(EDataType datatype);
-    Int_t ShowBanner();
-}
-
-#endif
+# define FOOANA_VERSION "0.1.0"
 
