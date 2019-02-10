@@ -61,7 +61,7 @@ Int_t FAUtils::ShowBanner()
     // Show the FooAna banner.
 
     printf("\n");
-    printf("FooAna %s by Dominik Werthmueller\n", FOOANA_VERSION);
+    printf("FooAna %s by Dominik Werthmueller, University of York (2017-2019)\n", FOOANA_VERSION);
     printf("https://github.com/werthm/FooAna\n");
     printf("\n");
 
