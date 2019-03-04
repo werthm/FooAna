@@ -18,11 +18,11 @@
 
 //______________________________________________________________________________
 Int_t FAUtilsA2::LoadTaggerCalibration(const Char_t* fileName, Int_t nChannel,
-                                       Double_t* taggEnergy, Double_t* taggEnergyErr,
+                                       Double_t* taggEnergy, Double_t* taggEnergyWidth,
                                        Bool_t quiet)
 {
     // Load the photon tagger energy calibration file produced by ugcal (short format)
-    // for 'nChannel' channels and save it into the arrays 'taggEnergy' and 'taggEnergyErr'.
+    // for 'nChannel' channels and save it into the arrays 'taggEnergy' and 'taggEnergyWidth'.
     // Return the number of loaded tagger channels.
 
     Int_t nRead = 0;
@@ -58,8 +58,8 @@ Int_t FAUtilsA2::LoadTaggerCalibration(const Char_t* fileName, Int_t nChannel,
         {
             // store channel
             taggEnergy[nRead] = e;
-            if (taggEnergyErr)
-                taggEnergyErr[nRead] = err;
+            if (taggEnergyWidth)
+                taggEnergyWidth[nRead] = err;
             nRead++;
         }
 

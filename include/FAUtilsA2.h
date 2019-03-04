@@ -18,7 +18,7 @@
 namespace FAUtilsA2
 {
     Int_t LoadTaggerCalibration(const Char_t* fileName, Int_t nChannel,
-                                Double_t* taggEnergy, Double_t* taggEnergyErr = 0,
+                                Double_t* taggEnergy, Double_t* taggEnergyWidth = 0,
                                 Bool_t quiet = kFALSE);
 }
 
