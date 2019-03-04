@@ -285,20 +285,23 @@ void FAVarHistogram::Fill(Double_t weight, Int_t bin1, Int_t bin2)
     if (dim == 1)
     {
         if (!(fVarX->TestBits(FAVarAbs::kNoFill)))
-            fHist[bin1][bin2]->Fill(fVarX->AsDouble(), weight);
+            fHist[bin1][bin2]->Fill(fVarX->AsDouble(),
+                                    weight * fVarX->GetWeight());
     }
     else if (dim == 2)
     {
         if (!(fVarX->TestBits(FAVarAbs::kNoFill)) &&
             !(fVarY->TestBits(FAVarAbs::kNoFill)))
-            ((TH2*)fHist[bin1][bin2])->Fill(fVarX->AsDouble(), fVarY->AsDouble(), weight);
+            ((TH2*)fHist[bin1][bin2])->Fill(fVarX->AsDouble(), fVarY->AsDouble(),
+                                            weight * fVarX->GetWeight() * fVarY->GetWeight());
     }
     else if (dim == 3)
     {
         if (!(fVarX->TestBits(FAVarAbs::kNoFill)) &&
             !(fVarY->TestBits(FAVarAbs::kNoFill)) &&
             !(fVarZ->TestBits(FAVarAbs::kNoFill)))
-         ((TH3*)fHist[bin1][bin2])->Fill(fVarX->AsDouble(), fVarY->AsDouble(), fVarZ->AsDouble(), weight);
+         ((TH3*)fHist[bin1][bin2])->Fill(fVarX->AsDouble(), fVarY->AsDouble(), fVarZ->AsDouble(),
+                                         weight * fVarX->GetWeight() * fVarY->GetWeight() * fVarZ->GetWeight());
     }
 }
 
