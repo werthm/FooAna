@@ -35,12 +35,14 @@ public:
 protected:
     TString fUnit;                  // unit of variable
     TAxis* fBins;                   // binning of variable
+    Double_t fWeight;               // individual weight of variable
     FAVarList* fRelVar;             // list of related variables
 
 public:
     FAVarAbs() : TNamed(),
                  fUnit(),
                  fBins(0),
+                 fWeight(1),
                  fRelVar(0) { }
     FAVarAbs(const Char_t* name, const Char_t* title, const Char_t* unit = 0,
              Int_t nbins = 0, Double_t min = 0, Double_t max = 0,
@@ -61,9 +63,11 @@ public:
     const Char_t* GetUnit() const { return fUnit.Data(); }
     Bool_t HasUnit() const { return fUnit == "" ? kFALSE : kTRUE; }
     TAxis* GetBins() const { return fBins; }
+    Double_t GetWeight() const { return fWeight; }
     FAVarList* GetRelatedVariables() const { return fRelVar; }
 
     void SetUnit(const Char_t* unit) { fUnit = unit; }
+    void SetWeight(Double_t w) { fWeight = w; }
 
     void AddRelatedVariable(FAVarAbs* var);
 

@@ -33,6 +33,7 @@ FAVarAbs::FAVarAbs(const Char_t* name, const Char_t* title, const Char_t* unit,
         fBins = 0;
     else
         fBins = new TAxis(nbins, min, max);
+    fWeight = 1;
     SetBit(statusBits);
     fRelVar = new FAVarList(TString::Format("rel_var_%s", GetName()).Data(),
                             TString::Format("Related variables of %s", GetTitle()).Data());
@@ -49,6 +50,7 @@ FAVarAbs::FAVarAbs(const Char_t* name, const Char_t* title, const Char_t* unit,
     // init members
     fUnit = unit;
     fBins = new TAxis(*binning);
+    fWeight = 1;
     SetBit(statusBits);
     fRelVar = new FAVarList(TString::Format("rel_var_%s", GetName()).Data(),
                             TString::Format("Related variables of %s", GetTitle()).Data());
@@ -70,6 +72,7 @@ FAVarAbs::FAVarAbs(FAVarFiller& filler, const Char_t* name, const Char_t* title,
         fBins = 0;
     else
         fBins = new TAxis(nbins, min, max);
+    fWeight = 1;
     SetBit(statusBits);
     fRelVar = new FAVarList(TString::Format("rel_var_%s", GetName()).Data(),
                             TString::Format("Related variables of %s", GetTitle()).Data());
@@ -90,6 +93,7 @@ FAVarAbs::FAVarAbs(FAVarFiller& filler, const Char_t* name, const Char_t* title,
     // init members
     fUnit = unit;
     fBins = new TAxis(*binning);
+    fWeight = 1;
     SetBit(statusBits);
     fRelVar = new FAVarList(TString::Format("rel_var_%s", GetName()).Data(),
                             TString::Format("Related variables of %s", GetTitle()).Data());
