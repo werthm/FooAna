@@ -47,6 +47,9 @@ public:
         kTaggerDetector     // photon tagger
     };
 
+    static void Calculate4Vector(Double_t theta, Double_t phi, Double_t t, Double_t mass,
+                                 TLorentzVector& p4);
+
     ClassDef(FAParticleA2, 1)  // Class for presorted A2 analysis particles
 };
 

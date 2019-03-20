@@ -25,7 +25,18 @@ void FAParticleA2::Calculate4Vector(TLorentzVector& p4, Double_t mass) const
     // mass and the detected energy and angle information. The components of
     // the 4-vector will be stored in 'p4'.
 
-    Double_t tot_e = energy + mass;
+    Calculate4Vector(theta, phi, energy, mass, p4);
+}
+
+//______________________________________________________________________________
+void FAParticleA2::Calculate4Vector(Double_t theta, Double_t phi, Double_t t, Double_t mass,
+                                    TLorentzVector& p4)
+{
+    // Calculate the 4-vector of a particle using the polar angle 'th', the azimuthal
+    // angle 'ph', the kinetic energy 't', and the mass 'mass'.
+    // The components of the 4-vector will be stored in 'p4'.
+
+    Double_t tot_e = t + mass;
     p4.SetE(tot_e);
     Double_t p = TMath::Sqrt(tot_e*tot_e - mass*mass);
     TVector3 v;
