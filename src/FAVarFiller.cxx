@@ -340,8 +340,19 @@ void FAVarFiller::WriteFile(const Char_t* filename)
     if (fMode == kUnbinned || fMode == kBoth)
     {
         for (Int_t i = 0; i < nb1; i++)
+        {
             for (Int_t j = 0; j < nb2; j++)
-                fTree[i][j]->Write();
+            {
+                // clone the tree
+                TTree* t = (TTree*)fTree[i][j]->CloneTree();
+
+                // write to file with compression
+                t->Write();
+
+                // clean-up
+                delete t;
+            }
+        }
     }
 
     // binned filling
