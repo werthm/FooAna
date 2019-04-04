@@ -24,10 +24,11 @@
 ClassImp(FAVarFiller)
 
 //______________________________________________________________________________
-FAVarFiller::FAVarFiller(const Char_t* name, const Char_t* title)
+FAVarFiller::FAVarFiller(const Char_t* name, const Char_t* title, Bool_t doCleanup)
     : TNamed(name, title)
 {
     // Constructor.
+    // If 'doCleanup' is kFALSE, the output histograms/trees will not be deleted.
 
     // init members
     fBins1 = 0;
@@ -35,6 +36,7 @@ FAVarFiller::FAVarFiller(const Char_t* name, const Char_t* title)
     fNVar = 0;
     fVar = 0;
     fMode= kNone;
+    fIsCleanup = doCleanup;
     fNHist = 0;
     fHist = 0;
     fTree = 0;
@@ -47,13 +49,13 @@ FAVarFiller::~FAVarFiller()
 
     if (fVar)
         delete [] fVar;
-    if (fHist)
+    if (fHist && fIsCleanup)
     {
         for (Int_t i = 0; i < fNHist; i++)
             delete fHist[i];
         delete [] fHist;
     }
-    if (fTree)
+    if (fTree && fIsCleanup)
     {
         Int_t nb1 = fBins1 ? fBins1->GetNbins() : 1;
         Int_t nb2 = fBins2 ? fBins2->GetNbins() : 1;

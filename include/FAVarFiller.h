@@ -41,6 +41,7 @@ protected:
     Int_t fNVar;                    // number of analysis variables
     FAVarAbs** fVar;                //[fNVar] array of analysis variables (elements not owned)
     EFillMode fMode;                // filling mode
+    Bool_t fIsCleanup;              // clean-up flag
     Int_t fNHist;                   // number of histograms
     FAVarHistogram** fHist;         //[fNHist] array of histograms
     TTree*** fTree;                 // output trees for unbinned filling
@@ -51,9 +52,10 @@ public:
     FAVarFiller() : TNamed(),
                     fBins1(0), fBins2(0),
                     fNVar(0), fVar(0),
+                    fIsCleanup(kTRUE),
                     fNHist(0), fHist(0),
                     fTree(0) { }
-    FAVarFiller(const Char_t* name, const Char_t* title);
+    FAVarFiller(const Char_t* name, const Char_t* title, Bool_t doCleanup = kTRUE);
     virtual ~FAVarFiller();
 
     void SetBins1(TAxis* axis) { fBins1 = axis; }
