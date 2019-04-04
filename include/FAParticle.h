@@ -22,6 +22,7 @@ class FAParticle
 public:
     Int_t detector;         // detector index/pattern
     Short_t detElem;        // detector element index
+
     FAParticle() : detector(0), detElem(0) { }
     virtual ~FAParticle() { }
 
