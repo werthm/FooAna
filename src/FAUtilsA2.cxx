@@ -13,6 +13,7 @@
 
 
 #include "TSystem.h"
+#include "TError.h"
 
 #include "FAUtilsA2.h"
 
