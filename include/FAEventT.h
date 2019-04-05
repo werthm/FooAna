@@ -17,6 +17,7 @@
 #include <vector>
 
 #include "FAEventBase.h"
+#include "FAVector4.h"
 
 template <class PartType, class PartTypeMC>
 class FAEventT : public FAEventBase
@@ -25,16 +26,19 @@ class FAEventT : public FAEventBase
 public:
     Short_t nPart;                      // number of particles
     Short_t nPartMC;                    // number of MC particles
+    Short_t nVec4;                      // number of 4-vectors
     std::vector<PartType> part;         // array of particles
     std::vector<PartTypeMC> partMC;     // array of particles
+    std::vector<FAVector4> vec4;        // array of 4-vectors
 
     FAEventT() : FAEventBase(),
-                 nPart(0), nPartMC(0) { }
+                 nPart(0), nPartMC(0), nVec4(0) { }
     FAEventT(const FAEventT& orig);
     virtual ~FAEventT() { }
 
     void AddParticle(PartType& p);
     void AddParticleMC(PartTypeMC& p);
+    void AddVector4(FAVector4& v);
 
     virtual void Print(Option_t* option = "") const;
     virtual void Clear(Option_t* option = "");
@@ -54,8 +58,10 @@ FAEventT<PartType, PartTypeMC>::FAEventT(const FAEventT& orig)
     // init members
     nPart = orig.nPart;
     nPartMC = orig.nPartMC;
+    nVec4 = orig.nVec4;
     part = orig.part;
     partMC = orig.partMC;
+    vec4 = orig.vec4;
 }
 
 //______________________________________________________________________________
@@ -80,6 +86,16 @@ void FAEventT<PartType, PartTypeMC>::AddParticleMC(PartTypeMC& p)
 
 //______________________________________________________________________________
 template <class PartType, class PartTypeMC>
+void FAEventT<PartType, PartTypeMC>::AddVector4(FAVector4& v)
+{
+    // Add a vector to the list of 4-vectors.
+
+    vec4.push_back(v);
+    nVec4++;
+}
+
+//______________________________________________________________________________
+template <class PartType, class PartTypeMC>
 void FAEventT<PartType, PartTypeMC>::Print(Option_t* option) const
 {
     // Print the content of this class.
@@ -97,6 +113,12 @@ void FAEventT<PartType, PartTypeMC>::Print(Option_t* option) const
         printf("-> MC Particle %d\n", i+1);
         partMC[i].Print(option);
     }
+    printf("Number of 4-vectors    : %d\n", nVec4);
+    for (Int_t i = 0; i < nVec4; i++)
+    {
+        printf("-> 4-vector %d\n", i+1);
+        vec4[i].Print(option);
+    }
 }
 
 //______________________________________________________________________________
@@ -108,8 +130,10 @@ void FAEventT<PartType, PartTypeMC>::Clear(Option_t* option)
     FAEventBase::Clear(option);
     nPart = 0;
     nPartMC = 0;
+    nVec4 = 0;
     part.clear();
     partMC.clear();
+    vec4.clear();
 }
 
 //______________________________________________________________________________
@@ -124,8 +148,10 @@ FAEventT<PartType, PartTypeMC>& FAEventT<PartType, PartTypeMC>::operator=(const 
         FAEventBase::operator=(e);
         nPart = e.nPart;
         nPartMC = e.nPartMC;
+        nVec4 = e.nVec4;
         part = e.part;
         partMC = e.partMC;
+        vec4 = e.vec4;
     }
 
     return *this;
