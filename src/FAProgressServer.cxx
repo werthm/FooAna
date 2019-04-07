@@ -42,7 +42,11 @@ FAProgressServer::FAProgressServer(Long64_t events, Int_t port)
 
     // try to create server socket
     fServer = new TServerSocket(port);
-    if (!fServer->IsValid())
+    if (fServer->IsValid())
+    {
+        Info("FAProgressServer", "Server started on port %d", fServer->GetLocalPort());
+    }
+    else
     {
         Error("FAProgressServer", "Could not open server socket on port %d", port);
         fServer = 0;
