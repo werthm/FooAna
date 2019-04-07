@@ -33,6 +33,7 @@ public:
     Bool_t Connect();
     Bool_t RequestPrint();
     Bool_t AddProcessedEvents(Long64_t n);
+    Bool_t AddProcessedEventsAndPrint(Long64_t n);
 
     ClassDef(FAProgressClient, 1)  // progress monitoring in processing (client)
 };

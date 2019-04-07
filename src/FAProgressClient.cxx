@@ -74,7 +74,8 @@ Bool_t FAProgressClient::RequestPrint()
     // check connection
     if (fSocket && fSocket->IsValid())
     {
-        TMessage mes(FAProgressServer::kPrint);
+        TMessage mes(kMESS_ANY | kMESS_ACK);
+        mes.WriteInt(FAProgressServer::kPrint);
         fSocket->Send(mes);
         return kTRUE;
     }
@@ -94,7 +95,8 @@ Bool_t FAProgressClient::AddProcessedEvents(Long64_t n)
     // check connection
     if (fSocket && fSocket->IsValid())
     {
-        TMessage mes(FAProgressServer::kAddProcEvents);
+        TMessage mes(kMESS_ANY | kMESS_ACK);
+        mes.WriteInt(FAProgressServer::kAddProcEvents);
         mes.WriteLong64(n);
         fSocket->Send(mes);
         return kTRUE;
@@ -102,6 +104,28 @@ Bool_t FAProgressClient::AddProcessedEvents(Long64_t n)
     else
     {
         Error("AddProcessedEvents()", "No connection to server!");
+        return kFALSE;
+    }
+}
+
+//______________________________________________________________________________
+Bool_t FAProgressClient::AddProcessedEventsAndPrint(Long64_t n)
+{
+    // Add 'n' events to the list on the server and send a print request.
+    // Return kTRUE on success, otherwise kFALSE.
+
+    // check connection
+    if (fSocket && fSocket->IsValid())
+    {
+        TMessage mes(kMESS_ANY | kMESS_ACK);
+        mes.WriteInt(FAProgressServer::kAddProcEventsPrint);
+        mes.WriteLong64(n);
+        fSocket->Send(mes);
+        return kTRUE;
+    }
+    else
+    {
+        Error("AddProcessedEventsAndPrint()", "No connection to server!");
         return kFALSE;
     }
 }
