@@ -136,15 +136,31 @@ void FAProgressServer::Start()
         if (!mess) continue;
 
         // interpret message
-        if (mess->What() == kPrint)
+        if (mess->What() == kMESS_ANY)
         {
-            Print();
-        }
-        else if (mess->What() == kAddProcEvents)
-        {
+            // read command code
+            Int_t cmd;
+            mess->ReadInt(cmd);
+
+            // parse command
             Long64_t ev_done;
-            mess->ReadLong64(ev_done);
-            fEventsDone += ev_done;
+            switch (cmd)
+            {
+                case kPrint:
+                    Print();
+                    break;
+                case kAddProcEvents:
+                    mess->ReadLong64(ev_done);
+                    fEventsDone += ev_done;
+                    break;
+                case kAddProcEventsPrint:
+                    mess->ReadLong64(ev_done);
+                    fEventsDone += ev_done;
+                    Print();
+                    break;
+                default:
+                    Error("Start", "Unknown command code '%d'", cmd);
+            }
         }
 
         // clean-up

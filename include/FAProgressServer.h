@@ -27,7 +27,8 @@ class FAProgressServer : public TObject
 public:
     enum ENetMsg {
         kPrint,
-        kAddProcEvents
+        kAddProcEvents,
+        kAddProcEventsPrint
     };
 
 protected:
