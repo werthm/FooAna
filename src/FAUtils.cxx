@@ -68,3 +68,19 @@ Int_t FAUtils::ShowBanner()
     return 0;
 }
 
+//______________________________________________________________________________
+TString FAUtils::FormatTimeSec(Double_t seconds)
+{
+    // Return a time string in the format HH:MM:SS of the seconds 'seconds'.
+
+    // convert seconds
+    Int_t hours = Int_t(seconds / 3600);
+    seconds -= hours * 3600;
+    Int_t min = Int_t(seconds / 60);
+    seconds -= min * 60;
+    Int_t sec = Int_t(seconds);
+
+    // format string
+    return TString::Format("%02d:%02d:%02d", hours, min, sec);
+}
+
