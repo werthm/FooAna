@@ -93,6 +93,9 @@ FAVarFiller           : the histogram/tree filler class for analysis variables
 FAVarPlotter          : the histogram plotter class for analysis variables
 FAVarPlotterEntry     : an entry (histogram(s) from file) to be plotted by FAVarPlotter
 
+FAProgressServer      : processing progress monitoring server
+FAProgressClient      : processing progress monitoring client
+
 FAUtils               : namespace with utility functions
 FAUtilsA2             : namespace with utility functions related to the A2 experiment
 ```
