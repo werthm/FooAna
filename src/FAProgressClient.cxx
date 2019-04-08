@@ -21,6 +21,18 @@
 ClassImp(FAProgressClient)
 
 //______________________________________________________________________________
+FAProgressClient::FAProgressClient(const Char_t* server, Int_t port)
+{
+    // Constructor.
+
+    // init members
+    fSocket = 0;
+
+    // connect to server
+    Connect(server, port);
+}
+
+//______________________________________________________________________________
 FAProgressClient::~FAProgressClient()
 {
     // Destructor.
@@ -47,7 +59,11 @@ Bool_t FAProgressClient::Connect(const Char_t* server, Int_t port)
 
     // try to create client socket
     fSocket = new TSocket(server, port);
-    if (!fSocket->IsValid())
+    if (fSocket->IsValid())
+    {
+        Info("Connect", "Connected to server '%s' on port %d", server, port);
+    }
+    else
     {
         Error("Connect", "Could not open connection to '%s' on port %d", server, port);
         return kFALSE;
@@ -57,12 +73,39 @@ Bool_t FAProgressClient::Connect(const Char_t* server, Int_t port)
 }
 
 //______________________________________________________________________________
-Bool_t FAProgressClient::Connect()
+void FAProgressClient::Deconnect()
 {
-    // Connect to the singleton server.
+    // Deconnect from the server.
     // Return kTRUE on success, otherwise kFALSE.
 
-    return Connect("localhost", FAProgressServer::GetServerPort());
+    if (fSocket)
+    {
+        fSocket->Close();
+        delete fSocket;
+        fSocket = 0;
+    }
+}
+
+//______________________________________________________________________________
+Bool_t FAProgressClient::RequestInit(Long64_t n)
+{
+    // Send an init request to the server.
+    // Return kTRUE on success, otherwise kFALSE.
+
+    // check connection
+    if (fSocket && fSocket->IsValid())
+    {
+        TMessage mes;
+        mes.WriteInt(FAProgressServer::kInit);
+        mes.WriteLong64(n);
+        fSocket->Send(mes);
+        return kTRUE;
+    }
+    else
+    {
+        Error("RequestInit()", "No connection to server!");
+        return kFALSE;
+    }
 }
 
 //______________________________________________________________________________
@@ -74,7 +117,7 @@ Bool_t FAProgressClient::RequestPrint()
     // check connection
     if (fSocket && fSocket->IsValid())
     {
-        TMessage mes(kMESS_ANY | kMESS_ACK);
+        TMessage mes;
         mes.WriteInt(FAProgressServer::kPrint);
         fSocket->Send(mes);
         return kTRUE;
@@ -95,7 +138,7 @@ Bool_t FAProgressClient::AddProcessedEvents(Long64_t n)
     // check connection
     if (fSocket && fSocket->IsValid())
     {
-        TMessage mes(kMESS_ANY | kMESS_ACK);
+        TMessage mes;
         mes.WriteInt(FAProgressServer::kAddProcEvents);
         mes.WriteLong64(n);
         fSocket->Send(mes);
@@ -117,7 +160,7 @@ Bool_t FAProgressClient::AddProcessedEventsAndPrint(Long64_t n)
     // check connection
     if (fSocket && fSocket->IsValid())
     {
-        TMessage mes(kMESS_ANY | kMESS_ACK);
+        TMessage mes;
         mes.WriteInt(FAProgressServer::kAddProcEventsPrint);
         mes.WriteLong64(n);
         fSocket->Send(mes);
@@ -126,6 +169,48 @@ Bool_t FAProgressClient::AddProcessedEventsAndPrint(Long64_t n)
     else
     {
         Error("AddProcessedEventsAndPrint()", "No connection to server!");
+        return kFALSE;
+    }
+}
+
+//______________________________________________________________________________
+Bool_t FAProgressClient::RequestFinish()
+{
+    // Send a finish request to the server.
+    // Return kTRUE on success, otherwise kFALSE.
+
+    // check connection
+    if (fSocket && fSocket->IsValid())
+    {
+        TMessage mes;
+        mes.WriteInt(FAProgressServer::kFinish);
+        fSocket->Send(mes);
+        return kTRUE;
+    }
+    else
+    {
+        Error("RequestFinish()", "No connection to server!");
+        return kFALSE;
+    }
+}
+
+//______________________________________________________________________________
+Bool_t FAProgressClient::RequestStop()
+{
+    // Send a stop request to the server.
+    // Return kTRUE on success, otherwise kFALSE.
+
+    // check connection
+    if (fSocket && fSocket->IsValid())
+    {
+        TMessage mes;
+        mes.WriteInt(FAProgressServer::kStop);
+        fSocket->Send(mes);
+        return kTRUE;
+    }
+    else
+    {
+        Error("RequestStop()", "No connection to server!");
         return kFALSE;
     }
 }
