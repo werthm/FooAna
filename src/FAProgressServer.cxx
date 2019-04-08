@@ -29,14 +29,14 @@ FAProgressServer* FAProgressServer::fgServer = 0;
 TThread* FAProgressServer::fgServerThread = 0;
 
 //______________________________________________________________________________
-FAProgressServer::FAProgressServer(Long64_t events, Int_t port)
+FAProgressServer::FAProgressServer(Int_t port)
     : TObject()
 {
     // Constructor.
 
     // init members
     fServer = 0;
-    fEvents = events;
+    fEvents = 0;
     fEventsDone = 0;
     fTimer = new TStopwatch();
 
@@ -66,14 +66,14 @@ FAProgressServer::~FAProgressServer()
 }
 
 //______________________________________________________________________________
-void FAProgressServer::Start()
+void FAProgressServer::Listen()
 {
-    // Start the server.
+    // Start the server listening loop.
 
     // check server status
     if (!fServer)
     {
-        Error("Start", "Cannot listen to socket - server is not running!");
+        Error("Listen", "Cannot listen to socket - server is not running!");
         return;
     }
 
@@ -87,10 +87,6 @@ void FAProgressServer::Start()
     // create list for network sockets
     TList* sockets = new TList();
     sockets->SetOwner(kTRUE);
-
-    // start timer
-    fTimer->Reset();
-    fTimer->Start();
 
     // listen to port
     while (1)
@@ -147,23 +143,33 @@ void FAProgressServer::Start()
             mess->ReadInt(cmd);
 
             // parse command
-            Long64_t ev_done;
+            Long64_t n;
             switch (cmd)
             {
+                case kInit:
+                    mess->ReadLong64(n);
+                    Init(n);
+                    break;
                 case kPrint:
-                    Print();
+                    PrintProgress();
                     break;
                 case kAddProcEvents:
-                    mess->ReadLong64(ev_done);
-                    fEventsDone += ev_done;
+                    mess->ReadLong64(n);
+                    fEventsDone += n;
                     break;
                 case kAddProcEventsPrint:
-                    mess->ReadLong64(ev_done);
-                    fEventsDone += ev_done;
-                    Print();
+                    mess->ReadLong64(n);
+                    fEventsDone += n;
+                    PrintProgress();
+                    break;
+                case kFinish:
+                    Finish();
+                    break;
+                case kStop:
+                    StopListening();
                     break;
                 default:
-                    Error("Start", "Unknown command code '%d'", cmd);
+                    Error("Listen", "Unknown command code '%d'", cmd);
             }
         }
 
@@ -188,29 +194,29 @@ void FAProgressServer::Start()
 }
 
 //______________________________________________________________________________
-void FAProgressServer::Stop()
+void FAProgressServer::StopListening()
 {
     // Stop the server.
 
-    // user info
-    fTimer->Stop();
-    Info("Stop", "Finished in %s", FAUtils::FormatTimeSec(fTimer->RealTime()).Data());
-
     // check server status
-    if (!fServer)
+    if (fServer)
+    {
+        // set running flag
+        fIsRunning = kFALSE;
+
+        // user info
+        Info("StopListening", "Stopping server on port %d", fServer->GetLocalPort());
+    }
+    else
     {
         Error("StopListening", "Server is not running!");
-        return;
     }
-
-    // set running flag
-    fIsRunning = kFALSE;
 }
 
 //______________________________________________________________________________
 Int_t FAProgressServer::GetPort()
 {
-    // Return the server port.
+    // Return the port of the server.
 
     if (fServer)
         return fServer->GetLocalPort();
@@ -219,7 +225,52 @@ Int_t FAProgressServer::GetPort()
 }
 
 //______________________________________________________________________________
-void FAProgressServer::CreateServer(Long64_t events, Int_t port)
+void FAProgressServer::Init(Long64_t events)
+{
+    // Init the server with 'events' events to process.
+
+    // reset event counters
+    fEvents = events;
+    fEventsDone = 0;
+
+    // reset timer
+    fTimer->Reset();
+    fTimer->Start();
+
+    // user info
+    Info("Init", "Started processing %lld events", fEvents);
+}
+
+//______________________________________________________________________________
+void FAProgressServer::PrintProgress()
+{
+    // Print the progress.
+
+    // calculate rate
+    fTimer->Stop();
+    Double_t rate = fEventsDone / fTimer->RealTime();
+    fTimer->Continue();
+
+    // user info
+    Info("Print", "%.1f%% processed - %s remaining",
+                  100.*(Double_t)fEventsDone/(Double_t)fEvents,
+                  FAUtils::FormatTimeSec((fEvents-fEventsDone)/rate).Data());
+}
+
+//______________________________________________________________________________
+void FAProgressServer::Finish()
+{
+    // Finish the progress measurement and print summary.
+
+    // stop timer
+    fTimer->Stop();
+
+    // user info
+    Info("Stop", "Finished processing in %s", FAUtils::FormatTimeSec(fTimer->RealTime()).Data());
+}
+
+//______________________________________________________________________________
+void FAProgressServer::CreateServer(Int_t port)
 {
     // Create and start the singleton server.
 
@@ -231,12 +282,12 @@ void FAProgressServer::CreateServer(Long64_t events, Int_t port)
     }
     if (fgServer)
     {
-        fgServer->Stop();
+        fgServer->StopListening();
         delete fgServer;
     }
 
     // create server
-    fgServer = new FAProgressServer(events, port);
+    fgServer = new FAProgressServer(port);
 
     // start the server
     fgServerThread = new TThread(RunServer);
@@ -250,21 +301,9 @@ void* FAProgressServer::RunServer(void* arg)
 
     // start the server
     if (fgServer)
-        fgServer->Start();
+        fgServer->Listen();
 
     return 0;
-}
-
-//______________________________________________________________________________
-Int_t FAProgressServer::GetServerPort()
-{
-    // Return the port of the singleton server.
-
-    // start the server
-    if (fgServer)
-        return fgServer->GetPort();
-    else
-        return 0;
 }
 
 //______________________________________________________________________________
@@ -275,28 +314,12 @@ void FAProgressServer::StopServer()
     // stop the server
     if (fgServer && fgServer->IsRunning())
     {
-        fgServer->Stop();
+        fgServer->StopListening();
         fgServerThread->Join();
         delete fgServerThread;
         delete fgServer;
         fgServer = 0;
         fgServerThread = 0;
     }
-}
-
-//______________________________________________________________________________
-void FAProgressServer::Print(Option_t* option) const
-{
-    // Print the content of this class.
-
-    // calculate rate
-    fTimer->Stop();
-    Double_t rate = fEventsDone / fTimer->RealTime();
-    fTimer->Continue();
-
-    // user info
-    Info("Print", "%.1f%% processed - %s remaining",
-                  100.*(Double_t)fEventsDone/(Double_t)fEvents,
-                  FAUtils::FormatTimeSec((fEvents-fEventsDone)/rate).Data());
 }
 

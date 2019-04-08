@@ -26,9 +26,12 @@ class FAProgressServer : public TObject
 
 public:
     enum ENetMsg {
+        kInit,
         kPrint,
         kAddProcEvents,
-        kAddProcEventsPrint
+        kAddProcEventsPrint,
+        kFinish,
+        kStop
     };
 
 protected:
@@ -37,6 +40,10 @@ protected:
     Long64_t fEvents;           // total number of events
     Long64_t fEventsDone;       // number of processed events
     TStopwatch* fTimer;         // stop watch
+
+    void Init(Long64_t events);
+    void PrintProgress();
+    void Finish();
 
     static const Int_t fgNetTimeout;
     static FAProgressServer* fgServer;
@@ -48,21 +55,16 @@ public:
                          fIsRunning(kFALSE),
                          fEvents(0), fEventsDone(0),
                          fTimer(0) { }
-    FAProgressServer(Long64_t events, Int_t port = 0);
+    FAProgressServer(Int_t port);
     virtual ~FAProgressServer();
 
     Bool_t IsRunning() const { return fIsRunning; }
-    Long64_t GetEvents() const { return fEvents; }
-    Long64_t GetEventsProcessed() const { return fEventsDone; }
 
-    void Start();
-    void Stop();
+    void Listen();
+    void StopListening();
     Int_t GetPort();
 
-    virtual void Print(Option_t* option = "") const;
-
-    static void CreateServer(Long64_t events, Int_t port = 0);
-    static Int_t GetServerPort();
+    static void CreateServer(Int_t port);
     static void* RunServer(void* arg);
     static void StopServer();
 
