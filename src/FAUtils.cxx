@@ -11,6 +11,9 @@
 //////////////////////////////////////////////////////////////////////////
 
 
+#include "TRandom3.h"
+#include "TSystem.h"
+
 #include "FAUtils.h"
 #include "FAVersion.h"
 
@@ -82,5 +85,23 @@ TString FAUtils::FormatTimeSec(Double_t seconds)
 
     // format string
     return TString::Format("%02d:%02d:%02d", hours, min, sec);
+}
+
+//______________________________________________________________________________
+Int_t FAUtils::LaunchProgressServer()
+{
+    // Launch a progress server instance on a random port on localhost in an
+    // external ROOT session.
+    // Return the port number.
+
+    // choose port
+    TRandom3 rnd(0);
+    Int_t port = rnd.Uniform(5000, 10000);
+
+    // launch server
+    gSystem->Exec(TString::Format("root -b -l -e 'FAProgressServer server(%d); server.Listen()' &", port).Data());
+    gSystem->Sleep(1000);
+
+    return port;
 }
 

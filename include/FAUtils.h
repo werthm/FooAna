@@ -21,6 +21,7 @@ namespace FAUtils
     Char_t TreeDataTypeToChar(EDataType datatype);
     Int_t ShowBanner();
     TString FormatTimeSec(Double_t seconds);
+    Int_t LaunchProgressServer();
 }
 
 #endif
