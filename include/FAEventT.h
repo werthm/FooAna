@@ -49,10 +49,10 @@ public:
     PartTypeMC* particleMC(Int_t i) { return (PartTypeMC*)partMC[i]; }
     FAVector4* vector4(Int_t i) { return (FAVector4*)vec4[i]; }
 
-    void AddParticle(PartType& p);
-    void AddParticleMC(PartTypeMC& p);
-    void AddVector4(FAVector4& v);
-    void AddVector4(TLorentzVector& v);
+    void AddParticle(const PartType& p);
+    void AddParticleMC(const PartTypeMC& p);
+    void AddVector4(const FAVector4& v);
+    void AddVector4(const TLorentzVector& v);
 
     virtual void Print(Option_t* option = "") const;
     virtual void Clear(Option_t* option = "");
@@ -64,7 +64,7 @@ public:
 
 //______________________________________________________________________________
 template <class PartType, class PartTypeMC>
-void FAEventT<PartType, PartTypeMC>::AddParticle(PartType& p)
+void FAEventT<PartType, PartTypeMC>::AddParticle(const PartType& p)
 {
     // Add a particle to the list of particles.
 
@@ -73,7 +73,7 @@ void FAEventT<PartType, PartTypeMC>::AddParticle(PartType& p)
 
 //______________________________________________________________________________
 template <class PartType, class PartTypeMC>
-void FAEventT<PartType, PartTypeMC>::AddParticleMC(PartTypeMC& p)
+void FAEventT<PartType, PartTypeMC>::AddParticleMC(const PartTypeMC& p)
 {
     // Add a particle to the list of MC particles.
 
@@ -82,7 +82,7 @@ void FAEventT<PartType, PartTypeMC>::AddParticleMC(PartTypeMC& p)
 
 //______________________________________________________________________________
 template <class PartType, class PartTypeMC>
-void FAEventT<PartType, PartTypeMC>::AddVector4(FAVector4& v)
+void FAEventT<PartType, PartTypeMC>::AddVector4(const FAVector4& v)
 {
     // Add a vector to the list of 4-vectors.
 
@@ -91,7 +91,7 @@ void FAEventT<PartType, PartTypeMC>::AddVector4(FAVector4& v)
 
 //______________________________________________________________________________
 template <class PartType, class PartTypeMC>
-void FAEventT<PartType, PartTypeMC>::AddVector4(TLorentzVector& v)
+void FAEventT<PartType, PartTypeMC>::AddVector4(const TLorentzVector& v)
 {
     // Add a vector to the list of 4-vectors.
 
