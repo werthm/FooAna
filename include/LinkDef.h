@@ -46,11 +46,7 @@
 #pragma link C++ class FAParticleA2KF+;
 #pragma link C++ class FAParticleMC+;
 #pragma link C++ class FAParticleMCA2+;
-#pragma link C++ class FAEventBase+;
-#pragma link C++ class FAEventBaseA2+;
-#pragma link C++ class FAEventA2+;
 #pragma link C++ class FAEventT<FAParticleA2, FAParticleMCA2>+;
-#pragma link C++ class FAEventA2KF+;
 #pragma link C++ class FAEventT<FAParticleA2KF, FAParticleMCA2>+;
 
 #endif

@@ -63,15 +63,6 @@ root [1] .x FooAnaMacro.C++
 
 ## Class hierarchy
 ```
-FAEventBase           : abstract base event class
-  FAEventT            : base event class template
-    FAEventA2         : A2 event class (typedef FAEventT<FAParticleA2, FAParticleMCA2>)
-    FAEventA2KF       : A2 event class for kinematic fitting (typedef FAEventT<FAParticleA2KF, FAParticleMCA2>)
-FAEventBaseA2         : common analysis variables for A2 event classes
-
-FAEventVar            : base event variable class
-  FAEventVarA2        : base A2 event variable class
-  FAEventVarA2KF      : A2 event variable class for kinematic fitting
 
 FAParticle            : base particle class
   FAParticleA2        : base A2 particle class
