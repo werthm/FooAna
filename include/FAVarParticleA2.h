@@ -17,7 +17,8 @@
 #include "FAVarList.h"
 #include "FAVarAbs.h"
 
-class FAParticleA2;
+class FAParticleA2_B;
+class FAParticleA2_BF1;
 
 class FAVarParticleA2 : public FAVarList
 {
@@ -31,6 +32,9 @@ protected:
     FAVarAbs* fVarTAPS_TOF;                  // TOF for TAPS
     FAVarAbs* fVarPSA_A;                     // PSA angle
     FAVarAbs* fVarPSA_R;                     // PSA radius
+    FAVarAbs* fVarPullTheta;                 // theta pull
+    FAVarAbs* fVarPullPhi;                   // phi pull
+    FAVarAbs* fVarPullT;                     // kinetic energy pull
 
 public:
     FAVarParticleA2() : FAVarList(),
@@ -38,7 +42,8 @@ public:
                         fVarTheta(0),
                         fVarCB_dE(0), fVarTAPS_dE(0),
                         fVarCB_TOF(0), fVarTAPS_TOF(0),
-                        fVarPSA_A(0), fVarPSA_R(0) { }
+                        fVarPSA_A(0), fVarPSA_R(0),
+                        fVarPullTheta(0), fVarPullPhi(0), fVarPullT(0) { }
     FAVarParticleA2(const Char_t* name, const Char_t* title);
     virtual ~FAVarParticleA2();
 
@@ -54,8 +59,11 @@ public:
     void AddVarsPSA(Int_t nbinsA = 600, Double_t minA = 0, Double_t maxA = 60,
                     Int_t nbinsR = 600, Double_t minR = 0, Double_t maxR = 600,
                     UInt_t statusBits = FAVarAbs::kNoUnbinned);
+    void AddVarsPull(Int_t nbins = 100, Double_t min = -5, Double_t max = 5,
+                     UInt_t statusBits = FAVarAbs::kNoUnbinned);
 
-    FAVarParticleA2& operator=(const FAParticleA2& part);
+    FAVarParticleA2& operator=(const FAParticleA2_B& part);
+    FAVarParticleA2& operator=(const FAParticleA2_BF1& part);
 
     ClassDef(FAVarParticleA2, 1)  // analysis variables of A2 particle
 };

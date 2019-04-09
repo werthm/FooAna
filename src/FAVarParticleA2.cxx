@@ -15,7 +15,9 @@
 
 #include "FAVarParticleA2.h"
 #include "FAVar.h"
-#include "FAParticleA2.h"
+#include "FAConfig.h"
+#include "FAParticleA2_B.h"
+#include "FAParticleA2_BF1.h"
 
 ClassImp(FAVarParticleA2)
 
@@ -34,6 +36,9 @@ FAVarParticleA2::FAVarParticleA2(const Char_t* name, const Char_t* title)
     fVarTAPS_TOF = 0;
     fVarPSA_A = 0;
     fVarPSA_R = 0;
+    fVarPullTheta = 0;
+    fVarPullPhi= 0;
+    fVarPullT = 0;
 }
 
 //______________________________________________________________________________
@@ -49,6 +54,9 @@ FAVarParticleA2::~FAVarParticleA2()
     if (fVarTAPS_TOF) delete fVarTAPS_TOF;
     if (fVarPSA_A) delete fVarPSA_A;
     if (fVarPSA_R) delete fVarPSA_R;
+    if (fVarPullTheta) delete fVarPullTheta;
+    if (fVarPullPhi) delete fVarPullPhi;
+    if (fVarPullT) delete fVarPullT;
 }
 
 //______________________________________________________________________________
@@ -200,7 +208,33 @@ void FAVarParticleA2::AddVarsPSA(Int_t nbinsA, Double_t minA, Double_t maxA,
 }
 
 //______________________________________________________________________________
-FAVarParticleA2& FAVarParticleA2::operator=(const FAParticleA2& part)
+void FAVarParticleA2::AddVarsPull(Int_t nbins, Double_t min, Double_t max,
+                                  UInt_t statusBits)
+{
+    // Add kinfit pull variables.
+
+    // create variables
+    fVarPullTheta = new FAVar<Float_t>(TString::Format("%s_pull_theta", GetName()).Data(),
+                                       TString::Format("Pull of #theta_{%s}", GetTitle()).Data(),
+                                       0,
+                                       nbins, min, max, statusBits);
+    fVarPullPhi = new FAVar<Float_t>(TString::Format("%s_pull_phi", GetName()).Data(),
+                                     TString::Format("Pull of #phi_{%s}", GetTitle()).Data(),
+                                     0,
+                                     nbins, min, max, statusBits);
+    fVarPullT = new FAVar<Float_t>(TString::Format("%s_pull_T", GetName()).Data(),
+                                   TString::Format("Pull of T_{%s}", GetTitle()).Data(),
+                                   0,
+                                   nbins, min, max, statusBits);
+
+    // register variables
+    AddVariable(fVarPullTheta);
+    AddVariable(fVarPullPhi);
+    AddVariable(fVarPullT);
+}
+
+//______________________________________________________________________________
+FAVarParticleA2& FAVarParticleA2::operator=(const FAParticleA2_B& part)
 {
     // Assignment operator.
 
@@ -219,7 +253,7 @@ FAVarParticleA2& FAVarParticleA2::operator=(const FAParticleA2& part)
         ((FAVar<Float_t>*)fVarTAPS_dE)->SetVar(part.deltaE);
 
         // check the detector and set the no-fill bits accordingly
-        if (part.detector == FAParticleA2::kTAPSDetector)
+        if (part.detector == FAConfig::kTAPSDetector)
         {
             fVarCB_dE->SetBit(FAVarAbs::kNoFill);
             fVarTAPS_dE->ResetBit(FAVarAbs::kNoFill);
@@ -239,7 +273,7 @@ FAVarParticleA2& FAVarParticleA2::operator=(const FAParticleA2& part)
         ((FAVar<Float_t>*)fVarTAPS_TOF)->SetVar(part.tof);
 
         // check the detector and set the no-fill bits accordingly
-        if (part.detector == FAParticleA2::kTAPSDetector)
+        if (part.detector == FAConfig::kTAPSDetector)
         {
             fVarCB_TOF->SetBit(FAVarAbs::kNoFill);
             fVarTAPS_TOF->ResetBit(FAVarAbs::kNoFill);
@@ -258,7 +292,7 @@ FAVarParticleA2& FAVarParticleA2::operator=(const FAParticleA2& part)
         ((FAVar<Float_t>*)fVarPSA_R)->SetVar(part.psa_r);
 
         // check the detector and set the no-fill bits for CB particles
-        if (part.detector == FAParticleA2::kTAPSDetector)
+        if (part.detector == FAConfig::kTAPSDetector)
         {
             fVarPSA_A->ResetBit(FAVarAbs::kNoFill);
             fVarPSA_R->ResetBit(FAVarAbs::kNoFill);
@@ -268,6 +302,88 @@ FAVarParticleA2& FAVarParticleA2::operator=(const FAParticleA2& part)
             fVarPSA_A->SetBit(FAVarAbs::kNoFill);
             fVarPSA_R->SetBit(FAVarAbs::kNoFill);
         }
+    }
+
+    return *this;
+}
+
+//______________________________________________________________________________
+FAVarParticleA2& FAVarParticleA2::operator=(const FAParticleA2_BF1& part)
+{
+    // Assignment operator.
+
+    // check kinematics filling
+    if (fVarTheta)
+    {
+        ((FAVar<Float_t>*)fVarEnergy)->SetVar(part.energy);
+        ((FAVar<Float_t>*)fVarTheta)->SetVar(part.theta * TMath::RadToDeg());
+    }
+
+    // check dE-E filling
+    if (fVarCB_dE)
+    {
+        ((FAVar<Float_t>*)fVarEnergy)->SetVar(part.energy);
+        ((FAVar<Float_t>*)fVarCB_dE)->SetVar(part.deltaE);
+        ((FAVar<Float_t>*)fVarTAPS_dE)->SetVar(part.deltaE);
+
+        // check the detector and set the no-fill bits accordingly
+        if (part.detector == FAConfig::kTAPSDetector)
+        {
+            fVarCB_dE->SetBit(FAVarAbs::kNoFill);
+            fVarTAPS_dE->ResetBit(FAVarAbs::kNoFill);
+        }
+        else
+        {
+            fVarCB_dE->ResetBit(FAVarAbs::kNoFill);
+            fVarTAPS_dE->SetBit(FAVarAbs::kNoFill);
+        }
+    }
+
+    // check TOF filling
+    if (fVarCB_TOF)
+    {
+        ((FAVar<Float_t>*)fVarEnergy)->SetVar(part.energy);
+        ((FAVar<Float_t>*)fVarCB_TOF)->SetVar(part.tof);
+        ((FAVar<Float_t>*)fVarTAPS_TOF)->SetVar(part.tof);
+
+        // check the detector and set the no-fill bits accordingly
+        if (part.detector == FAConfig::kTAPSDetector)
+        {
+            fVarCB_TOF->SetBit(FAVarAbs::kNoFill);
+            fVarTAPS_TOF->ResetBit(FAVarAbs::kNoFill);
+        }
+        else
+        {
+            fVarCB_TOF->ResetBit(FAVarAbs::kNoFill);
+            fVarTAPS_TOF->SetBit(FAVarAbs::kNoFill);
+        }
+    }
+
+    // check PSA filling
+    if (fVarPSA_A)
+    {
+        ((FAVar<Float_t>*)fVarPSA_A)->SetVar(part.psa_a);
+        ((FAVar<Float_t>*)fVarPSA_R)->SetVar(part.psa_r);
+
+        // check the detector and set the no-fill bits for CB particles
+        if (part.detector == FAConfig::kTAPSDetector)
+        {
+            fVarPSA_A->ResetBit(FAVarAbs::kNoFill);
+            fVarPSA_R->ResetBit(FAVarAbs::kNoFill);
+        }
+        else
+        {
+            fVarPSA_A->SetBit(FAVarAbs::kNoFill);
+            fVarPSA_R->SetBit(FAVarAbs::kNoFill);
+        }
+    }
+
+    // check kinfit pull filling
+    if (fVarPullTheta)
+    {
+        ((FAVar<Float_t>*)fVarPullTheta)->SetVar(part.pullTheta);
+        ((FAVar<Float_t>*)fVarPullPhi)->SetVar(part.pullPhi);
+        ((FAVar<Float_t>*)fVarPullT)->SetVar(part.pullT);
     }
 
     return *this;
