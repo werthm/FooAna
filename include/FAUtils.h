@@ -16,12 +16,17 @@
 
 #include "TDataType.h"
 
+class TLorentzVector;
+
 namespace FAUtils
 {
     Char_t TreeDataTypeToChar(EDataType datatype);
     Int_t ShowBanner();
     TString FormatTimeSec(Double_t seconds);
     Int_t LaunchProgressServer();
+
+    void Calculate4Vector(Double_t theta, Double_t phi, Double_t t, Double_t mass,
+                          TLorentzVector& p4);
 }
 
 #endif
