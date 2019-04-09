@@ -4,34 +4,48 @@
 
 //////////////////////////////////////////////////////////////////////////
 //                                                                      //
-// FAEventA2                                                            //
+// FAEventA2_B                                                          //
 //                                                                      //
-// Class for A2 events.                                                 //
+// A2 event class (basic).                                              //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef FooAna_FAEventA2
-#define FooAna_FAEventA2
+#ifndef FooAna_FAEventA2_B
+#define FooAna_FAEventA2_B
 
 #include "FAEventT.h"
-#include "FAEventBaseA2.h"
 #include "FAParticleA2.h"
 #include "FAParticleMCA2.h"
 
-class FAEventA2 :
-    public FAEventT<FAParticleA2, FAParticleMCA2>,
-    public FAEventBaseA2
+class FAEventA2_B : public FAEventT<FAParticleA2, FAParticleMCA2>
 {
 
 public:
-    FAEventA2() : FAEventT(), FAEventBaseA2() { }
-    virtual ~FAEventA2() { }
+    Double32_t weight;          // event weight
+    Short_t taggCh;             // tagger channel
+    Double32_t cbSum;           // CB energy sum
 
-    virtual void Print(Option_t* option = "") const;
-    virtual void Clear(Option_t* option = "");
+    FAEventA2_B() : FAEventT(),
+                    weight(0), taggCh(-1), cbSum(0) { }
+    virtual ~FAEventA2_B() { }
 
-    ClassDef(FAEventA2, 1)  // Class for A2 events
+    virtual void Print(Option_t* option = "") const
+    {
+        FAEventT::Print(option);
+        printf("Weight                 : %f\n", weight);
+        printf("Tagger channel         : %d\n", taggCh);
+        printf("CB energy sum          : %f\n", cbSum);
+    }
+    virtual void Clear(Option_t* option = "")
+    {
+        FAEventT::Clear(option);
+        weight = 0;
+        taggCh = -1;
+        cbSum = 0;
+    }
+
+    ClassDef(FAEventA2_B, 1)  // A2 event class (basic)
 };
 
 #endif

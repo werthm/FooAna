@@ -63,6 +63,13 @@ root [1] .x FooAnaMacro.C++
 
 ## Class hierarchy
 ```
+FAEventT              : base event class template
+  FAEventA2_B         : A2 event class (basic, using FAParticleA2, FAParticleMCA2)
+  FAEventA2_BF1       : A2 event class (basic, kinfit type 1, using FAParticleA2KF, FAParticleMCA2)
+  FAEventA2_BF2       : A2 event class (basic, kinfit type 2, using FAParticleA2KF, FAParticleMCA2)
+  FAEventA2_BF3       : A2 event class (basic, kinfit type 3, using FAParticleA2KF, FAParticleMCA2)
+  FAEventA2_BIF3      : A2 event class (basic, event info, kinfit type 3, using FAParticleA2KF, FAParticleMCA2)
+  FAEventA2_BIF4      : A2 event class (basic, event info, kinfit type 4, using FAParticleA2KF, FAParticleMCA2)
 
 FAParticle            : base particle class
   FAParticleA2        : base A2 particle class

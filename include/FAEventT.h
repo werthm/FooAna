@@ -16,11 +16,10 @@
 
 #include <vector>
 
-#include "FAEventBase.h"
 #include "FAVector4.h"
 
 template <class PartType, class PartTypeMC>
-class FAEventT : public FAEventBase
+class FAEventT
 {
 
 public:
@@ -31,14 +30,14 @@ public:
     std::vector<PartTypeMC> partMC;     // array of particles
     std::vector<FAVector4> vec4;        // array of 4-vectors
 
-    FAEventT() : FAEventBase(),
-                 nPart(0), nPartMC(0), nVec4(0) { }
+    FAEventT() : nPart(0), nPartMC(0), nVec4(0) { }
     FAEventT(const FAEventT& orig);
     virtual ~FAEventT() { }
 
     void AddParticle(PartType& p);
     void AddParticleMC(PartTypeMC& p);
     void AddVector4(FAVector4& v);
+    void AddVector4(TLorentzVector& v);
 
     virtual void Print(Option_t* option = "") const;
     virtual void Clear(Option_t* option = "");
@@ -51,7 +50,6 @@ public:
 //______________________________________________________________________________
 template <class PartType, class PartTypeMC>
 FAEventT<PartType, PartTypeMC>::FAEventT(const FAEventT& orig)
-    : FAEventBase(orig)
 {
     // Copy constructor.
 
@@ -96,11 +94,20 @@ void FAEventT<PartType, PartTypeMC>::AddVector4(FAVector4& v)
 
 //______________________________________________________________________________
 template <class PartType, class PartTypeMC>
+void FAEventT<PartType, PartTypeMC>::AddVector4(TLorentzVector& v)
+{
+    // Add a vector to the list of 4-vectors.
+
+    vec4.push_back(FAVector4(v));
+    nVec4++;
+}
+
+//______________________________________________________________________________
+template <class PartType, class PartTypeMC>
 void FAEventT<PartType, PartTypeMC>::Print(Option_t* option) const
 {
     // Print the content of this class.
 
-    FAEventBase::Print(option);
     printf("Number of particles    : %d\n", nPart);
     for (Int_t i = 0; i < nPart; i++)
     {
@@ -127,7 +134,6 @@ void FAEventT<PartType, PartTypeMC>::Clear(Option_t* option)
 {
     // Prepare class for a new event by clearing all members.
 
-    FAEventBase::Clear(option);
     nPart = 0;
     nPartMC = 0;
     nVec4 = 0;
@@ -145,7 +151,6 @@ FAEventT<PartType, PartTypeMC>& FAEventT<PartType, PartTypeMC>::operator=(const 
     // check self assignment
     if (this != &e)
     {
-        FAEventBase::operator=(e);
         nPart = e.nPart;
         nPartMC = e.nPartMC;
         nVec4 = e.nVec4;
