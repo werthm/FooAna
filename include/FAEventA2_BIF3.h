@@ -18,10 +18,10 @@
 #include <iomanip>
 
 #include "FAEventT.h"
-#include "FAParticleA2KF.h"
-#include "FAParticleMCA2.h"
+#include "FAParticleA2_BF1.h"
+#include "FAParticleA2MC_B.h"
 
-class FAEventA2_BIF3 : public FAEventT<FAParticleA2KF, FAParticleMCA2>
+class FAEventA2_BIF3 : public FAEventT<FAParticleA2_BF1, FAParticleA2MC_B>
 {
 
 public:

@@ -4,34 +4,45 @@
 
 //////////////////////////////////////////////////////////////////////////
 //                                                                      //
-// FAParticleMCA2                                                       //
+// FAParticleA2MC_B                                                     //
 //                                                                      //
-// Base class for presorted analysis A2 MC particles.                   //
+// A2 MC particle class (basic).                                        //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef FooAna_FAParticleMCA2
-#define FooAna_FAParticleMCA2
+#ifndef FooAna_FAParticleA2MC_B
+#define FooAna_FAParticleA2MC_B
 
-#include "FAParticleMC.h"
-
-class FAParticleMCA2 : public FAParticleMC
+class FAParticleA2MC_B
 {
 
 public:
+    Int_t pdg;              // PDG ID
     Double32_t theta;       // polar angle
     Double32_t phi;         // azimuthal angle
     Double32_t energy;      // energy
 
-    FAParticleMCA2() : FAParticleMC(),
-                       theta(0), phi(0), energy(0) { }
-    virtual ~FAParticleMCA2() { }
+    FAParticleA2MC_B() : pdg(0),
+                         theta(0), phi(0), energy(0) { }
+    virtual ~FAParticleA2MC_B() { }
 
-    virtual void Print(Option_t* option = "") const;
-    virtual void Clear(Option_t* option = "");
+    virtual void Print(Option_t* option = "") const
+    {
+        printf("PDG index              : %d\n", pdg);
+        printf("Theta [deg]            : %f\n", theta);
+        printf("Phi [deg]              : %f\n", phi);
+        printf("Energy                 : %f\n", energy);
+    }
+    virtual void Clear(Option_t* option = "")
+    {
+        pdg = 0;
+        theta = 0;
+        phi = 0;
+        energy = 0;
+    }
 
-    ClassDef(FAParticleMCA2, 1)  // Base class for presorted analysis A2 MC particles
+    ClassDef(FAParticleA2MC_B, 1)  // A2 MC particle class (basic)
 };
 
 #endif

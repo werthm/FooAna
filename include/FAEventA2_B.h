@@ -15,10 +15,10 @@
 #define FooAna_FAEventA2_B
 
 #include "FAEventT.h"
-#include "FAParticleA2.h"
-#include "FAParticleMCA2.h"
+#include "FAParticleA2_B.h"
+#include "FAParticleA2MC_B.h"
 
-class FAEventA2_B : public FAEventT<FAParticleA2, FAParticleMCA2>
+class FAEventA2_B : public FAEventT<FAParticleA2_B, FAParticleA2MC_B>
 {
 
 public:

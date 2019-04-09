@@ -41,13 +41,11 @@
 #pragma link C++ class FAVarParticleA2+;
 #pragma link C++ class FAVarParticleA2KF+;
 #pragma link C++ class FAVarHistogram+;
-#pragma link C++ class FAParticle+;
-#pragma link C++ class FAParticleA2+;
-#pragma link C++ class FAParticleA2KF+;
-#pragma link C++ class FAParticleMC+;
-#pragma link C++ class FAParticleMCA2+;
-#pragma link C++ class FAEventT<FAParticleA2, FAParticleMCA2>+;
-#pragma link C++ class FAEventT<FAParticleA2KF, FAParticleMCA2>+;
+#pragma link C++ class FAParticleA2_B+;
+#pragma link C++ class FAParticleA2_BF1+;
+#pragma link C++ class FAParticleA2MC_B+;
+#pragma link C++ class FAEventT<FAParticleA2_B, FAParticleA2MC_B>+;
+#pragma link C++ class FAEventT<FAParticleA2_BF1, FAParticleA2MC_B>+;
 #pragma link C++ class FAEventA2_B+;
 #pragma link C++ class FAEventA2_BF1+;
 #pragma link C++ class FAEventA2_BF2+;

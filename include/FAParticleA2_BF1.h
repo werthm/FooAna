@@ -4,34 +4,74 @@
 
 //////////////////////////////////////////////////////////////////////////
 //                                                                      //
-// FAParticleA2KF                                                       //
+// FAParticleA2_BF1                                                     //
 //                                                                      //
-// Base class for presorted A2 analysis particles.                      //
+// A2 particle class (basic, kinfit type 1).                            //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef FooAna_FAParticleA2KF
-#define FooAna_FAParticleA2KF
+#ifndef FooAna_FAParticleA2_BF1
+#define FooAna_FAParticleA2_BF1
 
-#include "FAParticleA2.h"
+#include "TMath.h"
 
-class FAParticleA2KF : public FAParticleA2
+class FAParticleA2_BF1
 {
 
 public:
-    Double32_t pullTheta;       // theta pull
-    Double32_t pullPhi;         // phi pull
-    Double32_t pullT;           // kinetic energy pull
+    Int_t detector;         // detector index/pattern
+    Short_t detElem;        // detector element index
+    Double32_t theta;       // polar angle [rad]
+    Double32_t phi;         // azimuthal angle [rad]
+    Double32_t energy;      // energy [MeV]
+    Double32_t deltaE;      // deltaE [MeV]
+    Double32_t tof;         // time-of-flight [ns]
+    Double32_t psa_a;       // PSA angle [deg]
+    Double32_t psa_r;       // PSA radius [MeV]
+    Double32_t pullTheta;   // theta pull
+    Double32_t pullPhi;     // phi pull
+    Double32_t pullT;       // kinetic energy pull
 
-    FAParticleA2KF() : FAParticleA2(),
-                       pullTheta(0), pullPhi(0), pullT(0) { }
-    virtual ~FAParticleA2KF() { }
+    FAParticleA2_BF1() : detector(0), detElem(0),
+                         theta(0), phi(0), energy(0),
+                         deltaE(0), tof(0),
+                         psa_a(0), psa_r(0),
+                         pullTheta(0), pullPhi(0), pullT(0) { }
+    virtual ~FAParticleA2_BF1() { }
 
-    virtual void Print(Option_t* option = "") const;
-    virtual void Clear(Option_t* option = "");
+    virtual void Print(Option_t* option = "") const
+    {
+        printf("Detector               : %d\n", detector);
+        printf("Detector element       : %d\n", detElem);
+        printf("Theta [deg]            : %f\n", theta*TMath::RadToDeg());
+        printf("Phi [deg]              : %f\n", phi*TMath::RadToDeg());
+        printf("Energy                 : %f\n", energy);
+        printf("DeltaE                 : %f\n", deltaE);
+        printf("time-of-flight         : %f\n", tof);
+        printf("PSA angle              : %f\n", psa_a);
+        printf("PSA radius             : %f\n", psa_r);
+        printf("Theta pull             : %f\n", pullTheta);
+        printf("Phi pull               : %f\n", pullPhi);
+        printf("T pull                 : %f\n", pullT);
+    }
+    virtual void Clear(Option_t* option = "")
+    {
+        detector = 0;
+        detElem = 0;
+        theta = 0;
+        phi = 0;
+        energy = 0;
+        deltaE = 0;
+        tof = 0;
+        psa_a = 0;
+        psa_r = 0;
+        pullTheta = 0;
+        pullPhi = 0;
+        pullT = 0;
+    }
 
-    ClassDef(FAParticleA2KF, 1)  // Class for presorted A2 analysis particles (kinfit)
+    ClassDef(FAParticleA2_BF1, 1)  // A2 particle class (basic, kinfit type 1)
 };
 
 #endif
