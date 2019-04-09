@@ -14,7 +14,8 @@
 #ifndef FooAna_FAEventT
 #define FooAna_FAEventT
 
-#include <vector>
+#include "TClonesArray.h"
+#include "TClass.h"
 
 #include "FAVector4.h"
 
@@ -26,13 +27,27 @@ public:
     Short_t nPart;                      // number of particles
     Short_t nPartMC;                    // number of MC particles
     Short_t nVec4;                      // number of 4-vectors
-    std::vector<PartType> part;         // array of particles
-    std::vector<PartTypeMC> partMC;     // array of particles
-    std::vector<FAVector4> vec4;        // array of 4-vectors
+    TClonesArray part;                  // array of particles
+    TClonesArray partMC;                // array of particles
+    TClonesArray vec4;                  // array of 4-vectors
 
-    FAEventT() : nPart(0), nPartMC(0), nVec4(0) { }
-    FAEventT(const FAEventT& orig);
+    FAEventT() : nPart(0),
+                 nPartMC(0),
+                 nVec4(0),
+                 part(PartType::Class(), 10),
+                 partMC(PartTypeMC::Class(), 10),
+                 vec4(FAVector4::Class(), 10) { }
+    FAEventT(const FAEventT& orig) : nPart(orig.nPart),
+                                     nPartMC(orig.nPartMC),
+                                     nVec4(orig.nVec4),
+                                     part(orig.part),
+                                     partMC(orig.partMC),
+                                     vec4(orig.vec4) { }
     virtual ~FAEventT() { }
+
+    PartType* particle(Int_t i) { return (PartType*)part[i]; }
+    PartTypeMC* particleMC(Int_t i) { return (PartTypeMC*)partMC[i]; }
+    FAVector4* vector4(Int_t i) { return (FAVector4*)vec4[i]; }
 
     void AddParticle(PartType& p);
     void AddParticleMC(PartTypeMC& p);
@@ -49,27 +64,11 @@ public:
 
 //______________________________________________________________________________
 template <class PartType, class PartTypeMC>
-FAEventT<PartType, PartTypeMC>::FAEventT(const FAEventT& orig)
-{
-    // Copy constructor.
-
-    // init members
-    nPart = orig.nPart;
-    nPartMC = orig.nPartMC;
-    nVec4 = orig.nVec4;
-    part = orig.part;
-    partMC = orig.partMC;
-    vec4 = orig.vec4;
-}
-
-//______________________________________________________________________________
-template <class PartType, class PartTypeMC>
 void FAEventT<PartType, PartTypeMC>::AddParticle(PartType& p)
 {
     // Add a particle to the list of particles.
 
-    part.push_back(p);
-    nPart++;
+    new (part[nPart++]) PartType(p);
 }
 
 //______________________________________________________________________________
@@ -78,8 +77,7 @@ void FAEventT<PartType, PartTypeMC>::AddParticleMC(PartTypeMC& p)
 {
     // Add a particle to the list of MC particles.
 
-    partMC.push_back(p);
-    nPartMC++;
+    new (partMC[nPartMC++]) PartTypeMC(p);
 }
 
 //______________________________________________________________________________
@@ -88,8 +86,7 @@ void FAEventT<PartType, PartTypeMC>::AddVector4(FAVector4& v)
 {
     // Add a vector to the list of 4-vectors.
 
-    vec4.push_back(v);
-    nVec4++;
+    new (vec4[nVec4++]) FAVector4(v);
 }
 
 //______________________________________________________________________________
@@ -98,8 +95,7 @@ void FAEventT<PartType, PartTypeMC>::AddVector4(TLorentzVector& v)
 {
     // Add a vector to the list of 4-vectors.
 
-    vec4.push_back(FAVector4(v));
-    nVec4++;
+    new (vec4[nVec4++]) FAVector4(v);
 }
 
 //______________________________________________________________________________
@@ -112,19 +108,19 @@ void FAEventT<PartType, PartTypeMC>::Print(Option_t* option) const
     for (Int_t i = 0; i < nPart; i++)
     {
         printf("-> Particle %d\n", i+1);
-        part[i].Print(option);
+        part[i]->Print(option);
     }
     printf("Number of MC particles : %d\n", nPartMC);
     for (Int_t i = 0; i < nPartMC; i++)
     {
         printf("-> MC Particle %d\n", i+1);
-        partMC[i].Print(option);
+        partMC[i]->Print(option);
     }
     printf("Number of 4-vectors    : %d\n", nVec4);
     for (Int_t i = 0; i < nVec4; i++)
     {
         printf("-> 4-vector %d\n", i+1);
-        vec4[i].Print(option);
+        vec4[i]->Print(option);
     }
 }
 
@@ -137,9 +133,9 @@ void FAEventT<PartType, PartTypeMC>::Clear(Option_t* option)
     nPart = 0;
     nPartMC = 0;
     nVec4 = 0;
-    part.clear();
-    partMC.clear();
-    vec4.clear();
+    part.Clear();
+    partMC.Clear();
+    vec4.Clear();
 }
 
 //______________________________________________________________________________
