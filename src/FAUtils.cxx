@@ -14,6 +14,9 @@
 #include "TRandom3.h"
 #include "TSystem.h"
 #include "TLorentzVector.h"
+#include "TObjArray.h"
+#include "TObjString.h"
+#include "TAxis.h"
 
 #include "FAUtils.h"
 #include "FAVersion.h"
@@ -104,6 +107,37 @@ Int_t FAUtils::LaunchProgressServer()
     gSystem->Sleep(1000);
 
     return port;
+}
+
+//______________________________________________________________________________
+TAxis* FAUtils::CreateVariableAxis(const Char_t* binning)
+{
+    // Create an axis having variable bin sizes using the low edge string list
+    // from 'binning'.
+
+    // tokenize string
+    TString st(binning);
+    TObjArray* list = st.Tokenize(" ");
+    Int_t n = list->GetEntries();
+
+    // create low edge array
+    Double_t edg[n];
+
+    // loop over token
+    for (Int_t i = 0; i < n; i++)
+    {
+        // get string
+        TObjString* s = (TObjString*) list->At(i);
+
+        // convert to double and save to edge array
+        edg[i] = atof(s->GetString().Data());
+    }
+
+    // clean-up
+    delete list;
+
+    // return axis
+    return new TAxis(n-1, edg);
 }
 
 //______________________________________________________________________________
