@@ -64,19 +64,16 @@ root [1] .x FooAnaMacro.C++
 ## Class hierarchy
 ```
 FAEventT              : base event class template
-  FAEventA2_B         : A2 event class (basic, using FAParticleA2, FAParticleMCA2)
-  FAEventA2_BF1       : A2 event class (basic, kinfit type 1, using FAParticleA2KF, FAParticleMCA2)
-  FAEventA2_BF2       : A2 event class (basic, kinfit type 2, using FAParticleA2KF, FAParticleMCA2)
-  FAEventA2_BF3       : A2 event class (basic, kinfit type 3, using FAParticleA2KF, FAParticleMCA2)
-  FAEventA2_BIF3      : A2 event class (basic, event info, kinfit type 3, using FAParticleA2KF, FAParticleMCA2)
-  FAEventA2_BIF4      : A2 event class (basic, event info, kinfit type 4, using FAParticleA2KF, FAParticleMCA2)
+  FAEventA2_B         : A2 event class (basic)
+  FAEventA2_BF1       : A2 event class (basic, kinfit type 1)
+  FAEventA2_BF2       : A2 event class (basic, kinfit type 2)
+  FAEventA2_BF3       : A2 event class (basic, kinfit type 3)
+  FAEventA2_BIF3      : A2 event class (basic, event info, kinfit type 3)
+  FAEventA2_BIF4      : A2 event class (basic, event info, kinfit type 4)
 
-FAParticle            : base particle class
-  FAParticleA2        : base A2 particle class
-  FAParticleA2KF      : A2 particle class for kinematic fitting
-
-FAParticleMC          : base MC particle class
-  FAParticleMCA2      : base A2 MC particle class
+FAParticleA2_B        : A2 particle class (basic)
+FAParticleA2_BF1      : A2 particle class (basic, kinfit type 1)
+FAParticleA2MC_B      : A2 MC particle class (basic)
 
 FAVector3             : three-vector class using Double32_t
   FAVector4           : four-vector class using Double32_t
@@ -85,7 +82,6 @@ FAVarAbs              : abstract base class for analysis variables
   FAVar               : analysis variable class template
 FAVarList             : a list of analysis variables
   FAVarParticleA2     : a list of analysis variables for A2 particles
-    FAVarParticleA2KF : a list of analysis variables for A2 particles (kinematic fitting)
 FAVarHistogram        : a histogram to be filled with analysis variables
 FAVarFiller           : the histogram/tree filler class for analysis variables
 FAVarPlotter          : the histogram plotter class for analysis variables
@@ -96,22 +92,22 @@ FAProgressClient      : processing progress monitoring client
 
 FAUtils               : namespace with utility functions
 FAUtilsA2             : namespace with utility functions related to the A2 experiment
+FAConfig              : namespace with constants and definitions
+FAVersion             : namespace with version information
 ```
 
 ## User Guide
 
 ### Writing a custom event class
-Custom event classes can be easily created by using the template class `FAEventT`. This
-class derives from `FAEventBase`, which holds the most common event variables (event ID,
-timestamp, etc.). Classes created by `FAEventT` contain also two vectors for detected
-and generated (MC) particles. The exact types of the classes representing those particles
-can be specified when the template class `FAEventT` is instantiated. The base particle
-classes are `FAParticle` and `FAParticleMC`, respectively. Additional event variables
-can be added to the custom event class.
+Custom event classes can be easily created by using the template class `FAEventT`.
+Classes created by `FAEventT` contain also vectors for detected and generated (MC) particles
+as well as a vector for generic 4-vectors.  The exact types of the classes representing
+those particles can be specified when the template class `FAEventT` is instantiated.
+Additional event variables can be added to the custom event class.
 Example:
 ```C++
 class CustomEvent :
-    public FAEventT<FAParticle, FAParticleMC>
+    public FAEventT<FAParticleA2_B, FAParticleA2MC_B>
 {
 public:
     Short_t someIndex;
