@@ -20,6 +20,7 @@ ClassImp(FAVector3)
 
 //______________________________________________________________________________
 FAVector3::FAVector3(TVector3& v)
+    : TObject()
 {
     // Constructor.
 
@@ -30,6 +31,7 @@ FAVector3::FAVector3(TVector3& v)
 
 //______________________________________________________________________________
 FAVector3::FAVector3(const FAVector3& orig)
+    : TObject(orig)
 {
     // Copy constructor.
 
