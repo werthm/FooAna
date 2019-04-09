@@ -15,7 +15,7 @@
 
 #include "FAVarParticleA2.h"
 #include "FAVar.h"
-#include "FAConfig.h"
+#include "FAConfigA2.h"
 #include "FAParticleA2_B.h"
 #include "FAParticleA2_BF1.h"
 
@@ -253,7 +253,7 @@ FAVarParticleA2& FAVarParticleA2::operator=(const FAParticleA2_B& part)
         ((FAVar<Float_t>*)fVarTAPS_dE)->SetVar(part.deltaE);
 
         // check the detector and set the no-fill bits accordingly
-        if (part.detector == FAConfig::kTAPSDetector)
+        if (part.detector == FAConfigA2::kTAPSDetector)
         {
             fVarCB_dE->SetBit(FAVarAbs::kNoFill);
             fVarTAPS_dE->ResetBit(FAVarAbs::kNoFill);
@@ -273,7 +273,7 @@ FAVarParticleA2& FAVarParticleA2::operator=(const FAParticleA2_B& part)
         ((FAVar<Float_t>*)fVarTAPS_TOF)->SetVar(part.tof);
 
         // check the detector and set the no-fill bits accordingly
-        if (part.detector == FAConfig::kTAPSDetector)
+        if (part.detector == FAConfigA2::kTAPSDetector)
         {
             fVarCB_TOF->SetBit(FAVarAbs::kNoFill);
             fVarTAPS_TOF->ResetBit(FAVarAbs::kNoFill);
@@ -292,7 +292,7 @@ FAVarParticleA2& FAVarParticleA2::operator=(const FAParticleA2_B& part)
         ((FAVar<Float_t>*)fVarPSA_R)->SetVar(part.psa_r);
 
         // check the detector and set the no-fill bits for CB particles
-        if (part.detector == FAConfig::kTAPSDetector)
+        if (part.detector == FAConfigA2::kTAPSDetector)
         {
             fVarPSA_A->ResetBit(FAVarAbs::kNoFill);
             fVarPSA_R->ResetBit(FAVarAbs::kNoFill);
@@ -327,7 +327,7 @@ FAVarParticleA2& FAVarParticleA2::operator=(const FAParticleA2_BF1& part)
         ((FAVar<Float_t>*)fVarTAPS_dE)->SetVar(part.deltaE);
 
         // check the detector and set the no-fill bits accordingly
-        if (part.detector == FAConfig::kTAPSDetector)
+        if (part.detector == FAConfigA2::kTAPSDetector)
         {
             fVarCB_dE->SetBit(FAVarAbs::kNoFill);
             fVarTAPS_dE->ResetBit(FAVarAbs::kNoFill);
@@ -347,7 +347,7 @@ FAVarParticleA2& FAVarParticleA2::operator=(const FAParticleA2_BF1& part)
         ((FAVar<Float_t>*)fVarTAPS_TOF)->SetVar(part.tof);
 
         // check the detector and set the no-fill bits accordingly
-        if (part.detector == FAConfig::kTAPSDetector)
+        if (part.detector == FAConfigA2::kTAPSDetector)
         {
             fVarCB_TOF->SetBit(FAVarAbs::kNoFill);
             fVarTAPS_TOF->ResetBit(FAVarAbs::kNoFill);
@@ -366,7 +366,7 @@ FAVarParticleA2& FAVarParticleA2::operator=(const FAParticleA2_BF1& part)
         ((FAVar<Float_t>*)fVarPSA_R)->SetVar(part.psa_r);
 
         // check the detector and set the no-fill bits for CB particles
-        if (part.detector == FAConfig::kTAPSDetector)
+        if (part.detector == FAConfigA2::kTAPSDetector)
         {
             fVarPSA_A->ResetBit(FAVarAbs::kNoFill);
             fVarPSA_R->ResetBit(FAVarAbs::kNoFill);
