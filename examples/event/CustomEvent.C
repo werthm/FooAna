@@ -20,18 +20,18 @@
 #include "TTreeReader.h"
 
 #include "FAEventT.h"
-#include "FAParticle.h"
-#include "FAParticleMC.h"
+#include "FAParticleA2_B.h"
+#include "FAParticleA2MC_B.h"
 #include "FAVarFiller.h"
 #include "FAVar.h"
 
 #ifdef __ROOTCLING__
-#pragma link C++ class FAEventT<FAParticle, FAParticleMC>+;
+#pragma link C++ class FAEventT<FAParticleA2_B, FAParticleA2MC_B>+;
 #pragma link C++ class CustomEvent+;
 #endif
 
 class CustomEvent :
-    public FAEventT<FAParticle, FAParticleMC>
+    public FAEventT<FAParticleA2_B, FAParticleA2MC_B>
 {
 public:
     Short_t someIndex;
@@ -75,10 +75,6 @@ void WriteCustomEvents(Int_t nEvent = 5000)
     for (Int_t i = 0; i < nEvent; i++)
     {
         // set event variables
-        event.eventID = i;
-        event.timestamp = gRandom->Uniform(0, 1548859286);
-        event.weight = gRandom->Uniform(-1, 1);
-        event.flux = gRandom->Uniform(1e5, 2e5);
         event.someIndex = gRandom->Uniform(0, 10);
         event.someVariable = gRandom->Gaus(10, 1);
 
@@ -89,7 +85,7 @@ void WriteCustomEvents(Int_t nEvent = 5000)
         // add MC particles to event
         for (Int_t j = 0; j < npartMC; j++)
         {
-            FAParticleMC particle;
+            FAParticleA2MC_B particle;
             particle.pdg = gRandom->Uniform(0, 20);
             event.AddParticleMC(particle);
         }
@@ -97,7 +93,7 @@ void WriteCustomEvents(Int_t nEvent = 5000)
         // add particles to event
         for (Int_t j = 0; j < npart; j++)
         {
-            FAParticle particle;
+            FAParticleA2_B particle;
             particle.detector = gRandom->Uniform(0, 3);
             particle.detElem = gRandom->Uniform(0, 1000);
             event.AddParticle(particle);
