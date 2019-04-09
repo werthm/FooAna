@@ -18,7 +18,7 @@
 ClassImp(FAVector4)
 
 //______________________________________________________________________________
-FAVector4::FAVector4(TLorentzVector& p)
+FAVector4::FAVector4(const TLorentzVector& p)
     : FAVector3(p.Px(), p.Py(), p.Pz())
 {
     // Constructor.

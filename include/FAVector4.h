@@ -30,7 +30,7 @@ public:
     FAVector4(Double_t x_in, Double_t y_in, Double_t z_in, Double_t t_in)
         : FAVector3(x_in, y_in, z_in),
           t(t_in) { }
-    FAVector4(TLorentzVector& p);
+    FAVector4(const TLorentzVector& p);
     FAVector4(const FAVector4& orig);
     virtual ~FAVector4() { }
 
