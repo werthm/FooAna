@@ -14,11 +14,12 @@
 #ifndef FooAna_FAParticleA2_B
 #define FooAna_FAParticleA2_B
 
+#include "TObject.h"
 #include "TMath.h"
 
 #include "FAUtils.h"
 
-class FAParticleA2_B
+class FAParticleA2_B : public TObject
 {
 
 public:
@@ -32,7 +33,8 @@ public:
     Double32_t psa_a;       // PSA angle [deg]
     Double32_t psa_r;       // PSA radius [MeV]
 
-    FAParticleA2_B() : detector(0), detElem(0),
+    FAParticleA2_B() : TObject(),
+                       detector(0), detElem(0),
                        theta(0), phi(0), energy(0),
                        deltaE(0), tof(0),
                        psa_a(0), psa_r(0) { }

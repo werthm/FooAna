@@ -14,7 +14,9 @@
 #ifndef FooAna_FAParticleA2MC_B
 #define FooAna_FAParticleA2MC_B
 
-class FAParticleA2MC_B
+#include "TObject.h"
+
+class FAParticleA2MC_B : public TObject
 {
 
 public:
@@ -23,7 +25,8 @@ public:
     Double32_t phi;         // azimuthal angle
     Double32_t energy;      // energy
 
-    FAParticleA2MC_B() : pdg(0),
+    FAParticleA2MC_B() : TObject(),
+                         pdg(0),
                          theta(0), phi(0), energy(0) { }
     virtual ~FAParticleA2MC_B() { }
 

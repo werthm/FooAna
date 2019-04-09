@@ -14,9 +14,10 @@
 #ifndef FooAna_FAParticleA2_BF1
 #define FooAna_FAParticleA2_BF1
 
+#include "TObject.h"
 #include "TMath.h"
 
-class FAParticleA2_BF1
+class FAParticleA2_BF1 : public TObject
 {
 
 public:
@@ -33,7 +34,8 @@ public:
     Double32_t pullPhi;     // phi pull
     Double32_t pullT;       // kinetic energy pull
 
-    FAParticleA2_BF1() : detector(0), detElem(0),
+    FAParticleA2_BF1() : TObject(),
+                         detector(0), detElem(0),
                          theta(0), phi(0), energy(0),
                          deltaE(0), tof(0),
                          psa_a(0), psa_r(0),
