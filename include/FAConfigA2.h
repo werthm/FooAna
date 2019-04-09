@@ -4,17 +4,17 @@
 
 //////////////////////////////////////////////////////////////////////////
 //                                                                      //
-// FAConfig                                                             //
+// FAConfigA2                                                           //
 //                                                                      //
 // This namespace contains some often used constants and definitions.   //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef FooAna_FAConfig
-#define FooAna_FAConfig
+#ifndef FooAna_FAConfigA2
+#define FooAna_FAConfigA2
 
-namespace FAConfig
+namespace FAConfigA2
 {
     enum EA2Detector {
         kNoDetector,        // no detector

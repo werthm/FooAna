@@ -24,6 +24,7 @@
 
 #pragma link C++ namespace FAUtils;
 #pragma link C++ namespace FAUtilsA2;
+#pragma link C++ namespace FAConfigA2;
 #pragma link C++ class FAVector3+;
 #pragma link C++ class FAVector4+;
 #pragma link C++ class FAProgressServer+;

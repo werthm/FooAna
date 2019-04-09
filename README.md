@@ -92,8 +92,7 @@ FAProgressClient      : processing progress monitoring client
 
 FAUtils               : namespace with utility functions
 FAUtilsA2             : namespace with utility functions related to the A2 experiment
-FAConfig              : namespace with constants and definitions
-FAVersion             : namespace with version information
+FAConfigA2            : namespace with constants and definitions
 ```
 
 ## User Guide
