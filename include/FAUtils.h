@@ -25,7 +25,7 @@ namespace FAUtils
     Int_t ShowBanner();
     TString FormatTimeSec(Double_t seconds);
     Int_t LaunchProgressServer();
-    TAxis* CreateVariableAxis(const Char_t* binning);
+    TAxis CreateVariableAxis(const Char_t* binning);
 
     void Calculate4Vector(Double_t theta, Double_t phi, Double_t t, Double_t mass,
                           TLorentzVector& p4);

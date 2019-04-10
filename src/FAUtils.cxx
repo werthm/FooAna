@@ -110,7 +110,7 @@ Int_t FAUtils::LaunchProgressServer()
 }
 
 //______________________________________________________________________________
-TAxis* FAUtils::CreateVariableAxis(const Char_t* binning)
+TAxis FAUtils::CreateVariableAxis(const Char_t* binning)
 {
     // Create an axis having variable bin sizes using the low edge string list
     // from 'binning'.
@@ -137,7 +137,7 @@ TAxis* FAUtils::CreateVariableAxis(const Char_t* binning)
     delete list;
 
     // return axis
-    return new TAxis(n-1, edg);
+    return TAxis(n-1, edg);
 }
 
 //______________________________________________________________________________
