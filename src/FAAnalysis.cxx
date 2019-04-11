@@ -1,0 +1,189 @@
+/*************************************************************************
+ * Author: Dominik Werthmueller, 2019
+ *************************************************************************/
+
+//////////////////////////////////////////////////////////////////////////
+//                                                                      //
+// FAAnalysis                                                           //
+//                                                                      //
+// FooAna analysis wrapper.                                             //
+//                                                                      //
+//////////////////////////////////////////////////////////////////////////
+
+
+#include "TChain.h"
+#include "TROOT.h"
+#include "TEnv.h"
+#include "TError.h"
+#include "TTreeReader.h"
+#include "TFileMerger.h"
+#include "TSystem.h"
+#include "ROOT/TTreeProcessorMP.hxx"
+
+#include "FAAnalysis.h"
+#include "FAUtils.h"
+#include "FAProgressClient.h"
+#include "FAVarFiller.h"
+#include "FAAnalysisResult.h"
+
+ClassImp(FAAnalysis)
+
+//______________________________________________________________________________
+FAAnalysis::FAAnalysis(const Char_t* cfg)
+    : TObject()
+{
+    // Constructor.
+
+    // init members
+    fChain = 0;
+    fProgress = 0;
+    fResult = 0;
+
+    // force batch mode
+    gROOT->SetBatch();
+
+    // load configuration
+    gEnv->ReadFile(cfg, kEnvLocal);
+
+    // load data
+    fChain = new TChain(gEnv->GetValue("FA.Analysis.TreeName", "null"));
+    fChain->Add(gEnv->GetValue("FA.Analysis.Input", "null"));
+
+    // set up progress monitoring
+    Int_t port = FAUtils::LaunchProgressServer();
+    fProgress = new FAProgressClient("localhost", port);
+
+    // generate axes
+    fAxis1 = CreateAxis(1);
+    fAxis2 = CreateAxis(2);
+}
+
+//______________________________________________________________________________
+FAAnalysis::~FAAnalysis()
+{
+    // Destructor.
+
+    if (fChain)
+        delete fChain;
+    if (fProgress)
+        delete fProgress;
+    if (fResult)
+        delete fResult;
+    if (fAxis1)
+        delete fAxis1;
+    if (fAxis2)
+        delete fAxis2;
+}
+
+//______________________________________________________________________________
+TAxis* FAAnalysis::CreateAxis(Int_t index)
+{
+    // Create and return the axis with index 'index'.
+
+    // find axis config
+    const Char_t* binsAxis = gEnv->GetValue(TString::Format("FA.Analysis.Axis%d.Binning",
+                                                            index).Data(), "null");
+    // create axis
+    if (strcmp(binsAxis, "null"))
+    {
+        TAxis* a = new TAxis(FAUtils::CreateVariableAxis(binsAxis));
+
+        // check for name config
+        const Char_t* nameAxis = gEnv->GetValue(TString::Format("FA.Analysis.Axis%d.Name",
+                                                index).Data(), "null");
+        if (strcmp(nameAxis, "null"))
+            a->SetNameTitle(nameAxis, nameAxis);
+
+        return a;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+//______________________________________________________________________________
+void FAAnalysis::Process(std::function<FAAnalysisResult* (TTreeReader&)> func)
+{
+    // Event processing function.
+
+    // get number of files, entries and workers
+    Long64_t nEntries = fChain->GetEntries();
+    Int_t nFiles = fChain->GetListOfFiles()->GetEntries();
+    Int_t nWorkers = gEnv->GetValue("FA.Analysis.NWorker", 1);
+    if (nWorkers > nFiles)
+        nWorkers = nFiles;
+
+    // user info
+    Info("Process", "%d file(s) in chain", nFiles);
+    Info("Process", "%lld (%e) entries in chain", nEntries, (Double_t)nEntries);
+    Info("Process", "Using %d worker(s)", nWorkers);
+
+    // delete old result
+    if (fResult)
+        delete fResult;
+
+    // start progress monitoring
+    fProgress->RequestInit(nEntries);
+
+    // process events
+    ROOT::TTreeProcessorMP workers(nWorkers);
+    fResult = workers.Process(*fChain, func);
+
+    // stop progress monitoring
+    fProgress->RequestFinish();
+    fProgress->RequestStop();
+}
+
+//______________________________________________________________________________
+void FAAnalysis::WriteOutputFile(const Char_t* out)
+{
+    // Write the output to the file 'out'.
+
+    // check result
+    if (!fResult)
+    {
+        Error("WriteOutputFile", "No analysis result to write!");
+        return;
+    }
+
+    // user info
+    Info("WriteOutputFile", "Merging %d partial output files", fResult->GetNFiles());
+
+    // output file
+    const Char_t* outfile = out ? out : gEnv->GetValue("FA.Analysis.Output", "out.root");
+
+    // merge partial output files
+    TFileMerger merger(kFALSE);
+    merger.OutputFile(outfile, "recreate");
+    for (Int_t i = 0; i < fResult->GetNFiles(); i++)
+    {
+        if (!merger.AddFile(fResult->GetFile(i), kFALSE))
+            Error("WriteOutputFile", "Partial output file '%s' was not found!", fResult->GetFile(i));
+    }
+    merger.Merge();
+
+    // delete partial output files
+    for (Int_t i = 0; i < fResult->GetNFiles(); i++)
+        gSystem->Unlink(fResult->GetFile(i));
+}
+
+//______________________________________________________________________________
+FAAnalysisResult* FAAnalysis::WritePartialOutput(FAVarFiller& filler, const Char_t* inFile)
+{
+    // Write the partial output from the filler 'filler' to a file in the current
+    // directory using the input file name 'inFile'.
+
+    // build output file name
+    TString fout = FAUtils::ExtractFileName(inFile) + ".out.part";
+
+    // user info
+    ::Info("FAAnalysis::WritePartialOutput", "Writing partial output file '%s'", fout.Data());
+
+    // write partial output
+    filler.WriteFile(fout.Data());
+
+    // create mergeable list of partial output files
+    return new FAAnalysisResult("FooAna_Result", fout.Data());
+}
+
