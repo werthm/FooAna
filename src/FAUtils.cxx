@@ -76,22 +76,6 @@ Int_t FAUtils::ShowBanner()
 }
 
 //______________________________________________________________________________
-TString FAUtils::FormatTimeSec(Double_t seconds)
-{
-    // Return a time string in the format HH:MM:SS of the seconds 'seconds'.
-
-    // convert seconds
-    Int_t hours = Int_t(seconds / 3600);
-    seconds -= hours * 3600;
-    Int_t min = Int_t(seconds / 60);
-    seconds -= min * 60;
-    Int_t sec = Int_t(seconds);
-
-    // format string
-    return TString::Format("%02d:%02d:%02d", hours, min, sec);
-}
-
-//______________________________________________________________________________
 Int_t FAUtils::LaunchProgressServer()
 {
     // Launch a progress server instance on a random port on localhost in an
@@ -112,6 +96,39 @@ Int_t FAUtils::LaunchProgressServer()
     gSystem->Sleep(1000);
 
     return port;
+}
+
+//______________________________________________________________________________
+TString FAUtils::FormatTimeSec(Double_t seconds)
+{
+    // Return a time string in the format HH:MM:SS of the seconds 'seconds'.
+
+    // convert seconds
+    Int_t hours = Int_t(seconds / 3600);
+    seconds -= hours * 3600;
+    Int_t min = Int_t(seconds / 60);
+    seconds -= min * 60;
+    Int_t sec = Int_t(seconds);
+
+    // format string
+    return TString::Format("%02d:%02d:%02d", hours, min, sec);
+}
+
+//______________________________________________________________________________
+TString FAUtils::ExtractFileName(const Char_t* s)
+{
+    // Extracts the file name of a file given by its full Unix paths in
+    // the string s.
+
+    // search last slash
+    TString p(s);
+    Ssiz_t pos = p.Last('/');
+
+    // return the same string or copy substring
+    if (pos == kNPOS)
+        return p;
+    else
+        return TString(p(pos+1, p.Length()-pos));
 }
 
 //______________________________________________________________________________

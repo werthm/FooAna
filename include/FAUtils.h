@@ -23,8 +23,11 @@ namespace FAUtils
 {
     Char_t TreeDataTypeToChar(EDataType datatype);
     Int_t ShowBanner();
-    TString FormatTimeSec(Double_t seconds);
     Int_t LaunchProgressServer();
+
+    TString FormatTimeSec(Double_t seconds);
+    TString ExtractFileName(const Char_t* s);
+
     TAxis CreateVariableAxis(const Char_t* binning);
 
     void Calculate4Vector(Double_t theta, Double_t phi, Double_t t, Double_t mass,
