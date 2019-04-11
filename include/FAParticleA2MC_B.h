@@ -14,35 +14,34 @@
 #ifndef FooAna_FAParticleA2MC_B
 #define FooAna_FAParticleA2MC_B
 
-#include "TObject.h"
+#include "FAVector4.h"
 
 class FAParticleA2MC_B : public TObject
 {
 
 public:
     Int_t pdg;              // PDG ID
-    Double32_t theta;       // polar angle
-    Double32_t phi;         // azimuthal angle
-    Double32_t energy;      // energy
+    FAVector4 vec4;         // 4-vector
 
     FAParticleA2MC_B() : TObject(),
-                         pdg(0),
-                         theta(0), phi(0), energy(0) { }
+                         pdg(0), vec4(0, 0, 0, 0) { }
+    FAParticleA2MC_B(Int_t pdg, TLorentzVector& v)
+        : TObject(),
+          pdg(pdg), vec4(v) { }
     virtual ~FAParticleA2MC_B() { }
 
     virtual void Print(Option_t* option = "") const
     {
         printf("PDG index              : %d\n", pdg);
-        printf("Theta [deg]            : %f\n", theta);
-        printf("Phi [deg]              : %f\n", phi);
-        printf("Energy                 : %f\n", energy);
+        printf("Px                     : %f\n", vec4.x);
+        printf("Py                     : %f\n", vec4.y);
+        printf("Pz                     : %f\n", vec4.z);
+        printf("Energy                 : %f\n", vec4.t);
     }
     virtual void Clear(Option_t* option = "")
     {
         pdg = 0;
-        theta = 0;
-        phi = 0;
-        energy = 0;
+        vec4.Clear();
     }
 
     ClassDef(FAParticleA2MC_B, 1)  // A2 MC particle class (basic)
