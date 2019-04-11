@@ -26,6 +26,7 @@
 #pragma link C++ namespace FAUtilsA2;
 #pragma link C++ namespace FAConfigA2;
 #pragma link C++ class FAAnalysis+;
+#pragma link C++ class FAAnalysisA2+;
 #pragma link C++ class FAAnalysisResult+;
 #pragma link C++ class FAVector3+;
 #pragma link C++ class FAVector4+;
