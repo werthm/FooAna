@@ -70,7 +70,7 @@ Double_t FAVector4::M2() const
 }
 
 //______________________________________________________________________________
-void FAVector4::Convert4Vector(TLorentzVector& out)
+void FAVector4::Convert4Vector(TLorentzVector& out) const
 {
     // Save this 4-vector to 'out'.
 

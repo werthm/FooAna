@@ -47,7 +47,7 @@ public:
     virtual void Print(Option_t* option = "") const;
     virtual void Clear(Option_t* option = "");
 
-    void Convert4Vector(TLorentzVector& out);
+    void Convert4Vector(TLorentzVector& out) const;
 
     FAVector4& operator=(const FAVector4& p);
     FAVector4& operator=(const TLorentzVector& p);
