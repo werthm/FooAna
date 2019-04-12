@@ -32,6 +32,7 @@
 #pragma link C++ class FAVector4+;
 #pragma link C++ class FAProgressServer+;
 #pragma link C++ class FAProgressClient+;
+#pragma link C++ class FAProgressMessage+;
 #pragma link C++ class FAVarAbs+;
 #pragma link C++ class FAVar<Short_t>+;
 #pragma link C++ class FAVar<Int_t>+;
