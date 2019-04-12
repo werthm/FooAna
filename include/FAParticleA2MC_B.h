@@ -14,6 +14,8 @@
 #ifndef FooAna_FAParticleA2MC_B
 #define FooAna_FAParticleA2MC_B
 
+#include "TLorentzVector.h"
+
 #include "FAVector4.h"
 
 class FAParticleA2MC_B : public TObject
@@ -21,27 +23,29 @@ class FAParticleA2MC_B : public TObject
 
 public:
     Int_t pdg;              // PDG ID
-    FAVector4 vector4;      // 4-vector
+    FAVector4 vec4;         // 4-vector
 
     FAParticleA2MC_B() : TObject(),
-                         pdg(0), vector4(0, 0, 0, 0) { }
+                         pdg(0), vec4(0, 0, 0, 0) { }
     FAParticleA2MC_B(Int_t pdg, TLorentzVector& v)
         : TObject(),
-          pdg(pdg), vector4(v) { }
+          pdg(pdg), vec4(v) { }
     virtual ~FAParticleA2MC_B() { }
+
+    const FAVector4& vector4() const { return vec4; }
 
     virtual void Print(Option_t* option = "") const
     {
         printf("PDG index              : %d\n", pdg);
-        printf("Px                     : %f\n", vector4.x);
-        printf("Py                     : %f\n", vector4.y);
-        printf("Pz                     : %f\n", vector4.z);
-        printf("Energy                 : %f\n", vector4.t);
+        printf("Px                     : %f\n", vec4.x);
+        printf("Py                     : %f\n", vec4.y);
+        printf("Pz                     : %f\n", vec4.z);
+        printf("Energy                 : %f\n", vec4.t);
     }
     virtual void Clear(Option_t* option = "")
     {
         pdg = 0;
-        vector4.Clear();
+        vec4.Clear();
     }
 
     ClassDef(FAParticleA2MC_B, 1)  // A2 MC particle class (basic)
