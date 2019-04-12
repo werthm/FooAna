@@ -17,6 +17,8 @@
 #include "TObject.h"
 #include "TMath.h"
 
+#include "FAUtils.h"
+
 class FAParticleA2_BF1 : public TObject
 {
 
@@ -42,6 +44,10 @@ public:
                          pullTheta(0), pullPhi(0), pullT(0) { }
     virtual ~FAParticleA2_BF1() { }
 
+    void Calculate4Vector(TLorentzVector& p4, Double_t mass) const
+    {
+        FAUtils::Calculate4Vector(theta, phi, energy, mass, p4);
+    }
     virtual void Print(Option_t* option = "") const
     {
         printf("Detector               : %d\n", detector);

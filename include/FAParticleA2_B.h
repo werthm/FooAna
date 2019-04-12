@@ -40,7 +40,7 @@ public:
                        psa_a(0), psa_r(0) { }
     virtual ~FAParticleA2_B() { }
 
-    virtual void Calculate4Vector(TLorentzVector& p4, Double_t mass) const
+    void Calculate4Vector(TLorentzVector& p4, Double_t mass) const
     {
         FAUtils::Calculate4Vector(theta, phi, energy, mass, p4);
     }
