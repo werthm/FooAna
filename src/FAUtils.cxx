@@ -87,10 +87,10 @@ Int_t FAUtils::LaunchProgressServer()
     Int_t port = rnd.Uniform(5000, 10000);
 
     // launch server
-    //gSystem->RedirectOutput("/dev/null");
+    gSystem->RedirectOutput("/dev/null");
     gSystem->Exec(TString::Format("root -b -l -e 'FAProgressServer server(%d); server.Listen(); "
                                   "gSystem->Exit(0)' &", port).Data());
-    //gSystem->RedirectOutput(0);
+    gSystem->RedirectOutput(0);
 
     // wait for server startup
     gSystem->Sleep(1000);
