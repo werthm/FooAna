@@ -24,6 +24,8 @@ class FAProgressClient : public TObject
 protected:
     TSocket* fSocket;       // client socket
 
+    static const Int_t fgNetTimeout;
+
 public:
     FAProgressClient() : TObject(),
                          fSocket(0) { }
@@ -34,13 +36,12 @@ public:
     void Deconnect();
 
     Bool_t RequestInit(Long64_t n);
-    Bool_t RequestPrint();
-    Bool_t AddProcessedEvents(Long64_t n);
-    Bool_t AddProcessedEventsAndPrint(Long64_t n);
+    Bool_t ReportEvents(Long64_t n);
+    Bool_t PrintProgress();
     Bool_t RequestFinish();
     Bool_t RequestStop();
 
-    ClassDef(FAProgressClient, 1)  // progress monitoring in processing (client)
+    ClassDef(FAProgressClient, 0)  // progress monitoring in processing (client)
 };
 
 #endif
