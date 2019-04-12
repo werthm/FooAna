@@ -36,7 +36,7 @@ FAAnalysis::FAAnalysis(const Char_t* cfg)
 
     // init members
     fChain = 0;
-    fProgress = 0;
+    fProgSrvPort = 0;
     fResult = 0;
 
     // force batch mode
@@ -50,8 +50,8 @@ FAAnalysis::FAAnalysis(const Char_t* cfg)
     fChain->Add(gEnv->GetValue("FA.Analysis.Input", "null"));
 
     // set up progress monitoring
-    Int_t port = FAUtils::LaunchProgressServer();
-    fProgress = new FAProgressClient("localhost", port);
+    if (gEnv->GetValue("FA.Analysis.Progress", 1))
+        fProgSrvPort = FAUtils::LaunchProgressServer();
 
     // generate axes
     fAxis1 = CreateAxis(1);
@@ -65,8 +65,6 @@ FAAnalysis::~FAAnalysis()
 
     if (fChain)
         delete fChain;
-    if (fProgress)
-        delete fProgress;
     if (fResult)
         delete fResult;
     if (fAxis1)
@@ -123,16 +121,19 @@ void FAAnalysis::Process(std::function<FAAnalysisResult* (TTreeReader&)> func)
     if (fResult)
         delete fResult;
 
+    // connect to progress server
+    FAProgressClient progress("localhost", fProgSrvPort);
+
     // start progress monitoring
-    fProgress->RequestInit(nEntries);
+    progress.RequestInit(nEntries);
 
     // process events
     ROOT::TTreeProcessorMP workers(nWorkers);
     fResult = workers.Process(*fChain, func);
 
     // stop progress monitoring
-    fProgress->RequestFinish();
-    fProgress->RequestStop();
+    progress.RequestFinish();
+    progress.RequestStop();
 }
 
 //______________________________________________________________________________

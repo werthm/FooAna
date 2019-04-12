@@ -21,7 +21,6 @@
 class TChain;
 class TTreeReader;
 class TAxis;
-class FAProgressClient;
 class FAVarFiller;
 class FAAnalysisResult;
 
@@ -30,7 +29,7 @@ class FAAnalysis : public TObject
 
 protected:
     TChain* fChain;                 // file chain
-    FAProgressClient* fProgress;    // progress client
+    Int_t fProgSrvPort;             // port of progress server
     FAAnalysisResult* fResult;      // analysis result
     TAxis* fAxis1;                  // primary bin axis
     TAxis* fAxis2;                  // secondary bin axis
@@ -39,12 +38,12 @@ protected:
 
 public:
     FAAnalysis() : TObject(),
-                   fChain(0), fProgress(0), fResult(0),
+                   fChain(0), fProgSrvPort(0), fResult(0),
                    fAxis1(0), fAxis2(0) { }
     FAAnalysis(const Char_t* cfg);
     virtual ~FAAnalysis();
 
-    FAProgressClient* GetProgressClient() const { return fProgress; }
+    Int_t GetProgressSrvPort() const { return fProgSrvPort; }
     TAxis* GetAxis1() const { return fAxis1; }
     TAxis* GetAxis2() const { return fAxis2; }
 
