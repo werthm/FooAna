@@ -12,6 +12,12 @@ Yet another analysis framework
 
 ## Release notes
 
+### 0.2.0
+April 12, 2019
+* added wrapper for multi-threaded TTree analysis
+* new A2 event and particle formats
+* added progress server
+
 ### 0.1.0
 February 10, 2019
 * initial release
@@ -63,6 +69,10 @@ root [1] .x FooAnaMacro.C++
 
 ## Class hierarchy
 ```
+FAAnalysis            : base analysis wrapper
+  FAAnalysisA2        : A2 analysis wrapper
+FAAnalysisResult      : analysis result
+
 FAEventT              : base event class template
   FAEventA2_B         : A2 event class (basic)
   FAEventA2_BF1       : A2 event class (basic, kinfit type 1)
@@ -89,6 +99,7 @@ FAVarPlotterEntry     : an entry (histogram(s) from file) to be plotted by FAVar
 
 FAProgressServer      : processing progress monitoring server
 FAProgressClient      : processing progress monitoring client
+FAProgressMessage     : progress message object
 
 FAUtils               : namespace with utility functions
 FAUtilsA2             : namespace with utility functions related to the A2 experiment
