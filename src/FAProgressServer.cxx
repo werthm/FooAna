@@ -16,7 +16,6 @@
 #include "TMessage.h"
 #include "TError.h"
 #include "TThread.h"
-#include "TStopwatch.h"
 
 #include "FAProgressServer.h"
 #include "FAUtils.h"
@@ -38,7 +37,8 @@ FAProgressServer::FAProgressServer(Int_t port)
     fServer = 0;
     fEvents = 0;
     fEventsDone = 0;
-    fTimer = new TStopwatch();
+    fStartTime = 0;
+    fStopTime = 0;
 
     // try to create server socket
     fServer = new TServerSocket(port);
@@ -150,17 +150,12 @@ void FAProgressServer::Listen()
                     mess->ReadLong64(n);
                     Init(n);
                     break;
-                case kPrint:
-                    PrintProgress();
-                    break;
-                case kAddProcEvents:
+                case kReportEvents:
                     mess->ReadLong64(n);
                     fEventsDone += n;
                     break;
-                case kAddProcEventsPrint:
-                    mess->ReadLong64(n);
-                    fEventsDone += n;
-                    PrintProgress();
+                case kRequestProgress:
+                    SendProgress(s);
                     break;
                 case kFinish:
                     Finish();
@@ -227,46 +222,42 @@ Int_t FAProgressServer::GetPort()
 //______________________________________________________________________________
 void FAProgressServer::Init(Long64_t events)
 {
-    // Init the server with 'events' events to process.
+    // Init the server with 'events' events to process and start the timer.
 
     // reset event counters
     fEvents = events;
     fEventsDone = 0;
 
     // reset timer
-    fTimer->Reset();
-    fTimer->Start();
-
-    // user info
-    Info("Init", "Started processing %lld events", fEvents);
+    fStartTime = TTimeStamp();
+    fStopTime = 0;
 }
 
 //______________________________________________________________________________
-void FAProgressServer::PrintProgress()
+void FAProgressServer::SendProgress(TSocket* s)
 {
-    // Print the progress.
+    // Send the current progress to the socket 's'.
 
-    // calculate rate
-    fTimer->Stop();
-    Double_t rate = fEventsDone / fTimer->RealTime();
-    fTimer->Continue();
+    // create message
+    TMessage mes(kMESS_OBJECT | kMESS_ACK);
 
-    // user info
-    Info("Print", "%.1f%% processed - %s remaining",
-                  100.*(Double_t)fEventsDone/(Double_t)fEvents,
-                  FAUtils::FormatTimeSec((fEvents-fEventsDone)/rate).Data());
+    // create progress object
+    FAProgressMessage prog(fEvents, fEventsDone, TTimeStamp() - fStartTime);
+
+    // stream object
+    mes.WriteObject(&prog);
+
+    // send message
+    s->Send(mes);
 }
 
 //______________________________________________________________________________
 void FAProgressServer::Finish()
 {
-    // Finish the progress measurement and print summary.
+    // Finish the progress measurement.
 
     // stop timer
-    fTimer->Stop();
-
-    // user info
-    Info("Stop", "Finished processing in %s", FAUtils::FormatTimeSec(fTimer->RealTime()).Data());
+    fStopTime = TTimeStamp();
 }
 
 //______________________________________________________________________________
