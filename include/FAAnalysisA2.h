@@ -44,6 +44,8 @@ public:
 
     Bool_t IsTrigger(Double_t cb_esum, Int_t mult_cb = 9999, Int_t mult_taps = 9999) const;
 
+    virtual void Print(Option_t* option = "") const;
+
     ClassDef(FAAnalysisA2, 0)  // A2 analysis wrapper
 };
 

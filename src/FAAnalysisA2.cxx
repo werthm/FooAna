@@ -86,3 +86,21 @@ Bool_t FAAnalysisA2::IsTrigger(Double_t cb_esum, Int_t mult_cb, Int_t mult_taps)
     return kTRUE;
 }
 
+//______________________________________________________________________________
+void FAAnalysisA2::Print(Option_t* option) const
+{
+    // Print the content of this class.
+
+    FAAnalysis::Print(option);
+    printf("Number of tagger channels       : %d\n", fNTagg);
+    printf("Tagger calibration              : %s\n", gEnv->GetValue("FA.Analysis.A2.Tagger.Calib", "null"));
+    printf("SW trigger: CB energy sum mean  : %.2f MeV\n", fTrig_CB_ESum_Mean);
+    printf("SW trigger: CB energy sum sigma : %.2f MeV\n", fTrig_CB_ESum_Sigma);
+    printf("SW trigger: Total multiplicity  : %d\n", fTrig_Mult_Total);
+    printf("SW trigger: TAPS in total mult. : ");
+    if (fIsTrig_Mult_TAPS)
+        printf("yes\n");
+    else
+        printf("no\n");
+}
+
