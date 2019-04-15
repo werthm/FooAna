@@ -163,6 +163,54 @@ TAxis FAUtils::CreateVariableAxis(const Char_t* binning)
 }
 
 //______________________________________________________________________________
+Int_t FAUtils::CalcBinOverlapWeights(TAxis* axis, Double_t x, Double_t x_width,
+                                     std::vector<std::pair<Int_t, Double_t>>& out)
+{
+    // Calculate bin overlap weights.
+    // Return the number of bins to fill
+    //
+    // Parameters:
+    // axis       : binning axis
+    // x          : x bin mean value (overlapping bin)
+    // x_width    : x bin width
+    // out        : output vector of bin indices and weights
+
+    // calculate original min/max bin values
+    Double_t origMin = x - x_width / 2.;
+    Double_t origMax = x + x_width / 2.;
+
+    // get new min/max bins
+    Int_t bMin = axis->FindFixBin(origMin);
+    Int_t bMax = axis->FindFixBin(origMax);
+
+    // calculate number of affected new bins
+    Int_t nbins = bMax - bMin + 1;
+
+    // loop over new bins and calculate filling weights
+    for (Int_t i = 0; i < nbins; i++)
+    {
+        // set bin number
+        Int_t bin = bMin + i;
+
+        // lower border (including correction for underflow bin)
+        Double_t low = TMath::Max(axis->GetBinLowEdge(bin), origMin);
+        if (bin == 0) low = origMin;
+
+        // upper border (including correction for overflow bin)
+        Double_t upp = TMath::Min(axis->GetBinUpEdge(bin), origMax);
+        if (bin == axis->GetNbins()+1) upp = origMax;
+
+        // calculate filling weight
+        Double_t fweight = (upp - low) / x_width;
+
+        // set output
+        out.push_back(std::make_pair(bin, fweight));
+    }
+
+    return nbins;
+}
+
+//______________________________________________________________________________
 void FAUtils::Calculate4Vector(Double_t theta, Double_t phi, Double_t t, Double_t mass,
                                TLorentzVector& p4)
 {

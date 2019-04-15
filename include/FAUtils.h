@@ -29,6 +29,8 @@ namespace FAUtils
     TString ExtractFileName(const Char_t* s);
 
     TAxis CreateVariableAxis(const Char_t* binning);
+    Int_t CalcBinOverlapWeights(TAxis* axis, Double_t x, Double_t x_width,
+                                std::vector<std::pair<Int_t, Double_t>>& out);
 
     void Calculate4Vector(Double_t theta, Double_t phi, Double_t t, Double_t mass,
                           TLorentzVector& p4);
