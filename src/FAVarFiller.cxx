@@ -20,6 +20,7 @@
 #include "FAVarAbs.h"
 #include "FAVarHistogram.h"
 #include "FAVarList.h"
+#include "FAUtils.h"
 
 ClassImp(FAVarFiller)
 
@@ -307,6 +308,77 @@ void FAVarFiller::FillBin(Double_t weight, Int_t bin1, Int_t bin2)
     // unbinned filling
     if (fMode == kUnbinned || fMode == kBoth)
         fTree[bin1][bin2]->Fill();
+}
+
+//______________________________________________________________________________
+void FAVarFiller::FillOverlap(Double_t weight, Double_t axisVar1, Double_t axisVarWidth1,
+                              Double_t axisVar2)
+{
+    // Fill all analysis variables using the weight 'weight' and the values of
+    // 'axisVar1' and 'axisVar2' as variables for the first and second bin
+    // axis variables, respectively.
+    // The weight will be split across several primary bins according to 'axisVar1'
+    // and the width 'axisVarWidth1' associated with 'axisVar1'.
+    // NOTE: This method is not yet implemented for unbinned filling.
+
+    // check all variables for NaN
+    FAVarAbs* badVar = 0;
+    for (Int_t i = 0; i < fNVar; i++)
+    {
+        if (TMath::IsNaN(fVar[i]->AsDouble()))
+        {
+            badVar = fVar[i];
+            break;
+        }
+    }
+    if (badVar)
+    {
+        Error("FillOverlap", "Variable '%s' is NaN, this event will not be filled!", badVar->GetName());
+        return;
+    }
+
+    // check binning
+    Int_t bin2 = 0;
+    if (fBins1 && fBins2)
+    {
+        if (axisVar2 < fBins2->GetXmin() || axisVar2 >= fBins2->GetXmax())
+            return;
+        bin2 = fBins2->FindFixBin(axisVar2)-1;
+    }
+    else if (fBins1 && !fBins2)
+    {
+        bin2 = 0;
+    }
+    else if (!fBins1 && !fBins2)
+    {
+        FillBin(weight, 0, 0);
+        return;
+    }
+
+    // exclude pure under-/overflow bins
+    if (fBins1->FindFixBin(axisVar1 + 0.5*axisVarWidth1) == 0)
+        return;
+    if (fBins1->FindFixBin(axisVar1 - 0.5*axisVarWidth1) == fBins1->GetNbins()+1)
+        return;
+
+    // find bins and partial weights
+    std::vector<std::pair<Int_t, Double_t>> bins;
+    FAUtils::CalcBinOverlapWeights(fBins1, axisVar1, axisVarWidth1, bins);
+
+    // fill all bins
+    for (const std::pair<Int_t, Double_t>& p : bins)
+    {
+        // skip partial under- and overflow bins
+        if (p.first == 0 || p.first == fBins1->GetNbins()+1)
+            continue;
+
+        // binned filling
+        if (fMode == kBinned || fMode == kBoth)
+        {
+            for (Int_t i = 0; i < fNHist; i++)
+                fHist[i]->Fill(weight, p.second, p.first-1, bin2);
+        }
+    }
 }
 
 //______________________________________________________________________________
