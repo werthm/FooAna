@@ -47,7 +47,9 @@ FAAnalysis::FAAnalysis(const Char_t* cfg)
 
     // load data
     fChain = new TChain(gEnv->GetValue("FA.Analysis.TreeName", "null"));
-    fChain->Add(gEnv->GetValue("FA.Analysis.Input", "null"));
+    const Char_t* input = gEnv->GetValue("FA.Analysis.Input", "null");
+    if (strcmp(input, "null"))
+        fChain->Add(input);
 
     // set up progress monitoring
     if (gEnv->GetValue("FA.Analysis.Progress", 1))
@@ -98,6 +100,15 @@ TAxis* FAAnalysis::CreateAxis(Int_t index)
     {
         return 0;
     }
+}
+
+//______________________________________________________________________________
+void FAAnalysis::AddInput(const Char_t* path)
+{
+    // Add the path 'path' to the input chain.
+
+    if (fChain)
+        fChain->Add(path);
 }
 
 //______________________________________________________________________________

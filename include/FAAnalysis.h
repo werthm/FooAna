@@ -47,6 +47,8 @@ public:
     TAxis* GetAxis1() const { return fAxis1; }
     TAxis* GetAxis2() const { return fAxis2; }
 
+    void AddInput(const Char_t* path);
+
     void Process(std::function<FAAnalysisResult* (TTreeReader&)> func);
     void WriteOutputFile(const Char_t* out = 0);
 
