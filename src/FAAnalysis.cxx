@@ -83,16 +83,57 @@ TAxis* FAAnalysis::CreateAxis(Int_t index)
     // find axis config
     const Char_t* binsAxis = gEnv->GetValue(TString::Format("FA.Analysis.Axis%d.Binning",
                                                             index).Data(), "null");
+
     // create axis
     if (strcmp(binsAxis, "null"))
     {
-        TAxis* a = new TAxis(FAUtils::CreateVariableAxis(binsAxis));
+        TAxis* a = 0;
+
+        // check for file
+        if (FAUtils::FileExists(binsAxis))
+        {
+            // try to read file
+            FILE* fin = fopen(FAUtils::ExpandPath(binsAxis).Data(), "r");
+            if (fin)
+            {
+                // read the file
+                TString binning;
+                Char_t buff[256];
+                while (fgets(buff, sizeof(buff), fin) != 0)
+                {
+                    // edit line content
+                    TString s(buff);
+                    s.ReplaceAll("\n", "");
+                    s.ReplaceAll("\r", "");
+                    s.ReplaceAll(" ", "");
+
+                    // concatenate binning
+                    if (s != "")
+                    {
+                        binning += s;
+                        binning += " ";
+                    }
+                }
+                fclose(fin);
+
+                // create axis
+                a = new TAxis(FAUtils::CreateVariableAxis(binning.Data()));
+            }
+        }
+        else
+        {
+            // direct bin edges
+            a = new TAxis(FAUtils::CreateVariableAxis(binsAxis));
+        }
 
         // check for name config
-        const Char_t* nameAxis = gEnv->GetValue(TString::Format("FA.Analysis.Axis%d.Name",
-                                                index).Data(), "null");
-        if (strcmp(nameAxis, "null"))
-            a->SetNameTitle(nameAxis, nameAxis);
+        if (a)
+        {
+            const Char_t* nameAxis = gEnv->GetValue(TString::Format("FA.Analysis.Axis%d.Name",
+                                                    index).Data(), "null");
+            if (strcmp(nameAxis, "null"))
+                a->SetNameTitle(nameAxis, nameAxis);
+        }
 
         return a;
     }
