@@ -246,22 +246,6 @@ void FAVarFiller::Fill(Double_t weight, Double_t axisVar1, Double_t axisVar2)
     // 'axisVar1' and 'axisVar2' as variables for the first and second bin
     // axis variables, respectively.
 
-    // check all variables for NaN
-    FAVarAbs* badVar = 0;
-    for (Int_t i = 0; i < fNVar; i++)
-    {
-        if (TMath::IsNaN(fVar[i]->AsDouble()))
-        {
-            badVar = fVar[i];
-            break;
-        }
-    }
-    if (badVar)
-    {
-        Error("Fill", "Variable '%s' is NaN, this event will not be filled!", badVar->GetName());
-        return;
-    }
-
     // find bin
     Int_t bin1 = 0;
     Int_t bin2 = 0;
@@ -285,6 +269,32 @@ void FAVarFiller::Fill(Double_t weight, Double_t axisVar1, Double_t axisVar2)
     {
         bin1 = 0;
         bin2 = 0;
+    }
+
+    // fill bin
+    FillBin(weight, bin1, bin2);
+}
+
+//______________________________________________________________________________
+void FAVarFiller::FillBin(Double_t weight, Int_t bin1, Int_t bin2)
+{
+    // Fill all analysis variables using the weight 'weight' and 'bin1' and 'bin2'
+    // as the first and second axis bins, respectively.
+
+    // check all variables for NaN
+    FAVarAbs* badVar = 0;
+    for (Int_t i = 0; i < fNVar; i++)
+    {
+        if (TMath::IsNaN(fVar[i]->AsDouble()))
+        {
+            badVar = fVar[i];
+            break;
+        }
+    }
+    if (badVar)
+    {
+        Error("FillBin", "Variable '%s' is NaN, this event will not be filled!", badVar->GetName());
+        return;
     }
 
     // binned filling

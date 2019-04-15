@@ -68,6 +68,7 @@ public:
     void AddHistogram3D(FAVarAbs* varX, FAVarAbs* varY, FAVarAbs* varZ);
     void Init(EFillMode mode);
     void Fill(Double_t weight = 1, Double_t axisVar1 = 0, Double_t axisVar2 = 0);
+    void FillBin(Double_t weight = 1, Int_t bin1 = 0, Int_t bin2 = 0);
     void AddObjectsToList(TList* list);
     void WriteFile(const Char_t* filename);
 
