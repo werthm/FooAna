@@ -159,11 +159,12 @@ void FAAnalysis::WriteOutputFile(const Char_t* out)
         return;
     }
 
-    // user info
-    Info("WriteOutputFile", "Merging %d partial output files", fResult->GetNFiles());
-
     // output file
     const Char_t* outfile = out ? out : gEnv->GetValue("FA.Analysis.Output", "out.root");
+
+    // user info
+    Info("WriteOutputFile", "Merging %d partial output files into '%s'",
+         fResult->GetNFiles(), outfile);
 
     // merge partial output files
     TFileMerger merger(kFALSE);
