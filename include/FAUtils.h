@@ -27,6 +27,8 @@ namespace FAUtils
 
     TString FormatTimeSec(Double_t seconds);
     TString ExtractFileName(const Char_t* s);
+    TString ExpandPath(const Char_t* p);
+    Bool_t FileExists(const Char_t* f);
 
     TAxis CreateVariableAxis(const Char_t* binning);
     Int_t CalcBinOverlapWeights(TAxis* axis, Double_t x, Double_t x_width,

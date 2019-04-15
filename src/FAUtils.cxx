@@ -132,6 +132,32 @@ TString FAUtils::ExtractFileName(const Char_t* s)
 }
 
 //______________________________________________________________________________
+TString FAUtils::ExpandPath(const Char_t* p)
+{
+    // Expand the path 'p'.
+
+    Char_t* fnt = gSystem->ExpandPathName(p);
+    TString out(fnt);
+    delete fnt;
+    return out;
+}
+
+//______________________________________________________________________________
+Bool_t FAUtils::FileExists(const Char_t* f)
+{
+    // Return kTRUE if the file 'f' exists, otherwise return kFALSE.
+
+    // expand filename
+    TString fn = ExpandPath(f);
+
+    // check file
+    if (!gSystem->AccessPathName(fn.Data()))
+        return kTRUE;
+    else
+        return kFALSE;
+}
+
+//______________________________________________________________________________
 TAxis FAUtils::CreateVariableAxis(const Char_t* binning)
 {
     // Create an axis having variable bin sizes using the low edge string list
