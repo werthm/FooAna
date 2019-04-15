@@ -167,6 +167,9 @@ void FAVarHistogram::CreateHistograms()
                                            fVarX->GetBins()->GetXmin(),
                                            fVarX->GetBins()->GetXmax());
 
+                // call Sumw2 for 1-dim. histograms
+                fHist[i][j]->Sumw2();
+
                 // x-axis title
                 if (fVarX->HasUnit())
                     fHist[i][j]->GetXaxis()->SetTitle(TString::Format("%s [%s]", fVarX->GetTitle(), fVarX->GetUnit()));
@@ -302,6 +305,62 @@ void FAVarHistogram::Fill(Double_t weight, Int_t bin1, Int_t bin2)
             !(fVarZ->TestBits(FAVarAbs::kNoFill)))
          ((TH3*)fHist[bin1][bin2])->Fill(fVarX->AsDouble(), fVarY->AsDouble(), fVarZ->AsDouble(),
                                          weight * fVarX->GetWeight() * fVarY->GetWeight() * fVarZ->GetWeight());
+    }
+}
+
+//______________________________________________________________________________
+void FAVarHistogram::Fill(Double_t weight, Double_t part_weight, Int_t bin1, Int_t bin2)
+{
+    // Fill the histogram in 'bin1', 'bin2' using the weight 'weight' and the
+    // partial (splitting) weight 'part_weight'.
+
+    // check for histogram
+    if (!fHist || !fHist[bin1][bin2])
+        return;
+
+    // shortcut
+    TH1* h = fHist[bin1][bin2];
+
+    // check histogram type
+    Int_t dim = h->GetDimension();
+    if (dim == 1)
+    {
+        if (!(fVarX->TestBits(FAVarAbs::kNoFill)))
+        {
+            Int_t gbin = h->GetXaxis()->FindFixBin(fVarX->AsDouble());
+            Double_t fill = weight * fVarX->GetWeight();
+            h->SetBinContent(gbin, h->GetBinContent(gbin) + fill * part_weight);
+            if (h->GetSumw2()->fN)
+                h->GetSumw2()->fArray[gbin] += fill * fill * part_weight;
+        }
+    }
+    else if (dim == 2)
+    {
+        if (!(fVarX->TestBits(FAVarAbs::kNoFill)) &&
+            !(fVarY->TestBits(FAVarAbs::kNoFill)))
+        {
+            Int_t gbin = h->GetBin(h->GetXaxis()->FindFixBin(fVarX->AsDouble()),
+                                   h->GetYaxis()->FindFixBin(fVarY->AsDouble()));
+            Double_t fill = weight * fVarX->GetWeight() * fVarY->GetWeight();
+            h->SetBinContent(gbin, h->GetBinContent(gbin) + fill * part_weight);
+            if (h->GetSumw2()->fN)
+                h->GetSumw2()->fArray[gbin] += fill * fill * part_weight;
+        }
+    }
+    else if (dim == 3)
+    {
+        if (!(fVarX->TestBits(FAVarAbs::kNoFill)) &&
+            !(fVarY->TestBits(FAVarAbs::kNoFill)) &&
+            !(fVarZ->TestBits(FAVarAbs::kNoFill)))
+        {
+            Int_t gbin = h->GetBin(h->GetXaxis()->FindFixBin(fVarX->AsDouble()),
+                                   h->GetYaxis()->FindFixBin(fVarY->AsDouble()),
+                                   h->GetYaxis()->FindFixBin(fVarZ->AsDouble()));
+            Double_t fill = weight * fVarX->GetWeight() * fVarY->GetWeight() * fVarZ->GetWeight();
+            h->SetBinContent(gbin, h->GetBinContent(gbin) + fill * part_weight);
+            if (h->GetSumw2()->fN)
+                h->GetSumw2()->fArray[gbin] += fill * fill * part_weight;
+        }
     }
 }
 
