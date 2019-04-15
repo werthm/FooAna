@@ -223,6 +223,28 @@ void FAAnalysis::WriteOutputFile(const Char_t* out)
 }
 
 //______________________________________________________________________________
+void FAAnalysis::Print(Option_t* option) const
+{
+    // Print the content of this class.
+
+    printf("########################\n");
+    printf("FAAnalysis configuration\n");
+    printf("########################\n");
+    printf("Number of workers               : %d\n", gEnv->GetValue("FA.Analysis.NWorker", 1));
+    printf("Tree name                       : %s\n", gEnv->GetValue("FA.Analysis.TreeName", "null"));
+    printf("Files in chain                  : %d\n", fChain ? fChain->GetListOfFiles()->GetEntries() : 0);
+    printf("Progress monitoring             : ");
+    if (gEnv->GetValue("FA.Analysis.Progress", 1))
+        printf("yes\n");
+    else
+        printf("no\n");
+    printf("Axis 1 name                     : %s\n", fAxis1 ? fAxis1->GetName() : "empty");
+    printf("Axis 1 bins                     : %d\n", fAxis1 ? fAxis1->GetNbins() : 0);
+    printf("Axis 2 name                     : %s\n", fAxis2 ? fAxis2->GetName() : "empty");
+    printf("Axis 2 bins                     : %d\n", fAxis2 ? fAxis2->GetNbins() : 0);
+}
+
+//______________________________________________________________________________
 FAAnalysisResult* FAAnalysis::WritePartialOutput(FAVarFiller& filler, const Char_t* inFile)
 {
     // Write the partial output from the filler 'filler' to a file in the current

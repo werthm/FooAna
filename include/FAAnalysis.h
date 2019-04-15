@@ -52,6 +52,8 @@ public:
     void Process(std::function<FAAnalysisResult* (TTreeReader&)> func);
     void WriteOutputFile(const Char_t* out = 0);
 
+    virtual void Print(Option_t* option = "") const;
+
     static FAAnalysisResult* WritePartialOutput(FAVarFiller& filler, const Char_t* inFile);
 
     ClassDef(FAAnalysis, 0)  // analysis wrapper
