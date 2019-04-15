@@ -20,13 +20,19 @@ class FAAnalysisA2 : public FAAnalysis
 {
 
 protected:
-    Int_t fNTagg;              // number of tagger channels
-    Double_t* fTaggE;          //[fNTagg] tagger energy
-    Double_t* fTaggEWidth;     //[fNTagg] tagger energy width
+    Int_t fNTagg;                       // number of tagger channels
+    Double_t* fTaggE;                   //[fNTagg] tagger energy
+    Double_t* fTaggEWidth;              //[fNTagg] tagger energy width
+    Double_t fTrig_CB_ESum_Mean;        // mean of CB energy sum software trigger
+    Double_t fTrig_CB_ESum_Sigma;       // sigma of CB energy sum software trigger
+    Int_t fTrig_Mult_Total;             // total trigger multiplicity
+    Bool_t fIsTrig_Mult_TAPS;           // flag indicating if TAPS is included in multiplicity
 
 public:
     FAAnalysisA2() : FAAnalysis(),
-                     fNTagg(0), fTaggE(0), fTaggEWidth(0) { }
+                     fNTagg(0), fTaggE(0), fTaggEWidth(0),
+                     fTrig_CB_ESum_Mean(0), fTrig_CB_ESum_Sigma(0),
+                     fTrig_Mult_Total(0), fIsTrig_Mult_TAPS(kFALSE) { }
     FAAnalysisA2(const Char_t* cfg);
     virtual ~FAAnalysisA2();
 
@@ -35,6 +41,8 @@ public:
     Double_t* GetTaggEWidth() const { return fTaggEWidth; }
     Double_t GetTaggE(Int_t c) const { return fTaggE[c]; }
     Double_t GetTaggEWidth(Int_t c) const { return fTaggEWidth[c]; }
+
+    Bool_t IsTrigger(Double_t cb_esum, Int_t mult_cb = 9999, Int_t mult_taps = 9999) const;
 
     ClassDef(FAAnalysisA2, 0)  // A2 analysis wrapper
 };

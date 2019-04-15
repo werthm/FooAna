@@ -12,6 +12,7 @@
 
 
 #include "TEnv.h"
+#include "TRandom.h"
 
 #include "FAAnalysisA2.h"
 #include "FAUtilsA2.h"
@@ -46,6 +47,12 @@ FAAnalysisA2::FAAnalysisA2(const Char_t* cfg)
         else
             Warning("FAAnalysisA2", "Could not load tagger calibration!");
     }
+
+    // load software trigger settings
+    fTrig_CB_ESum_Mean = gEnv->GetValue("FA.Analysis.A2.Trig.CB.ESum.Mean", 0.);
+    fTrig_CB_ESum_Sigma = gEnv->GetValue("FA.Analysis.A2.Trig.CB.ESum.Sigma", 0.);
+    fTrig_Mult_Total = gEnv->GetValue("FA.Analysis.A2.Trig.Mult.Total", 0);
+    fIsTrig_Mult_TAPS = (Bool_t)gEnv->GetValue("FA.Analysis.A2.Trig.Mult.UseTAPS", 1);
 }
 
 //______________________________________________________________________________
@@ -57,5 +64,25 @@ FAAnalysisA2::~FAAnalysisA2()
         delete [] fTaggE;
     if (fTaggEWidth)
         delete [] fTaggEWidth;
+}
+
+//______________________________________________________________________________
+Bool_t FAAnalysisA2::IsTrigger(Double_t cb_esum, Int_t mult_cb, Int_t mult_taps) const
+{
+    // Return kTRUE if the trigger conditions specified in the analysis config
+    // file are fulfilled for this event. Otherwise return kFALSE.
+
+    // check CB energy sum trigger
+    if (cb_esum < gRandom->Gaus(fTrig_CB_ESum_Mean, fTrig_CB_ESum_Sigma))
+        return kFALSE;
+
+    // check total multiplicity
+    Int_t mult = mult_cb;
+    if (fIsTrig_Mult_TAPS)
+        mult += mult_taps;
+    if (mult < fTrig_Mult_Total)
+        return kFALSE;
+
+    return kTRUE;
 }
 
