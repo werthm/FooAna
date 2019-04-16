@@ -174,18 +174,24 @@ void FAAnalysis::Process(std::function<FAAnalysisResult* (TTreeReader&)> func)
         delete fResult;
 
     // connect to progress server
-    FAProgressClient progress("localhost", fProgSrvPort);
+    FAProgressClient* progress = 0;
+    if (fProgSrvPort)
+        progress = new FAProgressClient("localhost", fProgSrvPort);
 
     // start progress monitoring
-    progress.RequestInit(nEntries);
+    if (progress)
+        progress->RequestInit(nEntries);
 
     // process events
     ROOT::TTreeProcessorMP workers(nWorkers);
     fResult = workers.Process(*fChain, func);
 
     // stop progress monitoring
-    progress.RequestFinish();
-    progress.RequestStop();
+    if (progress)
+    {
+        progress->RequestFinish();
+        progress->RequestStop();
+    }
 }
 
 //______________________________________________________________________________
