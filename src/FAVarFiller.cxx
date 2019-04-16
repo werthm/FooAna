@@ -346,14 +346,17 @@ void FAVarFiller::FillBin(Double_t weight, Int_t bin1, Int_t bin2)
 }
 
 //______________________________________________________________________________
-void FAVarFiller::FillOverlap(Double_t weight, Double_t axisVar1, Double_t axisVarWidth1,
-                              Double_t axisVar2)
+void FAVarFiller::FillOverlap(std::function<Double_t(void)> wFunc, Double_t axisVar1,
+                              Double_t axisVarWidth1, Double_t axisVar2)
 {
-    // Fill all analysis variables using the weight 'weight' and the values of
-    // 'axisVar1' and 'axisVar2' as variables for the first and second bin
-    // axis variables, respectively.
+    // Fill all analysis variables using the weight provided by the function
+    // 'wFunc', and the values of 'axisVar1' and 'axisVar2' as variables for the
+    // first and second bin axis variables, respectively.
     // The weight will be split across several primary bins according to 'axisVar1'
     // and the width 'axisVarWidth1' associated with 'axisVar1'.
+    // The weighting function will only be called for event that will be filled,
+    // i.e. are within the range of the binning variables.
+    // If the weighting function returns 0, the event will not be filled.
     // NOTE: This method is not yet implemented for unbinned filling.
 
     // check all variables for NaN
@@ -386,7 +389,9 @@ void FAVarFiller::FillOverlap(Double_t weight, Double_t axisVar1, Double_t axisV
     }
     else if (!fBins1 && !fBins2)
     {
-        FillBin(weight, 0, 0);
+        Double_t weight = wFunc();
+        if (weight != 0)
+            FillBin(weight, 0, 0);
         return;
     }
 
@@ -399,6 +404,17 @@ void FAVarFiller::FillOverlap(Double_t weight, Double_t axisVar1, Double_t axisV
     // find bins and partial weights
     std::vector<std::pair<Int_t, Double_t>> bins;
     FAUtils::CalcBinOverlapWeights(fBins1, axisVar1, axisVarWidth1, bins);
+
+    // leave if there are no bins to fill
+    if (!bins.size())
+        return;
+
+    // call weighting function
+    Double_t weight = wFunc();
+
+    // skip filling with weight 0
+    if (weight == 0)
+        return;
 
     // fill all bins
     for (const std::pair<Int_t, Double_t>& p : bins)
