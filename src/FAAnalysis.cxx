@@ -214,23 +214,35 @@ void FAAnalysis::WriteOutputFile(const Char_t* out)
     // output file
     const Char_t* outfile = out ? out : gEnv->GetValue("FA.Analysis.Output", "out.root");
 
-    // user info
-    Info("WriteOutputFile", "Merging %d partial output files into '%s'",
-         fResult->GetNFiles(), outfile);
+    //
+    // create total output
+    //
 
-    // merge partial output files
-    TFileMerger merger(kFALSE);
-    merger.OutputFile(outfile, "recreate");
-    for (Int_t i = 0; i < fResult->GetNFiles(); i++)
+    if (fResult->GetNFiles() == 1)
     {
-        if (!merger.AddFile(fResult->GetFile(i), kFALSE))
-            Error("WriteOutputFile", "Partial output file '%s' was not found!", fResult->GetFile(i));
+        Info("WriteOutputFile", "Renaming output file to '%s'", outfile);
+        gSystem->Rename(fResult->GetFile(0), outfile);
     }
-    merger.Merge();
+    else
+    {
+        // user info
+        Info("WriteOutputFile", "Merging %d partial output files into '%s'",
+             fResult->GetNFiles(), outfile);
 
-    // delete partial output files
-    for (Int_t i = 0; i < fResult->GetNFiles(); i++)
-        gSystem->Unlink(fResult->GetFile(i));
+        // merge partial output files
+        TFileMerger merger(kFALSE);
+        merger.OutputFile(outfile, "recreate");
+        for (Int_t i = 0; i < fResult->GetNFiles(); i++)
+        {
+            if (!merger.AddFile(fResult->GetFile(i), kFALSE))
+                Error("WriteOutputFile", "Partial output file '%s' was not found!", fResult->GetFile(i));
+        }
+        merger.Merge();
+
+        // delete partial output files
+        for (Int_t i = 0; i < fResult->GetNFiles(); i++)
+            gSystem->Unlink(fResult->GetFile(i));
+    }
 }
 
 //______________________________________________________________________________
