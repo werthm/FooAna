@@ -33,7 +33,7 @@ public:
                      fNTagg(0), fTaggE(0), fTaggEWidth(0),
                      fTrig_CB_ESum_Mean(0), fTrig_CB_ESum_Sigma(0),
                      fTrig_Mult_Total(0), fIsTrig_Mult_TAPS(kFALSE) { }
-    FAAnalysisA2(const Char_t* cfg);
+    FAAnalysisA2(const Char_t* cfg, const Char_t* treeName = 0);
     virtual ~FAAnalysisA2();
 
     Int_t GetNTagg() const { return fNTagg; }

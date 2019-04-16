@@ -40,7 +40,7 @@ public:
     FAAnalysis() : TObject(),
                    fChain(0), fProgSrvPort(0), fResult(0),
                    fAxis1(0), fAxis2(0) { }
-    FAAnalysis(const Char_t* cfg);
+    FAAnalysis(const Char_t* cfg, const Char_t* treeName = 0);
     virtual ~FAAnalysis();
 
     Int_t GetProgressSrvPort() const { return fProgSrvPort; }

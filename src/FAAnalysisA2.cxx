@@ -20,8 +20,8 @@
 ClassImp(FAAnalysisA2)
 
 //______________________________________________________________________________
-FAAnalysisA2::FAAnalysisA2(const Char_t* cfg)
-    : FAAnalysis(cfg)
+FAAnalysisA2::FAAnalysisA2(const Char_t* cfg, const Char_t* treeName)
+    : FAAnalysis(cfg, treeName)
 {
     // Constructor.
 

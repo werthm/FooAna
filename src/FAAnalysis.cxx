@@ -29,7 +29,7 @@
 ClassImp(FAAnalysis)
 
 //______________________________________________________________________________
-FAAnalysis::FAAnalysis(const Char_t* cfg)
+FAAnalysis::FAAnalysis(const Char_t* cfg, const Char_t* treeName)
     : TObject()
 {
     // Constructor.
@@ -45,8 +45,13 @@ FAAnalysis::FAAnalysis(const Char_t* cfg)
     // load configuration
     gEnv->ReadFile(cfg, kEnvLocal);
 
-    // load data
-    fChain = new TChain(gEnv->GetValue("FA.Analysis.TreeName", "null"));
+    // prepare chain
+    if (treeName)
+        fChain = new TChain(treeName);
+    else
+        fChain = new TChain(gEnv->GetValue("FA.Analysis.TreeName", "null"));
+
+    // add data to chain
     const Char_t* input = gEnv->GetValue("FA.Analysis.Input", "null");
     if (strcmp(input, "null"))
         fChain->Add(input);
@@ -237,7 +242,7 @@ void FAAnalysis::Print(Option_t* option) const
     printf("FAAnalysis configuration\n");
     printf("########################\n");
     printf("Number of workers               : %d\n", gEnv->GetValue("FA.Analysis.NWorker", 1));
-    printf("Tree name                       : %s\n", gEnv->GetValue("FA.Analysis.TreeName", "null"));
+    printf("Tree name                       : %s\n", fChain ? fChain->GetName() : "empty");
     printf("Files in chain                  : %d\n", fChain ? fChain->GetListOfFiles()->GetEntries() : 0);
     printf("Progress monitoring             : ");
     if (gEnv->GetValue("FA.Analysis.Progress", 1))
