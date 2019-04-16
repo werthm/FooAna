@@ -18,6 +18,9 @@
 #include "TTreeReader.h"
 #include "TFileMerger.h"
 #include "TSystem.h"
+#include "TH2.h"
+#include "TGraph.h"
+#include "TCutG.h"
 #include "ROOT/TTreeProcessorMP.hxx"
 
 #include "FAAnalysis.h"
@@ -63,6 +66,12 @@ FAAnalysis::FAAnalysis(const Char_t* cfg, const Char_t* treeName)
     // generate axes
     fAxis1 = CreateAxis(1);
     fAxis2 = CreateAxis(2);
+
+    // load objects
+    LoadObjects("TH1", fObj_TH1);
+    LoadObjects("TH2", fObj_TH2);
+    LoadObjects("TGraph", fObj_TGraph);
+    LoadObjects("TCutG", fObj_TCutG);
 }
 
 //______________________________________________________________________________
@@ -78,6 +87,14 @@ FAAnalysis::~FAAnalysis()
         delete fAxis1;
     if (fAxis2)
         delete fAxis2;
+    for (TH1* i : fObj_TH1)
+        delete i;
+    for (TH2* i : fObj_TH2)
+        delete i;
+    for (TGraph* i : fObj_TGraph)
+        delete i;
+    for (TCutG* i : fObj_TCutG)
+        delete i;
 }
 
 //______________________________________________________________________________
@@ -145,6 +162,52 @@ TAxis* FAAnalysis::CreateAxis(Int_t index)
     else
     {
         return 0;
+    }
+}
+
+//______________________________________________________________________________
+template <class T>
+void FAAnalysis::LoadObjects(const Char_t* objName, std::vector<T*>& list)
+{
+    // Load objects used in analyses.
+
+    // get number of objects
+    Int_t n = gEnv->GetValue(Form("FA.Analysis.Load.%s.N", objName), 0);
+
+    // try to load objects
+    for (Int_t i = 0; i < n; i++)
+    {
+        // get file and object name
+        const Char_t* file = gEnv->GetValue(Form("FA.Analysis.Load.%s.%d.File",
+                                                 objName, i), "null");
+        const Char_t* name = gEnv->GetValue(Form("FA.Analysis.Load.%s.%d.Name",
+                                                  objName, i), "null");
+
+        // check file name
+        if (!strcmp(file, "null"))
+        {
+            ::Error("FAAnalysis::LoadObjects", "File name of object %d to load not found!", i);
+            continue;
+        }
+
+        // check object name
+        if (!strcmp(name, "null"))
+        {
+            ::Error("FAAnalysis::LoadObjects", "Name of object %d to load not found!", i);
+            continue;
+        }
+
+        // load object
+        T* obj = 0;
+        FAUtils::LoadObject(file, name, obj);
+
+        // add to list
+        if (obj)
+        {
+            ::Info("FAAnalysis::LoadObjects", "Loaded %s object '%s' at index %d",
+                   objName, obj->GetName(), i);
+            list.push_back(obj);
+        }
     }
 }
 
@@ -265,6 +328,18 @@ void FAAnalysis::Print(Option_t* option) const
     printf("Axis 1 bins                     : %d\n", fAxis1 ? fAxis1->GetNbins() : 0);
     printf("Axis 2 name                     : %s\n", fAxis2 ? fAxis2->GetName() : "empty");
     printf("Axis 2 bins                     : %d\n", fAxis2 ? fAxis2->GetNbins() : 0);
+    printf("Loaded TH1 objects              : %lu\n", fObj_TH1.size());
+    for (UInt_t i = 0; i < fObj_TH1.size(); i++)
+        printf("  [%2u]  %s\n", i, fObj_TH1[i]->GetName());
+    printf("Loaded TH2 objects              : %lu\n", fObj_TH2.size());
+    for (UInt_t i = 0; i < fObj_TH2.size(); i++)
+        printf("  [%2u]  %s\n", i, fObj_TH2[i]->GetName());
+    printf("Loaded TGraph objects           : %lu\n", fObj_TGraph.size());
+    for (UInt_t i = 0; i < fObj_TGraph.size(); i++)
+        printf("  [%2u]  %s\n", i, fObj_TGraph[i]->GetName());
+    printf("Loaded TCutG objects            : %lu\n", fObj_TCutG.size());
+    for (UInt_t i = 0; i < fObj_TCutG.size(); i++)
+        printf("  [%2u]  %s\n", i, fObj_TCutG[i]->GetName());
 }
 
 //______________________________________________________________________________
