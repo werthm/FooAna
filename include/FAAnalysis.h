@@ -56,10 +56,10 @@ public:
     Int_t GetProgressSrvPort() const { return fProgSrvPort; }
     TAxis* GetAxis1() const { return fAxis1; }
     TAxis* GetAxis2() const { return fAxis2; }
-    TH1* GetObjectTH1(Int_t i) const { return fObj_TH1[i]; }
-    TH2* GetObjectTH2(Int_t i) const { return fObj_TH2[i]; }
-    TGraph* GetObjectTGraph(Int_t i) const { return fObj_TGraph[i]; }
-    TCutG* GetObjectTCutG(Int_t i) const { return fObj_TCutG[i]; }
+    TH1* GetTH1(Int_t i) const { return fObj_TH1[i]; }
+    TH2* GetTH2(Int_t i) const { return fObj_TH2[i]; }
+    TGraph* GetTGraph(Int_t i) const { return fObj_TGraph[i]; }
+    TCutG* GetTCutG(Int_t i) const { return fObj_TCutG[i]; }
 
     void AddInput(const Char_t* path);
 
