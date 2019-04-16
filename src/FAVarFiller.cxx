@@ -241,28 +241,28 @@ void FAVarFiller::AddHistogram3D(FAVarAbs* varX, FAVarAbs* varY, FAVarAbs* varZ)
 }
 
 //______________________________________________________________________________
-void FAVarFiller::Fill(Double_t weight, Double_t axisVar1, Double_t axisVar2)
+Bool_t FAVarFiller::FindBin(Double_t axisVar1, Double_t axisVar2, Int_t& bin1, Int_t& bin2)
 {
-    // Fill all analysis variables using the weight 'weight' and the values of
-    // 'axisVar1' and 'axisVar2' as variables for the first and second bin
-    // axis variables, respectively.
+    // Find the bins 'bin1' and 'bin2' corresponding to the 'axisVar1' and
+    // 'axisVar2' bin axis values.
+    // Return kFALSE for under/overflow bins.
 
     // find bin
-    Int_t bin1 = 0;
-    Int_t bin2 = 0;
+    bin1 = 0;
+    bin2 = 0;
     if (fBins1 && fBins2)
     {
         if (axisVar1 < fBins1->GetXmin() || axisVar1 >= fBins1->GetXmax())
-            return;
+            return kFALSE;
         if (axisVar2 < fBins2->GetXmin() || axisVar2 >= fBins2->GetXmax())
-            return;
+            return kFALSE;
         bin1 = fBins1->FindFixBin(axisVar1)-1;
         bin2 = fBins2->FindFixBin(axisVar2)-1;
     }
     else if (fBins1 && !fBins2)
     {
         if (axisVar1 < fBins1->GetXmin() || axisVar1 >= fBins1->GetXmax())
-            return;
+            return kFALSE;
         bin1 = fBins1->FindFixBin(axisVar1)-1;
         bin2 = 0;
     }
@@ -272,8 +272,43 @@ void FAVarFiller::Fill(Double_t weight, Double_t axisVar1, Double_t axisVar2)
         bin2 = 0;
     }
 
+    return kTRUE;
+}
+
+//______________________________________________________________________________
+void FAVarFiller::Fill(Double_t weight, Double_t axisVar1, Double_t axisVar2)
+{
+    // Fill all analysis variables using the weight 'weight' and the values of
+    // 'axisVar1' and 'axisVar2' as variables for the first and second bin
+    // axis variables, respectively.
+
+    Int_t bin1, bin2;
+    if (FindBin(axisVar1, axisVar2, bin1, bin2))
+        FillBin(weight, bin1, bin2);
+}
+
+//______________________________________________________________________________
+void FAVarFiller::Fill(std::function<Double_t(void)> wFunc, Double_t axisVar1, Double_t axisVar2)
+{
+    // Fill all analysis variables using the weight provided by the function
+    // 'wFunc', and the values of 'axisVar1' and 'axisVar2' as variables for the
+    // first and second bin axis variables, respectively.
+    // The weighting function will only be called for event that will be filled,
+    // i.e. are within the range of the binning variables.
+    // If the weighting function returns 0, the event will not be filled.
+
+    Int_t bin1, bin2;
+
+    // find the bin
+    if (!FindBin(axisVar1, axisVar2, bin1, bin2))
+        return;
+
+    // call weighting function
+    Double_t weight = wFunc();
+
     // fill bin
-    FillBin(weight, bin1, bin2);
+    if (weight != 0)
+        FillBin(weight, bin1, bin2);
 }
 
 //______________________________________________________________________________
