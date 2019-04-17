@@ -15,26 +15,23 @@
 #define FooAna_FAVarParticleA2
 
 #include "FAVarList.h"
-#include "FAVarAbs.h"
-
-class FAParticleA2_B;
-class FAParticleA2_BF1;
+#include "FAVar.h"
 
 class FAVarParticleA2 : public FAVarList
 {
 
 protected:
-    FAVarAbs* fVarEnergy;                    // energy
-    FAVarAbs* fVarTheta;                     // polar angle
-    FAVarAbs* fVarCB_dE;                     // deltaE for CB
-    FAVarAbs* fVarTAPS_dE;                   // deltaE for TAPS
-    FAVarAbs* fVarCB_TOF;                    // TOF for CB
-    FAVarAbs* fVarTAPS_TOF;                  // TOF for TAPS
-    FAVarAbs* fVarPSA_A;                     // PSA angle
-    FAVarAbs* fVarPSA_R;                     // PSA radius
-    FAVarAbs* fVarPullTheta;                 // theta pull
-    FAVarAbs* fVarPullPhi;                   // phi pull
-    FAVarAbs* fVarPullT;                     // kinetic energy pull
+    FAVar<Float_t>* fVarEnergy;     // energy
+    FAVar<Float_t>* fVarTheta;      // polar angle
+    FAVar<Float_t>* fVarCB_dE;      // deltaE for CB
+    FAVar<Float_t>* fVarTAPS_dE;    // deltaE for TAPS
+    FAVar<Float_t>* fVarCB_TOF;     // TOF for CB
+    FAVar<Float_t>* fVarTAPS_TOF;   // TOF for TAPS
+    FAVar<Float_t>* fVarPSA_A;      // PSA angle
+    FAVar<Float_t>* fVarPSA_R;      // PSA radius
+    FAVar<Float_t>* fVarPullTheta;  // theta pull
+    FAVar<Float_t>* fVarPullPhi;    // phi pull
+    FAVar<Float_t>* fVarPullT;      // kinetic energy pull
 
 public:
     FAVarParticleA2() : FAVarList(),
@@ -62,8 +59,10 @@ public:
     void AddVarsPull(Int_t nbins = 100, Double_t min = -5, Double_t max = 5,
                      UInt_t statusBits = FAVarAbs::kNoUnbinned);
 
-    FAVarParticleA2& operator=(const FAParticleA2_B& part);
-    FAVarParticleA2& operator=(const FAParticleA2_BF1& part);
+    template <class T>
+    void Set(const T* part);
+    template <class T>
+    void SetKF(const T* part);
 
     ClassDef(FAVarParticleA2, 1)  // analysis variables of A2 particle
 };
