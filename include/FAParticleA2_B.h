@@ -28,14 +28,15 @@ public:
     Double32_t theta;       // polar angle [rad]
     Double32_t phi;         // azimuthal angle [rad]
     Double32_t energy;      // energy [MeV]
+    Double32_t time;        // time [ns]
     Double32_t deltaE;      // deltaE [MeV]
-    Double32_t tof;         // time-of-flight [ns]
+    Double32_t tof;         // normalized time-of-flight [ns]
     Double32_t psa_a;       // PSA angle [deg]
     Double32_t psa_r;       // PSA radius [MeV]
 
     FAParticleA2_B() : TObject(),
                        detector(0), detElem(0),
-                       theta(0), phi(0), energy(0),
+                       theta(0), phi(0), energy(0), time(0),
                        deltaE(0), tof(0),
                        psa_a(0), psa_r(0) { }
     virtual ~FAParticleA2_B() { }
@@ -51,6 +52,7 @@ public:
         printf("Theta [deg]            : %f\n", theta*TMath::RadToDeg());
         printf("Phi [deg]              : %f\n", phi*TMath::RadToDeg());
         printf("Energy                 : %f\n", energy);
+        printf("Time                   : %f\n", time);
         printf("DeltaE                 : %f\n", deltaE);
         printf("time-of-flight         : %f\n", tof);
         printf("PSA angle              : %f\n", psa_a);
@@ -63,6 +65,7 @@ public:
         theta = 0;
         phi = 0;
         energy = 0;
+        time = 0;
         deltaE = 0;
         tof = 0;
         psa_a = 0;
