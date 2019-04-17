@@ -17,6 +17,10 @@
 #include "TObjArray.h"
 #include "TObjString.h"
 #include "TAxis.h"
+#include "TFile.h"
+#include "TH2.h"
+#include "TGraph.h"
+#include "TCutG.h"
 
 #include "FAUtils.h"
 #include "FAVersion.h"
@@ -158,6 +162,53 @@ Bool_t FAUtils::FileExists(const Char_t* f)
 }
 
 //______________________________________________________________________________
+template <class T>
+Bool_t FAUtils::LoadObject(const Char_t* file, const Char_t* name, T*& out)
+{
+    // Load generic TObjects named 'name' from the file 'file' to 'out'.
+
+    // set output object pointer to 0
+    out = 0;
+
+    // try to open the file
+    TString fileExp = ExpandPath(file);
+    TFile f(fileExp.Data());
+
+    // check if file exists
+    if (!f.IsZombie())
+    {
+        // try to load the object
+        f.GetObject(name, out);
+        if (out)
+        {
+            // clone the object
+            out = (T*)out->Clone();
+
+            // unset directory for histograms
+            if (out->InheritsFrom("TH1"))
+            {
+                TH1* h = (TH1*) out;
+                h->SetDirectory(0);
+            }
+
+            return kTRUE;
+        }
+        else
+        {
+            Error("FAUtils::LoadObject", "Could not load the object '%s'!", name);
+            return kFALSE;
+        }
+    }
+    else
+    {
+        // file opening error
+        Error("FAUtils::LoadObject", "Could not open the file '%s' containing the '%s' object!",
+              fileExp.Data(), name);
+        return kFALSE;
+    }
+}
+
+//______________________________________________________________________________
 TAxis FAUtils::CreateVariableAxis(const Char_t* binning)
 {
     // Create an axis having variable bin sizes using the low edge string list
@@ -251,4 +302,10 @@ void FAUtils::Calculate4Vector(Double_t theta, Double_t phi, Double_t t, Double_
     v.SetMagThetaPhi(p, theta, phi);
     p4.SetVect(v);
 }
+
+// template instantiations
+template Bool_t FAUtils::LoadObject(const Char_t*, const Char_t*, TH1*&);
+template Bool_t FAUtils::LoadObject(const Char_t*, const Char_t*, TH2*&);
+template Bool_t FAUtils::LoadObject(const Char_t*, const Char_t*, TGraph*&);
+template Bool_t FAUtils::LoadObject(const Char_t*, const Char_t*, TCutG*&);
 
