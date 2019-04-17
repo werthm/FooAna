@@ -69,41 +69,42 @@ root [1] .x FooAnaMacro.C++
 
 ## Class hierarchy
 ```
-FAAnalysis            : base analysis wrapper
-  FAAnalysisA2        : A2 analysis wrapper
-FAAnalysisResult      : analysis result
+FAAnalysis               : base analysis wrapper
+  FAAnalysisA2           : A2 analysis wrapper
+FAAnalysisResult         : analysis result
 
-FAEventT              : base event class template
-  FAEventA2_B         : A2 event class (basic)
-  FAEventA2_BF1       : A2 event class (basic, kinfit type 1)
-  FAEventA2_BF2       : A2 event class (basic, kinfit type 2)
-  FAEventA2_BF3       : A2 event class (basic, kinfit type 3)
-  FAEventA2_BIF3      : A2 event class (basic, event info, kinfit type 3)
-  FAEventA2_BIF4      : A2 event class (basic, event info, kinfit type 4)
+FAEventT                 : base event class template
+  FAEventA2_B            : A2 event class (basic)
+  FAEventA2_BF1          : A2 event class (basic, kinfit type 1)
+  FAEventA2_BF2          : A2 event class (basic, kinfit type 2)
+  FAEventA2_BF3          : A2 event class (basic, kinfit type 3)
+  FAEventA2_BIF3         : A2 event class (basic, event info, kinfit type 3)
+  FAEventA2_BIF4         : A2 event class (basic, event info, kinfit type 4)
 
-FAParticleA2_B        : A2 particle class (basic)
-FAParticleA2_BF1      : A2 particle class (basic, kinfit type 1)
-FAParticleA2MC_B      : A2 MC particle class (basic)
+FAParticleA2_B           : A2 particle class (basic)
+FAParticleA2_BF1         : A2 particle class (basic, kinfit type 1)
+FAParticleA2MC_B         : A2 MC particle class (basic)
 
-FAVector3             : three-vector class using Double32_t
-  FAVector4           : four-vector class using Double32_t
+FAVector3                : three-vector class using Double32_t
+  FAVector4              : four-vector class using Double32_t
 
-FAVarAbs              : abstract base class for analysis variables
-  FAVar               : analysis variable class template
-FAVarList             : a list of analysis variables
-  FAVarParticleA2     : a list of analysis variables for A2 particles
-FAVarHistogram        : a histogram to be filled with analysis variables
-FAVarFiller           : the histogram/tree filler class for analysis variables
-FAVarPlotter          : the histogram plotter class for analysis variables
-FAVarPlotterEntry     : an entry (histogram(s) from file) to be plotted by FAVarPlotter
+FAVarAbs                 : abstract base class for analysis variables
+  FAVar                  : analysis variable class template
+FAVarList                : a list of analysis variables
+  FAVarParticleA2        : a list of analysis variables for A2 particles
+  FAVarParticleA2_CoincT : a list of coincidence time variables for A2 particles
+FAVarHistogram           : a histogram to be filled with analysis variables
+FAVarFiller              : the histogram/tree filler class for analysis variables
+FAVarPlotter             : the histogram plotter class for analysis variables
+FAVarPlotterEntry        : an entry (histogram(s) from file) to be plotted by FAVarPlotter
 
-FAProgressServer      : processing progress monitoring server
-FAProgressClient      : processing progress monitoring client
-FAProgressMessage     : progress message object
+FAProgressServer         : processing progress monitoring server
+FAProgressClient         : processing progress monitoring client
+FAProgressMessage        : progress message object
 
-FAUtils               : namespace with utility functions
-FAUtilsA2             : namespace with utility functions related to the A2 experiment
-FAConfigA2            : namespace with constants and definitions
+FAUtils                  : namespace with utility functions
+FAUtilsA2                : namespace with utility functions related to the A2 experiment
+FAConfigA2               : namespace with constants and definitions
 ```
 
 ## User Guide

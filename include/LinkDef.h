@@ -44,6 +44,7 @@
 #pragma link C++ class FAVarPlotter+;
 #pragma link C++ class FAVarPlotterEntry+;
 #pragma link C++ class FAVarParticleA2+;
+#pragma link C++ class FAVarParticleA2_CoincT+;
 #pragma link C++ class FAVarHistogram+;
 #pragma link C++ class FAParticleA2_B+;
 #pragma link C++ class FAParticleA2_BF1+;
