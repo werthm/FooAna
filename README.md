@@ -12,6 +12,12 @@ Yet another analysis framework
 
 ## Release notes
 
+### 0.3.0
+April 23, 2019
+* overlap histogram filling
+* loading of TH1, TH2, TGraph, and TCutG objects in analyses
+* smaller improvements
+
 ### 0.2.0
 April 12, 2019
 * added wrapper for multi-threaded TTree analysis
