@@ -68,7 +68,8 @@ public:
 
     virtual void Print(Option_t* option = "") const;
 
-    static FAAnalysisResult* WritePartialOutput(FAVarFiller& filler, const Char_t* inFile);
+    static FAAnalysisResult* WritePartialOutput(FAVarFiller& filler, const Char_t* inFile,
+                                                Bool_t flat = kFALSE);
 
     ClassDef(FAAnalysis, 0)  // analysis wrapper
 };

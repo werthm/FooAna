@@ -384,9 +384,10 @@ void FAVarHistogram::AddHistogramsToList(TList* list)
 }
 
 //______________________________________________________________________________
-void FAVarHistogram::WriteToFile(TFile* fout)
+void FAVarHistogram::WriteToFile(TFile* fout, Bool_t flat)
 {
     // Write the histograms to the file 'fout'.
+    // If 'flat' is kTRUE, a flat directory is structure is used.
 
     // check for histograms
     if (!fHist)
@@ -402,10 +403,14 @@ void FAVarHistogram::WriteToFile(TFile* fout)
         for (Int_t j = 0; j < nb2; j++)
         {
             // create directory for bin
-            if (!fout->GetDirectory(TString::Format("bin_%d_%d", i, j).Data()))
-                fout->mkdir(TString::Format("bin_%d_%d", i, j).Data());
-            fout->cd(TString::Format("bin_%d_%d", i, j).Data());
-            if (fHist[i][j]) fHist[i][j]->Write();
+            if (!flat)
+            {
+                if (!fout->GetDirectory(TString::Format("bin_%d_%d", i, j).Data()))
+                    fout->mkdir(TString::Format("bin_%d_%d", i, j).Data());
+                fout->cd(TString::Format("bin_%d_%d", i, j).Data());
+            }
+            if (fHist[i][j])
+                fHist[i][j]->Write();
         }
     }
 }

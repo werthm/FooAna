@@ -74,7 +74,7 @@ public:
     void FillOverlap(std::function<Double_t(void)> wFunc, Double_t axisVar1,
                      Double_t axisVarWidth1, Double_t axisVar2 = 0);
     void AddObjectsToList(TList* list);
-    void WriteFile(const Char_t* filename);
+    void WriteFile(const Char_t* filename, Bool_t flat = kFALSE);
 
     ClassDef(FAVarFiller, 0)  // analysis variable manager
 };

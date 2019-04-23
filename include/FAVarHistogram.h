@@ -50,7 +50,7 @@ public:
     void Fill(Double_t weight, Int_t bin1, Int_t bin2);
     void Fill(Double_t weight, Double_t part_weight, Int_t bin1, Int_t bin2);
     void AddHistogramsToList(TList* list);
-    void WriteToFile(TFile* fout);
+    void WriteToFile(TFile* fout, Bool_t flat = kFALSE);
 
     ClassDef(FAVarHistogram, 1)  // analysis variable histogram class
 };

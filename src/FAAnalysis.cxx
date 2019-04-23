@@ -343,10 +343,12 @@ void FAAnalysis::Print(Option_t* option) const
 }
 
 //______________________________________________________________________________
-FAAnalysisResult* FAAnalysis::WritePartialOutput(FAVarFiller& filler, const Char_t* inFile)
+FAAnalysisResult* FAAnalysis::WritePartialOutput(FAVarFiller& filler, const Char_t* inFile,
+                                                 Bool_t flat)
 {
     // Write the partial output from the filler 'filler' to a file in the current
     // directory using the input file name 'inFile'.
+    // If 'flat' is kTRUE, a flat directory is structure is used.
 
     // build output file name
     TString fout = FAUtils::ExtractFileName(inFile) + ".out.part";
@@ -355,7 +357,7 @@ FAAnalysisResult* FAAnalysis::WritePartialOutput(FAVarFiller& filler, const Char
     ::Info("FAAnalysis::WritePartialOutput", "Writing partial output file '%s'", fout.Data());
 
     // write partial output
-    filler.WriteFile(fout.Data());
+    filler.WriteFile(fout.Data(), flat);
 
     // create mergeable list of partial output files
     return new FAAnalysisResult("FooAna_Result", fout.Data());

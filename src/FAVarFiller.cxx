@@ -458,9 +458,10 @@ void FAVarFiller::AddObjectsToList(TList* list)
 }
 
 //______________________________________________________________________________
-void FAVarFiller::WriteFile(const Char_t* filename)
+void FAVarFiller::WriteFile(const Char_t* filename, Bool_t flat)
 {
     // Write the analysis variable data to the file 'filename'.
+    // If 'flat' is kTRUE, a flat directory is structure is used.
 
     // open the output file
     TFile* fout = new TFile(filename, "recreate");
@@ -492,7 +493,7 @@ void FAVarFiller::WriteFile(const Char_t* filename)
     if (fMode == kBinned || fMode == kBoth)
     {
         for (Int_t i = 0; i < fNHist; i++)
-            fHist[i]->WriteToFile(fout);
+            fHist[i]->WriteToFile(fout, flat);
     }
 
     // close the file
