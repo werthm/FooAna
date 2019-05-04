@@ -68,6 +68,7 @@ public:
 
     void SetUnit(const Char_t* unit) { fUnit = unit; }
     void SetWeight(Double_t w) { fWeight = w; }
+    virtual void SetDouble(Double_t d) = 0;
 
     void AddRelatedVariable(FAVarAbs* var);
 

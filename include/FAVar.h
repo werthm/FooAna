@@ -45,6 +45,7 @@ public:
     Type GetVar() const { return fVar; }
 
     void SetVar(Type val) { fVar = val; }
+    virtual void SetDouble(Double_t d) { fVar = d; }
 
     virtual Double_t AsDouble() const { return (Double_t)fVar; }
     virtual void* GetVarPtr() const { return (void*)&fVar; }
