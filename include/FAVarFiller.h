@@ -40,6 +40,7 @@ protected:
     TAxis* fBins2;                  // second bin axis (not owned)
     Int_t fNVar;                    // number of analysis variables
     FAVarAbs** fVar;                //[fNVar] array of analysis variables (elements not owned)
+    FAVarAbs* fVarWeight;           // pointer to weighting variable for unbinned (overlap) filling
     EFillMode fMode;                // filling mode
     Bool_t fIsCleanup;              // clean-up flag
     Int_t fNHist;                   // number of histograms
@@ -51,7 +52,7 @@ protected:
 public:
     FAVarFiller() : TNamed(),
                     fBins1(0), fBins2(0),
-                    fNVar(0), fVar(0),
+                    fNVar(0), fVar(0), fVarWeight(0),
                     fIsCleanup(kTRUE),
                     fNHist(0), fHist(0),
                     fTree(0) { }
@@ -63,6 +64,7 @@ public:
 
     void AddVariable(FAVarAbs* var);
     void AddVariableList(FAVarList* list);
+    void SetWeightVariable(FAVarAbs* var) { fVarWeight = var; }
     void AddHistogram1D(FAVarAbs* varX);
     void AddHistogram2D(FAVarAbs* varX, FAVarAbs* varY);
     void AddHistogram3D(FAVarAbs* varX, FAVarAbs* varY, FAVarAbs* varZ);

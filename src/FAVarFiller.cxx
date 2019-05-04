@@ -36,6 +36,7 @@ FAVarFiller::FAVarFiller(const Char_t* name, const Char_t* title, Bool_t doClean
     fBins2 = 0;
     fNVar = 0;
     fVar = 0;
+    fVarWeight = 0;
     fMode= kNone;
     fIsCleanup = doCleanup;
     fNHist = 0;
@@ -357,7 +358,7 @@ void FAVarFiller::FillOverlap(std::function<Double_t(void)> wFunc, Double_t axis
     // The weighting function will only be called for event that will be filled,
     // i.e. are within the range of the binning variables.
     // If the weighting function returns 0, the event will not be filled.
-    // NOTE: This method is not yet implemented for unbinned filling.
+    // NOTE: This method leads to incorrect statistical errors for unbinned filling.
 
     // check all variables for NaN
     FAVarAbs* badVar = 0;
@@ -401,6 +402,13 @@ void FAVarFiller::FillOverlap(std::function<Double_t(void)> wFunc, Double_t axis
     if (fBins1->FindFixBin(axisVar1 - 0.5*axisVarWidth1) == fBins1->GetNbins()+1)
         return;
 
+    // check for linked weight variable for unbinned filling
+    if (!fVarWeight && (fMode == kUnbinned || fMode == kBoth))
+    {
+        Error("FillOverlap", "Pointer to weight variable was not set!");
+        return;
+    }
+
     // find bins and partial weights
     std::vector<std::pair<Int_t, Double_t>> bins;
     FAUtils::CalcBinOverlapWeights(fBins1, axisVar1, axisVarWidth1, bins);
@@ -416,6 +424,11 @@ void FAVarFiller::FillOverlap(std::function<Double_t(void)> wFunc, Double_t axis
     if (weight == 0)
         return;
 
+    // save original weight
+    Double_t orig_weight = 1;
+    if (fVarWeight)
+        orig_weight = fVarWeight->AsDouble();
+
     // fill all bins
     for (const std::pair<Int_t, Double_t>& p : bins)
     {
@@ -428,6 +441,16 @@ void FAVarFiller::FillOverlap(std::function<Double_t(void)> wFunc, Double_t axis
         {
             for (Int_t i = 0; i < fNHist; i++)
                 fHist[i]->Fill(weight, p.second, p.first-1, bin2);
+        }
+
+        // unbinned filling
+        if (fMode == kUnbinned || fMode == kBoth)
+        {
+            // modify weight
+            fVarWeight->SetDouble(orig_weight * p.second);
+
+            // fill tree
+            fTree[p.first-1][bin2]->Fill();
         }
     }
 }
