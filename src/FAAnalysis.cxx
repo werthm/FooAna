@@ -38,6 +38,7 @@ FAAnalysis::FAAnalysis(const Char_t* cfg, const Char_t* treeName)
     // Constructor.
 
     // init members
+    fOrigGDir = gDirectory;
     fChain = 0;
     fProgSrvPort = 0;
     fResult = 0;
@@ -250,9 +251,16 @@ void FAAnalysis::Process(std::function<FAAnalysisResult* (TTreeReader&)> func)
     if (progress)
         progress->RequestInit(nEntries);
 
+    // function wrapper to restore original gDirectory before calling 'func'
+    auto funcWrapper = [&](TTreeReader& reader)
+    {
+        fOrigGDir->cd();
+        return func(reader);
+    };
+
     // process events
     ROOT::TTreeProcessorMP workers(nWorkers);
-    fResult = workers.Process(*fChain, func);
+    fResult = workers.Process(*fChain, funcWrapper);
 
     // stop progress monitoring
     if (progress)

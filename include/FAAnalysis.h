@@ -32,6 +32,7 @@ class FAAnalysis : public TObject
 {
 
 protected:
+    TDirectory* fOrigGDir;              // original gDirectory
     TChain* fChain;                     // file chain
     Int_t fProgSrvPort;                 // port of progress server
     FAAnalysisResult* fResult;          // analysis result
@@ -48,11 +49,13 @@ protected:
 
 public:
     FAAnalysis() : TObject(),
+                   fOrigGDir(0),
                    fChain(0), fProgSrvPort(0), fResult(0),
                    fAxis1(0), fAxis2(0) { }
     FAAnalysis(const Char_t* cfg, const Char_t* treeName = 0);
     virtual ~FAAnalysis();
 
+    TDirectory* GetOrigGDirectory() const { return fOrigGDir; }
     Int_t GetProgressSrvPort() const { return fProgSrvPort; }
     TAxis* GetAxis1() const { return fAxis1; }
     TAxis* GetAxis2() const { return fAxis2; }
