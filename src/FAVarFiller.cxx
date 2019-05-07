@@ -212,32 +212,38 @@ void FAVarFiller::AddHistogram(FAVarHistogram* hist)
 }
 
 //______________________________________________________________________________
-void FAVarFiller::AddHistogram1D(FAVarAbs* varX)
+void FAVarFiller::AddHistogram1D(FAVarAbs* varX, Bool_t sumw2)
 {
     // Add a 1d-histogram of the variable 'varX'.
+    // Activate storage of weights if 'sumw2' is kTRUE.
 
     // create and add histogram
     FAVarHistogram* hist = new FAVarHistogram(varX);
+    hist->SetSumw2(sumw2);
     AddHistogram(hist);
 }
 
 //______________________________________________________________________________
-void FAVarFiller::AddHistogram2D(FAVarAbs* varX, FAVarAbs* varY)
+void FAVarFiller::AddHistogram2D(FAVarAbs* varX, FAVarAbs* varY, Bool_t sumw2)
 {
     // Add a 2d-histogram of the variables 'varX' and 'varY'.
+    // Activate storage of weights if 'sumw2' is kTRUE.
 
     // create and add histogram
     FAVarHistogram* hist = new FAVarHistogram(varX, varY);
+    hist->SetSumw2(sumw2);
     AddHistogram(hist);
 }
 
 //______________________________________________________________________________
-void FAVarFiller::AddHistogram3D(FAVarAbs* varX, FAVarAbs* varY, FAVarAbs* varZ)
+void FAVarFiller::AddHistogram3D(FAVarAbs* varX, FAVarAbs* varY, FAVarAbs* varZ, Bool_t sumw2)
 {
     // Add a 3d-histogram of the variables 'varX', 'varY' and 'varZ'.
+    // Activate storage of weights if 'sumw2' is kTRUE.
 
     // create and add histogram
     FAVarHistogram* hist = new FAVarHistogram(varX, varY, varZ);
+    hist->SetSumw2(sumw2);
     AddHistogram(hist);
 }
 

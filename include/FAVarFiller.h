@@ -65,9 +65,9 @@ public:
     void AddVariable(FAVarAbs* var);
     void AddVariableList(FAVarList* list);
     void SetWeightVariable(FAVarAbs* var) { fVarWeight = var; }
-    void AddHistogram1D(FAVarAbs* varX);
-    void AddHistogram2D(FAVarAbs* varX, FAVarAbs* varY);
-    void AddHistogram3D(FAVarAbs* varX, FAVarAbs* varY, FAVarAbs* varZ);
+    void AddHistogram1D(FAVarAbs* varX, Bool_t sumw2 = kTRUE);
+    void AddHistogram2D(FAVarAbs* varX, FAVarAbs* varY, Bool_t sumw2 = kFALSE);
+    void AddHistogram3D(FAVarAbs* varX, FAVarAbs* varY, FAVarAbs* varZ, Bool_t sumw2 = kFALSE);
     void Init(EFillMode mode);
     Bool_t FindBin(Double_t axisVar1, Double_t axisVar2, Int_t& bin1, Int_t& bin2);
     void Fill(Double_t weight = 1, Double_t axisVar1 = 0, Double_t axisVar2 = 0);
