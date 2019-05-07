@@ -33,6 +33,7 @@ FAVarHistogram::FAVarHistogram(FAVarAbs* varX, FAVarAbs* varY, FAVarAbs* varZ)
     fVarX = varX;
     fVarY = varY;
     fVarZ = varZ;
+    fIsSumw2 = kFALSE;
 }
 
 //______________________________________________________________________________
@@ -167,8 +168,9 @@ void FAVarHistogram::CreateHistograms()
                                            fVarX->GetBins()->GetXmin(),
                                            fVarX->GetBins()->GetXmax());
 
-                // call Sumw2 for 1-dim. histograms
-                fHist[i][j]->Sumw2();
+                // call Sumw2
+                if (fIsSumw2)
+                    fHist[i][j]->Sumw2();
 
                 // x-axis title
                 if (fVarX->HasUnit())
@@ -259,6 +261,10 @@ void FAVarHistogram::CreateHistograms()
                                                fVarY->GetBins()->GetXmax());
                     }
                 }
+
+                // call Sumw2
+                if (fIsSumw2)
+                    fHist[i][j]->Sumw2();
 
                 // axes titles
                 if (fVarX->HasUnit())

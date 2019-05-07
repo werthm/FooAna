@@ -30,12 +30,14 @@ protected:
     FAVarAbs* fVarX;             // x-variable (not owned)
     FAVarAbs* fVarY;             // y-variable (not owned)
     FAVarAbs* fVarZ;             // z-variable (not owned)
+    Bool_t fIsSumw2;             // flag for storing weights
 
 public:
     FAVarHistogram() : TObject(),
                        fBins1(0), fBins2(0),
                        fHist(0),
-                       fVarX(0), fVarY(0), fVarZ(0) { }
+                       fVarX(0), fVarY(0), fVarZ(0),
+                       fIsSumw2(kFALSE) { }
     FAVarHistogram(FAVarAbs* varX, FAVarAbs* varY = 0, FAVarAbs* varZ = 0);
     virtual ~FAVarHistogram();
 
@@ -45,6 +47,7 @@ public:
 
     void SetBins1(TAxis* axis) { fBins1 = axis; }
     void SetBins2(TAxis* axis) { fBins2 = axis; }
+    void SetSumw2(Bool_t s) { fIsSumw2 = s; }
 
     void CreateHistograms();
     void Fill(Double_t weight, Int_t bin1, Int_t bin2);
