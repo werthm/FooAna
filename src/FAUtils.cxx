@@ -303,6 +303,40 @@ void FAUtils::Calculate4Vector(Double_t theta, Double_t phi, Double_t t, Double_
     p4.SetVect(v);
 }
 
+//______________________________________________________________________________
+void FAUtils::Calculate4VectorTOF(Double_t theta, Double_t phi, Double_t tof, Double_t mass,
+                                  TLorentzVector& p4)
+{
+    // Calculate the 4-vector of a particle using the polar angle 'th', the azimuthal
+    // angle 'ph', the normalized time-of-flight 'tof', and the mass 'mass'.
+    // The components of the 4-vector will be stored in 'p4'.
+
+    Double_t tot_e = CalculateEkinTOF(tof, mass) + mass;
+    p4.SetE(tot_e);
+    Double_t p = TMath::Sqrt(tot_e*tot_e - mass*mass);
+    TVector3 v;
+    v.SetMagThetaPhi(p, theta, phi);
+    p4.SetVect(v);
+}
+
+//______________________________________________________________________________
+Double_t FAUtils::CalculateEkinTOF(Double_t tof, Double_t mass)
+{
+    // Calculate the kinetic energy of a particle with normalized
+    // time-of-flight 'tof' and mass 'mass'.
+
+    // calculate the beta
+    Double_t beta = 1. / (tof * 1e-9 * TMath::C());
+
+    // calculate the kinetic energy
+    if (beta*beta < 1)
+    {
+        Double_t gamma = TMath::Sqrt(1. / (1. - beta*beta));
+        return  mass * (gamma - 1.);
+    }
+    else return -1.;
+}
+
 // template instantiations
 template Bool_t FAUtils::LoadObject(const Char_t*, const Char_t*, TH1*&);
 template Bool_t FAUtils::LoadObject(const Char_t*, const Char_t*, TH2*&);
