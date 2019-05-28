@@ -49,6 +49,14 @@ public:
     {
         FAUtils::Calculate4Vector(theta, phi, energy, mass, p4);
     }
+    void Calculate4VectorTOF(TLorentzVector& p4, Double_t mass) const
+    {
+        FAUtils::Calculate4VectorTOF(theta, phi, tof, mass, p4);
+    }
+    Double_t CalculateEkinTOF(Double_t mass) const
+    {
+        return FAUtils::CalculateEkinTOF(tof, mass);
+    }
     virtual void Print(Option_t* option = "") const
     {
         printf("Detector               : %d\n", detector);
