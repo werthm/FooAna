@@ -90,6 +90,19 @@ Char_t FAVar<Type>::GetTypeChar() const
 
 //______________________________________________________________________________
 template <class Type>
+Bool_t FAVar<Type>::IsCutSigmaOk(Double_t mean, Double_t sigma, Double_t cut) const
+{
+    // Check if the value of the variable fulfills a 'cut'-sigma cut around
+    // 'mean' with sigma 'sigma'.
+
+    if (fVar > mean - cut*sigma && fVar < mean + cut*sigma)
+        return kTRUE;
+    else
+        return kFALSE;
+}
+
+//______________________________________________________________________________
+template <class Type>
 FAVar<Type>& FAVar<Type>::operator=(Type val)
 {
     // Assignment operator.

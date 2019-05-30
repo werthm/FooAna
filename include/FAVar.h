@@ -51,6 +51,8 @@ public:
     virtual void* GetVarPtr() const { return (void*)&fVar; }
     virtual Char_t GetTypeChar() const;
 
+    Bool_t IsCutSigmaOk(Double_t mean, Double_t sigma, Double_t cut) const;
+
     FAVar& operator=(Type val);
     Bool_t operator==(Type val) const { return fVar == val; }
     Bool_t operator!=(Type val) const { return fVar != val; }
