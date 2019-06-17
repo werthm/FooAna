@@ -16,6 +16,7 @@
 #include "TError.h"
 
 #include "FAUtilsA2.h"
+#include "FAConfigA2.h"
 
 //______________________________________________________________________________
 Int_t FAUtilsA2::LoadTaggerCalibration(const Char_t* fileName, Int_t nChannel,
@@ -77,5 +78,29 @@ Int_t FAUtilsA2::LoadTaggerCalibration(const Char_t* fileName, Int_t nChannel,
         Info("FAUtilsA2::LoadTaggerCalibration", "Loaded calibration for %d channels from '%s'", nRead, fs.Data());
 
     return nRead;
+}
+
+//______________________________________________________________________________
+void FAUtilsA2::SetDetFillFlags(Int_t det, FAVarAbs& v_cb, FAVarAbs& v_taps)
+{
+    // Set the filling flags of the variables 'v_cb' and 'v_taps' according to
+    // the detector 'det' so events are filled into the correct histogram.
+
+    // check detector
+    if (det == FAConfigA2::kCBDetector)
+    {
+        v_cb.ResetBit(FAVarAbs::kNoFill);
+        v_taps.SetBit(FAVarAbs::kNoFill);
+    }
+    else if (det == FAConfigA2::kTAPSDetector)
+    {
+        v_cb.SetBit(FAVarAbs::kNoFill);
+        v_taps.ResetBit(FAVarAbs::kNoFill);
+    }
+    else
+    {
+        v_cb.SetBit(FAVarAbs::kNoFill);
+        v_taps.SetBit(FAVarAbs::kNoFill);
+    }
 }
 
