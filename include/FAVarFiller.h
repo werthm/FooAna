@@ -59,6 +59,8 @@ public:
     FAVarFiller(const Char_t* name, const Char_t* title, Bool_t doCleanup = kTRUE);
     virtual ~FAVarFiller();
 
+    EFillMode GetMode() const { return fMode; }
+
     void SetBins1(TAxis* axis) { fBins1 = axis; }
     void SetBins2(TAxis* axis) { fBins2 = axis; }
 
