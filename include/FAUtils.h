@@ -18,6 +18,7 @@
 
 class TLorentzVector;
 class TAxis;
+class TH1;
 
 namespace FAUtils
 {
@@ -32,6 +33,7 @@ namespace FAUtils
     template <class T>
     Bool_t LoadObject(const Char_t* file, const Char_t* name, T*& out);
 
+    void NormHistogram(TH1* h, TH1* hnorm);
     TAxis CreateVariableAxis(const Char_t* binning);
     Int_t CalcBinOverlapWeights(TAxis* axis, Double_t x, Double_t x_width,
                                 std::vector<std::pair<Int_t, Double_t>>& out);

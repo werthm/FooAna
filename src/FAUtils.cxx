@@ -209,6 +209,47 @@ Bool_t FAUtils::LoadObject(const Char_t* file, const Char_t* name, T*& out)
 }
 
 //______________________________________________________________________________
+void FAUtils::NormHistogram(TH1* h, TH1* hnorm)
+{
+    // Normalize the histogram 'h' by 'hnorm'.
+
+    // check histogram type
+    Int_t dim = h->GetDimension();
+    if (dim == 1)
+    {
+        // loop over axis 1
+        for (Int_t i = 0; i < h->GetNbinsX(); i++)
+        {
+            Double_t norm = hnorm->GetBinContent(i+1);
+            if (norm != 0)
+            {
+                h->SetBinContent(i+1, h->GetBinContent(i+1) / norm);
+                h->SetBinError(i+1, h->GetBinError(i+1) / norm);
+            }
+        }
+    }
+    else if (dim == 2)
+    {
+        // loop over axis 1
+        for (Int_t i = 0; i < h->GetNbinsX(); i++)
+        {
+            // loop over axis 2
+            for (Int_t j = 0; j < h->GetNbinsY(); j++)
+            {
+                Double_t norm = hnorm->GetBinContent(i+1, j+1);
+                if (norm != 0)
+                {
+                    h->SetBinContent(i+1, j+1, h->GetBinContent(i+1, j+1) / norm);
+                    h->SetBinError(i+1, j+1, h->GetBinError(i+1, j+1) / norm);
+                }
+            }
+        }
+    }
+    else
+        Error("FAUtils::NormHistogram", "Not implemented for histogram dim=%d", dim);
+}
+
+//______________________________________________________________________________
 TAxis FAUtils::CreateVariableAxis(const Char_t* binning)
 {
     // Create an axis having variable bin sizes using the low edge string list
