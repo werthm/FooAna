@@ -201,6 +201,111 @@ filler.WriteFile("events.root");
 A complete example can be found in the `ReadCustomEvent()` method in
 `examples/event/CustomEvent.C`.
 
+### Analyzing A2 data
+`FAAnalysisA2` is an analysis-wrapper for data of the A2 experiment.
+It allows the analysis of presorted data with one single ROOT macro
+and one configuration file. It is mainly intended to be used as the last
+step in the analysis chain to create binned results (histograms) but
+it also supports tree output for further unbinned processing.
+
+The configuration file (ROOT config-file format) configures all general settings
+of the analysis, sets up the loading of ROOT objects (`TGraph`, `TH1`, etc.)
+needed during the analysis, and can be extended by custom configuration keys.
+The standard keys will be described in the next section.
+
+Thanks to the extended configuration file, the analysis ROOT macro can be kept
+compact and readable. The main part is a C++ lambda function which contains
+the code that is executed for every event in the data tree. This function is
+then passed to the `FAAnalysisA2` analysis object, which wires up everything
+and launches the analysis. Multithreading is fully supported by having multiple
+workers analyzing parts of the data. Partial results will be automatically
+merged at the end.
+
+#### `FAAnalysisA2` configuration file
+The following keys are currently supported:
+```
+# general keys
+FA.Analysis.TreeName:               name of the input TTree
+FA.Analysis.NWorker:                number of parallel workers in a multithreaded analysis
+FA.Analysis.Progress:               flag for progress indication (0=off, 1=on)
+FA.Analysis.Axis1.Binning:          binning for axis 1 (bin edges)
+FA.Analysis.Axis1.Name:             name of axis 1
+FA.Analysis.Axis2.Binning:          binning for axis 2 (bin edges)
+FA.Analysis.Axis2.Name:             name of axis 2
+FA.Analysis.Input:                  name of input file(s), wildcards are supported
+FA.Analysis.Output:                 name of output file
+
+# object loading (currently supported are TH1, TH2, TGraph, TCutG)
+FA.Analysis.Load.TH1.N:             number of TH1 objects to load
+FA.Analysis.Load.TH1.0.File:        file of the first TH1 object to load
+FA.Analysis.Load.TH1.0.Name:        name of the first TH1 object to load
+
+# A2-specific keys
+FA.Analysis.A2.Tagger.Channels:     number of tagger channels
+FA.Analysis.A2.Tagger.Calib:        tagger calibration file (ugcal short format)
+FA.Analysis.A2.Trig.CB.ESum.Mean:   mean value of energy sum threshold
+FA.Analysis.A2.Trig.CB.ESum.Sigma:  Gaussian sigma of energy sum threshold
+FA.Analysis.A2.Trig.Mult.Total:     total trigger multiplicity
+FA.Analysis.A2.Trig.Mult.UseTAPS:   TAPS contributing to multiplicity (0=no, 1=yes)
+```
+
+#### `FAAnalysisA2`-based analysis macro
+The following commented ROOT macro illustrates the general structure of an
+`FAAnalysisA2`-based analysis macro. More complex macros can be found
+in the `examples` folder.
+```C++
+void Analysis()
+{
+    // create analysis
+    FAAnalysisA2 ana("config.rootrc");
+
+    // print analysis configuration
+    ana.Print();
+
+    // event processing lambda function
+    auto ProcessEvents = [&](TTreeReader& reader)
+    {
+        // configure reader
+        TTreeReaderValue<FAEventA2_BIF3> event(reader, "Event");
+
+        // define analysis variables
+        FAVarFiller filler("my_analysis", "title of my analysis");
+        FAVar<Float_t> var_axis1(filler, "var_axis1", "variable of axis 1", "MeV", ana.GetAxis1());
+        FAVar<Float_t> some_var(filler, "some_var", "some analysis variable", "MeV", 100, 0, 2000);
+        filler.SetBins1(ana.GetAxis1());
+        filler.Init(FAVarFiller::kBinned);
+
+        // read events
+        while (reader.Next())
+        {
+            // analyis code
+            // ...
+
+            // set analysis variables
+            //var_axis1 = 123;
+            //some_var = 12.34;
+
+            // event weights via lambda function
+            auto weighting = [&] { return 1; };
+
+            // fill analysis variables
+            filler.Fill(weighting, var_axis1.GetVar());
+        }
+
+        // write and register partial output file
+        return FAAnalysis::WritePartialOutput(filler, reader.GetTree()->GetCurrentFile()->GetName());
+    };
+
+    // process events
+    ana.Process(ProcessEvents);
+
+    // write output file
+    ana.WriteOutputFile(out);
+
+    gSystem->Exit(0);
+}
+```
+
 ### Plotting and comparing analysis variables
 Analysis variables of several analyses can be compared by using `FAVarPlotter`. In the following
 minimal example, the analysis variable is defined and two files created by `FAVarFiller` are
