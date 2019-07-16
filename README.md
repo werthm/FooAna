@@ -207,6 +207,13 @@ It allows the analysis of presorted data with one single ROOT macro
 and one configuration file. It is mainly intended to be used as the last
 step in the analysis chain to create binned results (histograms) but
 it also supports tree output for further unbinned processing.
+For this, `FAAnalysisA2` makes use of the `FAVarFiller` class (see above).
+
+Input data is expected to be stored in a `TTree` using a `FAEventT`-based
+event class. Depending on the use case, different event classes
+are available that also contain different types of particle classes.
+This design enables to optimize the size of presorted data sets by only
+including the necessary event information.
 
 The configuration file (ROOT config-file format) configures all general settings
 of the analysis, sets up the loading of ROOT objects (`TGraph`, `TH1`, etc.)
