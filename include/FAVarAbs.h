@@ -29,7 +29,8 @@ public:
     enum EStatusBits {
         kNoUnbinned = BIT(14),      // no unbinned storage
         kNoBinned = BIT(15),        // no binned storage
-        kNoFill = BIT(16)           // no binned filling
+        kNoFill = BIT(16),          // no binned filling
+        kDoNorm = BIT(17)           // divide by (unweighted) normalization histogram
     };
 
 protected:
