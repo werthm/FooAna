@@ -14,6 +14,8 @@
 #ifndef FooAna_FAVarFiller
 #define FooAna_FAVarFiller
 
+#include <functional>
+
 #include "TNamed.h"
 
 class TTree;
