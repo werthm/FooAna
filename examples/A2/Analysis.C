@@ -1,4 +1,4 @@
-void TreeReader()
+void Analysis()
 {
     // Main method.
 
@@ -6,6 +6,7 @@ void TreeReader()
     FAAnalysisA2 ana("config.rootrc");
 
     // configure analysis
+    const Double_t kProtonMass = 938.27203;
     ana.Print();
 
     // event processing lambda function
@@ -18,14 +19,14 @@ void TreeReader()
         TTreeReaderValue<FAEventA2_B> event(reader, "Event");
 
         // define analysis variables
-        FAVarFiller filler("analysis", "1n1c analysis", kFALSE);
+        FAVarFiller filler("analysis", "pi0 analysis", kFALSE);
         FAVar<Short_t> tagg_ch(filler, "tagg_ch", "tagger channel", 0, ana.GetNTagg(), 0, ana.GetNTagg());
         FAVar<Float_t> eg(filler, "eg", "E_{#gamma}", "MeV", ana.GetAxis1());
-        FAVar<Float_t> cb_esum(filler, "cb_esum", "CB energy sum", "MeV", 1000, 0, 2000);
-        filler.AddHistogram2D(&eg, &cb_esum);
-        const Int_t nPart = 2;
-        const Char_t* partName[nPart]  = { "g", "p" };
-        const Char_t* partTitle[nPart] = { "Photon", "Proton" };
+        FAVar<Float_t> im(filler, "im", "m(#gamma#gamma)", "MeV", 500, 0, 1000);
+        filler.AddHistogram2D(&eg, &im);
+        const Int_t nPart = 3;
+        const Char_t* partName[nPart]  = { "g1", "g2", "p" };
+        const Char_t* partTitle[nPart] = { "Photon 1", "Photon 2", "Proton" };
         FAVarParticleA2* part[nPart];
         for (Int_t i = 0; i < nPart; i++)
         {
@@ -44,6 +45,9 @@ void TreeReader()
 
         // 4-vectors
         TLorentzVector p4Beam;
+        TLorentzVector p4Photon1;
+        TLorentzVector p4Photon2;
+        TLorentzVector p4Proton;
 
         // read events
         Long64_t n = 0;
@@ -61,6 +65,11 @@ void TreeReader()
             // primary cuts (on directly available tree data)
             // ...
 
+            // convert to TLorentzVector
+            event->particle(0)->Calculate4Vector(p4Photon1, 0);
+            event->particle(1)->Calculate4Vector(p4Photon2, 0);
+            event->particle(2)->Calculate4Vector(p4Proton, kProtonMass);
+
             // set beam 4-vector
             Double_t eBeam = ana.GetTaggE(event->taggCh);
             p4Beam.SetPxPyPzE(0, 0, eBeam, eBeam);
@@ -68,7 +77,7 @@ void TreeReader()
             // set analysis variables
             tagg_ch = event->taggCh;
             eg = p4Beam.E();
-            cb_esum = event->cbSum;
+            im = (p4Photon1 + p4Photon2).M();
             for (Int_t i = 0; i < nPart; i++)
                 part[i]->Set(event->particle(i));
 
@@ -79,8 +88,7 @@ void TreeReader()
             auto weighting = [&] { return event->weight; };
 
             // fill analysis variables
-            filler.FillOverlap(weighting, ana.GetTaggE(event->taggCh),
-                               ana.GetTaggEWidth(event->taggCh), 0);
+            filler.Fill(weighting, ana.GetTaggE(event->taggCh));
         }
 
         // report processed events to progress server
