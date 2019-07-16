@@ -17,6 +17,7 @@
 
 #include "FAVarHistogram.h"
 #include "FAVarAbs.h"
+#include "FAUtils.h"
 
 ClassImp(FAVarHistogram)
 
@@ -30,6 +31,7 @@ FAVarHistogram::FAVarHistogram(FAVarAbs* varX, FAVarAbs* varY, FAVarAbs* varZ)
     fBins1 = 0;
     fBins2 = 0;
     fHist = 0;
+    fHistNorm = 0;
     fVarX = varX;
     fVarY = varY;
     fVarZ = varZ;
@@ -49,11 +51,16 @@ FAVarHistogram::~FAVarHistogram()
         {
             for (Int_t j = 0; j < nb2; j++)
             {
-                delete fHist[i][j];
+                if (fHist[i][j])
+                    delete fHist[i][j];
+                if (fHistNorm[i][j])
+                    delete fHistNorm[i][j];
             }
             delete [] fHist[i];
+            delete [] fHistNorm[i];
         }
         delete [] fHist;
+        delete [] fHistNorm;
     }
 }
 
@@ -116,6 +123,7 @@ void FAVarHistogram::CreateHistograms()
 
     // create the histograms
     fHist = new TH1**[nb1];
+    fHistNorm = new TH1**[nb1];
 
     // some variables
     TString name;
@@ -125,12 +133,14 @@ void FAVarHistogram::CreateHistograms()
     for (Int_t i = 0; i < nb1; i++)
     {
         fHist[i] = new TH1*[nb2];
+        fHistNorm[i] = new TH1*[nb2];
 
         // loop over bins of second axis
         for (Int_t j = 0; j < nb2; j++)
         {
             // init
             fHist[i][j] = 0;
+            fHistNorm[i][j] = 0;
 
             // create 1d-histogram
             if (fVarX && fVarY == 0 && fVarZ == 0)
@@ -167,6 +177,10 @@ void FAVarHistogram::CreateHistograms()
                                            fVarX->GetBins()->GetNbins(),
                                            fVarX->GetBins()->GetXmin(),
                                            fVarX->GetBins()->GetXmax());
+
+                // create normalization histogram
+                if (fVarX->TestBits(FAVarAbs::kDoNorm))
+                    fHistNorm[i][j] = (TH1*)fHist[i][j]->Clone((name + "_norm").Data());
 
                 // call Sumw2
                 if (fIsSumw2)
@@ -262,6 +276,10 @@ void FAVarHistogram::CreateHistograms()
                     }
                 }
 
+                // create normalization histogram
+                if (fVarX->TestBits(FAVarAbs::kDoNorm) || fVarY->TestBits(FAVarAbs::kDoNorm))
+                    fHistNorm[i][j] = (TH2*)fHist[i][j]->Clone((name + "_norm").Data());
+
                 // call Sumw2
                 if (fIsSumw2)
                     fHist[i][j]->Sumw2();
@@ -294,23 +312,37 @@ void FAVarHistogram::Fill(Double_t weight, Int_t bin1, Int_t bin2)
     if (dim == 1)
     {
         if (!(fVarX->TestBits(FAVarAbs::kNoFill)))
+        {
             fHist[bin1][bin2]->Fill(fVarX->AsDouble(),
                                     weight * fVarX->GetWeight());
+            if (fHistNorm[bin1][bin2])
+                fHistNorm[bin1][bin2]->Fill(fVarX->AsDouble(), fVarX->GetWeight());
+        }
     }
     else if (dim == 2)
     {
         if (!(fVarX->TestBits(FAVarAbs::kNoFill)) &&
             !(fVarY->TestBits(FAVarAbs::kNoFill)))
+        {
             ((TH2*)fHist[bin1][bin2])->Fill(fVarX->AsDouble(), fVarY->AsDouble(),
                                             weight * fVarX->GetWeight() * fVarY->GetWeight());
+            if (fHistNorm[bin1][bin2])
+                ((TH2*)fHistNorm[bin1][bin2])->Fill(fVarX->AsDouble(), fVarY->AsDouble(),
+                                                    fVarX->GetWeight() * fVarY->GetWeight());
+        }
     }
     else if (dim == 3)
     {
         if (!(fVarX->TestBits(FAVarAbs::kNoFill)) &&
             !(fVarY->TestBits(FAVarAbs::kNoFill)) &&
             !(fVarZ->TestBits(FAVarAbs::kNoFill)))
-         ((TH3*)fHist[bin1][bin2])->Fill(fVarX->AsDouble(), fVarY->AsDouble(), fVarZ->AsDouble(),
-                                         weight * fVarX->GetWeight() * fVarY->GetWeight() * fVarZ->GetWeight());
+        {
+            ((TH3*)fHist[bin1][bin2])->Fill(fVarX->AsDouble(), fVarY->AsDouble(), fVarZ->AsDouble(),
+                                            weight * fVarX->GetWeight() * fVarY->GetWeight() * fVarZ->GetWeight());
+            if (fHistNorm[bin1][bin2])
+                ((TH3*)fHistNorm[bin1][bin2])->Fill(fVarX->AsDouble(), fVarY->AsDouble(), fVarZ->AsDouble(),
+                                                    fVarX->GetWeight() * fVarY->GetWeight() * fVarZ->GetWeight());
+        }
     }
 }
 
@@ -324,8 +356,9 @@ void FAVarHistogram::Fill(Double_t weight, Double_t part_weight, Int_t bin1, Int
     if (!fHist || !fHist[bin1][bin2])
         return;
 
-    // shortcut
+    // shortcuts
     TH1* h = fHist[bin1][bin2];
+    TH1* hn = fHistNorm[bin1][bin2];
 
     // check histogram type
     Int_t dim = h->GetDimension();
@@ -338,6 +371,8 @@ void FAVarHistogram::Fill(Double_t weight, Double_t part_weight, Int_t bin1, Int
             h->SetBinContent(gbin, h->GetBinContent(gbin) + fill * part_weight);
             if (h->GetSumw2()->fN)
                 h->GetSumw2()->fArray[gbin] += fill * fill * part_weight;
+            if (hn)
+                hn->SetBinContent(gbin, hn->GetBinContent(gbin) + fill/weight * part_weight);
         }
     }
     else if (dim == 2)
@@ -351,6 +386,8 @@ void FAVarHistogram::Fill(Double_t weight, Double_t part_weight, Int_t bin1, Int
             h->SetBinContent(gbin, h->GetBinContent(gbin) + fill * part_weight);
             if (h->GetSumw2()->fN)
                 h->GetSumw2()->fArray[gbin] += fill * fill * part_weight;
+            if (hn)
+                hn->SetBinContent(gbin, hn->GetBinContent(gbin) + fill/weight * part_weight);
         }
     }
     else if (dim == 3)
@@ -366,6 +403,8 @@ void FAVarHistogram::Fill(Double_t weight, Double_t part_weight, Int_t bin1, Int
             h->SetBinContent(gbin, h->GetBinContent(gbin) + fill * part_weight);
             if (h->GetSumw2()->fN)
                 h->GetSumw2()->fArray[gbin] += fill * fill * part_weight;
+            if (hn)
+                hn->SetBinContent(gbin, hn->GetBinContent(gbin) + fill/weight * part_weight);
         }
     }
 }
@@ -385,8 +424,15 @@ void FAVarHistogram::AddHistogramsToList(TList* list)
 
     // loop over histograms
     for (Int_t i = 0; i < nb1; i++)
+    {
         for (Int_t j = 0; j < nb2; j++)
-            if (fHist[i][j]) list->Add(fHist[i][j]);
+        {
+            if (fHist[i][j])
+                list->Add(fHist[i][j]);
+            if (fHistNorm[i][j])
+                list->Add(fHistNorm[i][j]);
+        }
+    }
 }
 
 //______________________________________________________________________________
@@ -415,8 +461,17 @@ void FAVarHistogram::WriteToFile(TFile* fout, Bool_t flat)
                     fout->mkdir(TString::Format("bin_%d_%d", i, j).Data());
                 fout->cd(TString::Format("bin_%d_%d", i, j).Data());
             }
+
+            // check for histogram
             if (fHist[i][j])
+            {
+                // normalize
+                if (fHistNorm[i][j])
+                    FAUtils::NormHistogram(fHist[i][j], fHistNorm[i][j]);
+
+                // write
                 fHist[i][j]->Write();
+            }
         }
     }
 }
