@@ -72,6 +72,8 @@ public:
     virtual void SetDouble(Double_t d) = 0;
 
     void AddRelatedVariable(FAVarAbs* var);
+    void EnableFillBinned() { ResetBit(FAVarAbs::kNoFill); }
+    void DisableFillBinned() { SetBit(FAVarAbs::kNoFill); }
 
     virtual Double_t AsDouble() const = 0;
     virtual void* GetVarPtr() const = 0;
