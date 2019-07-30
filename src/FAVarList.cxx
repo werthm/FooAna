@@ -12,6 +12,7 @@
 
 
 #include "FAVarList.h"
+#include "FAVarAbs.h"
 
 ClassImp(FAVarList)
 
@@ -45,5 +46,23 @@ void FAVarList::AddVariable(FAVarAbs* var)
     // Add the variable 'var'.
 
     fVar.push_back(var);
+}
+
+//______________________________________________________________________________
+void FAVarList::EnableFillBinned()
+{
+    // Enable binned filling for all variables.
+
+    for (FAVarAbs* v : fVar)
+        v->EnableFillBinned();
+}
+
+//______________________________________________________________________________
+void FAVarList::DisableFillBinned()
+{
+    // Disable binned filling for all variables.
+
+    for (FAVarAbs* v : fVar)
+        v->DisableFillBinned();
 }
 

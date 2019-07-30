@@ -35,6 +35,8 @@ public:
     FAVarAbs* GetVariable(Int_t i);
 
     void AddVariable(FAVarAbs* var);
+    void EnableFillBinned();
+    void DisableFillBinned();
 
     ClassDef(FAVarList, 1)  // list of analysis variables
 };
