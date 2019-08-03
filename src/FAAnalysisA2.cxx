@@ -87,6 +87,14 @@ Bool_t FAAnalysisA2::IsTrigger(Double_t cb_esum, Int_t mult_cb, Int_t mult_taps)
 }
 
 //______________________________________________________________________________
+Double_t FAAnalysisA2::GetTaggERndm(Int_t c) const
+{
+    // Return the uniformly randomized energy of the tagger channel 'c'.
+
+    return gRandom->Uniform(fTaggE[c] - 0.5*fTaggEWidth[c], fTaggE[c] + 0.5*fTaggEWidth[c]);
+}
+
+//______________________________________________________________________________
 void FAAnalysisA2::Print(Option_t* option) const
 {
     // Print the content of this class.

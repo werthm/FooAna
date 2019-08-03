@@ -40,6 +40,7 @@ public:
     Double_t* GetTaggE() const { return fTaggE; }
     Double_t* GetTaggEWidth() const { return fTaggEWidth; }
     Double_t GetTaggE(Int_t c) const { return fTaggE[c]; }
+    Double_t GetTaggERndm(Int_t c) const;
     Double_t GetTaggEWidth(Int_t c) const { return fTaggEWidth[c]; }
 
     Bool_t IsTrigger(Double_t cb_esum, Int_t mult_cb = 9999, Int_t mult_taps = 9999) const;
