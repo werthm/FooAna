@@ -46,6 +46,7 @@
 #pragma link C++ class FAVarParticleA2+;
 #pragma link C++ class FAVarParticleA2_CoincT+;
 #pragma link C++ class FAVarHistogram+;
+#pragma link C++ class FAWrapPrim<Double32_t>+;
 #pragma link C++ class FAParticleA2_B+;
 #pragma link C++ class FAParticleA2_BF1+;
 #pragma link C++ class FAParticleA2MC_B+;
