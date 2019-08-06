@@ -12,6 +12,11 @@ Yet another analysis framework
 
 ## Release notes
 
+### 0.3.1
+August 6, 2019
+* added a number of small improvements
+* extended the documentation
+
 ### 0.3.0
 April 23, 2019
 * overlap histogram filling
