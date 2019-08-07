@@ -50,8 +50,8 @@
 #pragma link C++ class FAParticleA2_B+;
 #pragma link C++ class FAParticleA2_BF1+;
 #pragma link C++ class FAParticleA2MC_B+;
-#pragma link C++ class FAEventT<FAParticleA2_B, FAParticleA2MC_B>+;
-#pragma link C++ class FAEventT<FAParticleA2_BF1, FAParticleA2MC_B>+;
+#pragma link C++ class FAEventT<Double32_t, FAParticleA2_B, FAParticleA2MC_B>+;
+#pragma link C++ class FAEventT<Double32_t, FAParticleA2_BF1, FAParticleA2MC_B>+;
 #pragma link C++ class FAEventA2_B+;
 #pragma link C++ class FAEventA2_BF1+;
 #pragma link C++ class FAEventA2_BF2+;

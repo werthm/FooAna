@@ -18,7 +18,7 @@
 #include "FAParticleA2_B.h"
 #include "FAParticleA2MC_B.h"
 
-class FAEventA2_B : public FAEventT<FAParticleA2_B, FAParticleA2MC_B>
+class FAEventA2_B : public FAEventT<Double32_t, FAParticleA2_B, FAParticleA2MC_B>
 {
 
 public:
