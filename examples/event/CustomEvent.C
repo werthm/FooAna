@@ -26,12 +26,12 @@
 #include "FAVar.h"
 
 #ifdef __ROOTCLING__
-#pragma link C++ class FAEventT<FAParticleA2_B, FAParticleA2MC_B>+;
+#pragma link C++ class FAEventT<Double32_t, FAParticleA2_B, FAParticleA2MC_B>+;
 #pragma link C++ class CustomEvent+;
 #endif
 
 class CustomEvent :
-    public FAEventT<FAParticleA2_B, FAParticleA2MC_B>
+    public FAEventT<Double32_t, FAParticleA2_B, FAParticleA2MC_B>
 {
 public:
     Short_t someIndex;

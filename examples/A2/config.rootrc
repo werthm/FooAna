@@ -7,7 +7,7 @@ FA.Analysis.NWorker:                2
 FA.Analysis.Progress:               1
 FA.Analysis.Axis1.Binning:          100 300 500 800
 FA.Analysis.Axis1.Name:             Eg
-FA.Analysis.Input:                  in.root
+FA.Analysis.Input:                  tree.root
 FA.Analysis.Output:                 out.root
 FA.Analysis.A2.Tagger.Channels:     344
 FA.Analysis.A2.Tagger.Calib:        data/calib_short
