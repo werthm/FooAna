@@ -124,14 +124,16 @@ FAConfigA2               : namespace with constants and definitions
 
 ### Writing a custom event class
 Custom event classes can be easily created by using the template class `FAEventT`.
-Classes created by `FAEventT` contain also vectors for detected and generated (MC) particles
-as well as a vector for generic 4-vectors.  The exact types of the classes representing
-those particles can be specified when the template class `FAEventT` is instantiated.
-Additional event variables can be added to the custom event class.
+Classes created by `FAEventT` contain arrays of general variables, 4-vectors, and
+detected and generated (MC) particles. The type of variables and the types of the
+classes representing the particles can be specified when the template class `FAEventT`
+is instantiated. Additional event variables can be added to the custom event class.
+This can make an event class more clear in case a large number of event variables is
+needed and keeping track of them in the general variable array is getting difficult.
 Example:
 ```C++
 class CustomEvent :
-    public FAEventT<FAParticleA2_B, FAParticleA2MC_B>
+    public FAEventT<Double32_t, FAParticleA2_B, FAParticleA2MC_B>
 {
 public:
     Short_t someIndex;
