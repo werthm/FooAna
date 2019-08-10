@@ -43,6 +43,7 @@ public:
     virtual ~FAVar() { }
 
     Type GetVar() const { return fVar; }
+    Type val() const { return fVar; }
 
     void SetVar(Type val) { fVar = val; }
     virtual void SetDouble(Double_t d) { fVar = d; }
