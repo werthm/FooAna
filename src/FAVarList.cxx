@@ -66,3 +66,21 @@ void FAVarList::DisableFillBinned()
         v->DisableFillBinned();
 }
 
+//______________________________________________________________________________
+void FAVarList::EnableStorageBinned()
+{
+    // Enable binned storage for all variables.
+
+    for (FAVarAbs* v : fVar)
+        v->EnableStorageBinned();
+}
+
+//______________________________________________________________________________
+void FAVarList::DisableStorageBinned()
+{
+    // Disable binned storage for all variables.
+
+    for (FAVarAbs* v : fVar)
+        v->DisableStorageBinned();
+}
+
