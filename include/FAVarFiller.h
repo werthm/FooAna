@@ -72,13 +72,21 @@ public:
     void AddHistogram1D(FAVarAbs* varX, Bool_t sumw2 = kTRUE);
     void AddHistogram2D(FAVarAbs* varX, FAVarAbs* varY, Bool_t sumw2 = kFALSE);
     void AddHistogram3D(FAVarAbs* varX, FAVarAbs* varY, FAVarAbs* varZ, Bool_t sumw2 = kFALSE);
+
     void Init(EFillMode mode);
+
     Bool_t FindBin(Double_t axisVar1, Double_t axisVar2, Int_t& bin1, Int_t& bin2);
     void Fill(Double_t weight = 1, Double_t axisVar1 = 0, Double_t axisVar2 = 0);
     void Fill(std::function<Double_t(void)> wFunc, Double_t axisVar1 = 0, Double_t axisVar2 = 0);
     void FillBin(Double_t weight = 1, Int_t bin1 = 0, Int_t bin2 = 0);
     void FillOverlap(std::function<Double_t(void)> wFunc, Double_t axisVar1,
                      Double_t axisVarWidth1, Double_t axisVar2 = 0);
+
+    void EnableFillBinned();
+    void DisableFillBinned();
+    void EnableStorageBinned();
+    void DisableStorageBinned();
+
     void AddObjectsToList(TList* list);
     void WriteFile(const Char_t* filename, Bool_t flat = kFALSE);
 

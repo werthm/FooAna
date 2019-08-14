@@ -462,6 +462,42 @@ void FAVarFiller::FillOverlap(std::function<Double_t(void)> wFunc, Double_t axis
 }
 
 //______________________________________________________________________________
+void FAVarFiller::EnableFillBinned()
+{
+    // Enable binned filling for all analysis variables.
+
+    for (Int_t i = 0; i < fNVar; i++)
+        fVar[i]->EnableFillBinned();
+}
+
+//______________________________________________________________________________
+void FAVarFiller::DisableFillBinned()
+{
+    // Disable binned filling for all analysis variables.
+
+    for (Int_t i = 0; i < fNVar; i++)
+        fVar[i]->DisableFillBinned();
+}
+
+//______________________________________________________________________________
+void FAVarFiller::EnableStorageBinned()
+{
+    // Enable binned storage for all analysis variables.
+
+    for (Int_t i = 0; i < fNVar; i++)
+        fVar[i]->EnableStorageBinned();
+}
+
+//______________________________________________________________________________
+void FAVarFiller::DisableStorageBinned()
+{
+    // Disable binned storage for all analysis variables.
+
+    for (Int_t i = 0; i < fNVar; i++)
+        fVar[i]->DisableStorageBinned();
+}
+
+//______________________________________________________________________________
 void FAVarFiller::AddObjectsToList(TList* list)
 {
     // Add all fill objects to the list 'list'.
