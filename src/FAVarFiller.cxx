@@ -34,13 +34,9 @@ FAVarFiller::FAVarFiller(const Char_t* name, const Char_t* title, Bool_t doClean
     // init members
     fBins1 = 0;
     fBins2 = 0;
-    fNVar = 0;
-    fVar = 0;
     fVarWeight = 0;
     fMode= kNone;
     fIsCleanup = doCleanup;
-    fNHist = 0;
-    fHist = 0;
     fTree = 0;
 }
 
@@ -49,13 +45,10 @@ FAVarFiller::~FAVarFiller()
 {
     // Destructor.
 
-    if (fVar)
-        delete [] fVar;
-    if (fHist && fIsCleanup)
+    if (fIsCleanup)
     {
-        for (Int_t i = 0; i < fNHist; i++)
-            delete fHist[i];
-        delete [] fHist;
+        for (FAVarHistogram* h : fHist)
+            delete h;
     }
     if (fTree && fIsCleanup)
     {
@@ -84,11 +77,46 @@ void FAVarFiller::Init(EFillMode mode)
     // prepare histograms for binned filling
     if (fMode == kBinned || fMode == kBoth)
     {
-        for (Int_t i = 0; i < fNHist; i++)
+        // remove histograms with disabled binned storage
+        auto remove_no_binned = [](FAVarHistogram* hist)
         {
-            fHist[i]->SetBins1(fBins1);
-            fHist[i]->SetBins2(fBins2);
-            fHist[i]->CreateHistograms();
+            // get associated variables
+            FAVarAbs* varX = hist->GetVarX();
+            FAVarAbs* varY = hist->GetVarY();
+            FAVarAbs* varZ = hist->GetVarZ();
+
+            // check binned storage
+            if (varX && varY && varZ)
+            {
+                // do not disable any 3d-histogram
+                return kFALSE;
+            }
+            else if (varX && varY)
+            {
+                // do not disable any 2d-histogram
+                return kFALSE;
+            }
+            else if (varX)
+            {
+                if (varX->TestBits(FAVarAbs::kNoBinned))
+                    return kTRUE;
+            }
+
+            return kFALSE;
+        };
+
+        // find histograms to be removed
+        auto new_end = std::remove_if(fHist.begin(), fHist.end(), remove_no_binned);
+
+        // remove histograms
+        fHist.erase(new_end, fHist.end());
+
+        // create histogram
+        for (FAVarHistogram* h : fHist)
+        {
+            h->SetBins1(fBins1);
+            h->SetBins2(fBins2);
+            h->CreateHistograms();
         }
     }
 
@@ -142,11 +170,11 @@ void FAVarFiller::Init(EFillMode mode)
                 }
 
                 // create branches
-                for (Int_t k = 0; k < fNVar; k++)
+                for (FAVarAbs* v : fVar)
                 {
-                    if (!(fVar[k]->TestBits(FAVarAbs::kNoUnbinned)))
-                        fTree[i][j]->Branch(fVar[k]->GetName(), fVar[k]->GetVarPtr(),
-                                            TString::Format("%s/%c", fVar[k]->GetName(), fVar[k]->GetTypeChar()).Data());
+                    if (!(v->TestBits(FAVarAbs::kNoUnbinned)))
+                        fTree[i][j]->Branch(v->GetName(), v->GetVarPtr(),
+                                            TString::Format("%s/%c", v->GetName(), v->GetTypeChar()).Data());
                 }
             }
         }
@@ -158,23 +186,11 @@ void FAVarFiller::AddVariable(FAVarAbs* var)
 {
     // Add the variable 'var'.
 
-    // backup old list
-    FAVarAbs** old = fVar;
-
-    // create new list
-    fVar = new FAVarAbs*[fNVar+1];
-    for (Int_t i = 0; i < fNVar; i++) fVar[i] = old[i];
-
-    // add new element
-    fVar[fNVar] = var;
-    fNVar++;
-
-    // destroy old list
-    if (old) delete [] old;
+    // add variable
+    fVar.push_back(var);
 
     // create and add 1d-histogram of variable
-    if (!(var->TestBits(FAVarAbs::kNoBinned)))
-        AddHistogram1D(var);
+    AddHistogram1D(var);
 
     // create and add 2d-histograms of related variables
     for (Int_t i = 0; i < var->GetRelatedVariables()->GetNVar(); i++)
@@ -196,19 +212,8 @@ void FAVarFiller::AddHistogram(FAVarHistogram* hist)
 {
     // Add the histogram 'hist'.
 
-    // backup old list
-    FAVarHistogram** old = fHist;
-
-    // create new list
-    fHist = new FAVarHistogram*[fNHist+1];
-    for (Int_t i = 0; i < fNHist; i++) fHist[i] = old[i];
-
-    // add new element
-    fHist[fNHist] = hist;
-    fNHist++;
-
-    // destroy old list
-    if (old) delete [] old;
+    // add histogram
+    fHist.push_back(hist);
 }
 
 //______________________________________________________________________________
@@ -326,11 +331,11 @@ void FAVarFiller::FillBin(Double_t weight, Int_t bin1, Int_t bin2)
 
     // check all variables for NaN
     FAVarAbs* badVar = 0;
-    for (Int_t i = 0; i < fNVar; i++)
+    for (FAVarAbs* v : fVar)
     {
-        if (TMath::IsNaN(fVar[i]->AsDouble()))
+        if (TMath::IsNaN(v->AsDouble()))
         {
-            badVar = fVar[i];
+            badVar = v;
             break;
         }
     }
@@ -343,8 +348,8 @@ void FAVarFiller::FillBin(Double_t weight, Int_t bin1, Int_t bin2)
     // binned filling
     if (fMode == kBinned || fMode == kBoth)
     {
-        for (Int_t i = 0; i < fNHist; i++)
-            fHist[i]->Fill(weight, bin1, bin2);
+        for (FAVarHistogram* h : fHist)
+            h->Fill(weight, bin1, bin2);
     }
 
     // unbinned filling
@@ -368,11 +373,11 @@ void FAVarFiller::FillOverlap(std::function<Double_t(void)> wFunc, Double_t axis
 
     // check all variables for NaN
     FAVarAbs* badVar = 0;
-    for (Int_t i = 0; i < fNVar; i++)
+    for (FAVarAbs* v : fVar)
     {
-        if (TMath::IsNaN(fVar[i]->AsDouble()))
+        if (TMath::IsNaN(v->AsDouble()))
         {
-            badVar = fVar[i];
+            badVar = v;
             break;
         }
     }
@@ -445,8 +450,8 @@ void FAVarFiller::FillOverlap(std::function<Double_t(void)> wFunc, Double_t axis
         // binned filling
         if (fMode == kBinned || fMode == kBoth)
         {
-            for (Int_t i = 0; i < fNHist; i++)
-                fHist[i]->Fill(weight, p.second, p.first-1, bin2);
+            for (FAVarHistogram* h : fHist)
+                h->Fill(weight, p.second, p.first-1, bin2);
         }
 
         // unbinned filling
@@ -466,8 +471,8 @@ void FAVarFiller::EnableFillBinned()
 {
     // Enable binned filling for all analysis variables.
 
-    for (Int_t i = 0; i < fNVar; i++)
-        fVar[i]->EnableFillBinned();
+    for (FAVarAbs* v : fVar)
+        v->EnableFillBinned();
 }
 
 //______________________________________________________________________________
@@ -475,8 +480,8 @@ void FAVarFiller::DisableFillBinned()
 {
     // Disable binned filling for all analysis variables.
 
-    for (Int_t i = 0; i < fNVar; i++)
-        fVar[i]->DisableFillBinned();
+    for (FAVarAbs* v : fVar)
+        v->DisableFillBinned();
 }
 
 //______________________________________________________________________________
@@ -484,8 +489,8 @@ void FAVarFiller::EnableStorageBinned()
 {
     // Enable binned storage for all analysis variables.
 
-    for (Int_t i = 0; i < fNVar; i++)
-        fVar[i]->EnableStorageBinned();
+    for (FAVarAbs* v : fVar)
+        v->EnableStorageBinned();
 }
 
 //______________________________________________________________________________
@@ -493,8 +498,8 @@ void FAVarFiller::DisableStorageBinned()
 {
     // Disable binned storage for all analysis variables.
 
-    for (Int_t i = 0; i < fNVar; i++)
-        fVar[i]->DisableStorageBinned();
+    for (FAVarAbs* v : fVar)
+        v->DisableStorageBinned();
 }
 
 //______________________________________________________________________________
@@ -517,8 +522,8 @@ void FAVarFiller::AddObjectsToList(TList* list)
     // binned filling
     if (fMode == kBinned || fMode == kBoth)
     {
-        for (Int_t i = 0; i < fNHist; i++)
-            fHist[i]->AddHistogramsToList(list);
+        for (FAVarHistogram* h : fHist)
+            h->AddHistogramsToList(list);
     }
 }
 
@@ -557,8 +562,8 @@ void FAVarFiller::WriteFile(const Char_t* filename, Bool_t flat)
     // binned filling
     if (fMode == kBinned || fMode == kBoth)
     {
-        for (Int_t i = 0; i < fNHist; i++)
-            fHist[i]->WriteToFile(fout, flat);
+        for (FAVarHistogram* h : fHist)
+            h->WriteToFile(fout, flat);
     }
 
     // close the file

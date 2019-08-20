@@ -15,6 +15,7 @@
 #define FooAna_FAVarFiller
 
 #include <functional>
+#include <vector>
 
 #include "TNamed.h"
 
@@ -38,25 +39,23 @@ public:
     };
 
 protected:
-    TAxis* fBins1;                  // first bin axis (not owned)
-    TAxis* fBins2;                  // second bin axis (not owned)
-    Int_t fNVar;                    // number of analysis variables
-    FAVarAbs** fVar;                //[fNVar] array of analysis variables (elements not owned)
-    FAVarAbs* fVarWeight;           // pointer to weighting variable for unbinned (overlap) filling
-    EFillMode fMode;                // filling mode
-    Bool_t fIsCleanup;              // clean-up flag
-    Int_t fNHist;                   // number of histograms
-    FAVarHistogram** fHist;         //[fNHist] array of histograms
-    TTree*** fTree;                 // output trees for unbinned filling
+    TAxis* fBins1;                      // first bin axis (not owned)
+    TAxis* fBins2;                      // second bin axis (not owned)
+    std::vector<FAVarAbs*> fVar;        // vector of analysis variables (elements not owned)
+    FAVarAbs* fVarWeight;               // pointer to weighting variable for unbinned (overlap) filling
+    EFillMode fMode;                    // filling mode
+    Bool_t fIsCleanup;                  // clean-up flag
+    std::vector<FAVarHistogram*> fHist; // vector of histograms
+    TTree*** fTree;                     // output trees for unbinned filling
 
     void AddHistogram(FAVarHistogram* hist);
 
 public:
     FAVarFiller() : TNamed(),
                     fBins1(0), fBins2(0),
-                    fNVar(0), fVar(0), fVarWeight(0),
+                    fVar(), fVarWeight(0),
                     fIsCleanup(kTRUE),
-                    fNHist(0), fHist(0),
+                    fHist(),
                     fTree(0) { }
     FAVarFiller(const Char_t* name, const Char_t* title, Bool_t doCleanup = kTRUE);
     virtual ~FAVarFiller();
