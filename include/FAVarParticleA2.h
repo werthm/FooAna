@@ -22,6 +22,7 @@ class FAVarParticleA2 : public FAVarList
 
 protected:
     FAVar<Float_t>* fVarEnergy;     // energy
+    FAVar<Float_t>* fVarEnergyOrig; // original energy
     FAVar<Float_t>* fVarTheta;      // polar angle
     FAVar<Float_t>* fVarCB_dE;      // deltaE for CB
     FAVar<Float_t>* fVarTAPS_dE;    // deltaE for TAPS
@@ -36,6 +37,7 @@ protected:
 public:
     FAVarParticleA2() : FAVarList(),
                         fVarEnergy(0),
+                        fVarEnergyOrig(0),
                         fVarTheta(0),
                         fVarCB_dE(0), fVarTAPS_dE(0),
                         fVarCB_TOF(0), fVarTAPS_TOF(0),

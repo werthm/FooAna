@@ -26,6 +26,7 @@ FAVarParticleA2::FAVarParticleA2(const Char_t* name, const Char_t* title)
 
     // init members
     fVarEnergy = 0;
+    fVarEnergyOrig = 0;
     fVarTheta = 0;
     fVarCB_dE = 0;
     fVarTAPS_dE = 0;
@@ -44,6 +45,7 @@ FAVarParticleA2::~FAVarParticleA2()
     // Destructor.
 
     if (fVarEnergy) delete fVarEnergy;
+    if (fVarEnergyOrig) delete fVarEnergyOrig;
     if (fVarTheta) delete fVarTheta;
     if (fVarCB_dE) delete fVarCB_dE;
     if (fVarTAPS_dE) delete fVarTAPS_dE;
@@ -141,14 +143,14 @@ void FAVarParticleA2::AddVarsTOF(Int_t nbinsTOF, Double_t minTOF, Double_t maxTO
     // Add the TOF variables.
 
     // create variables
-    Bool_t addEnergy = kFALSE;
-    if (!fVarEnergy)
+    Bool_t addEnergyOrig = kFALSE;
+    if (!fVarEnergyOrig)
     {
-        fVarEnergy = new FAVar<Float_t>(TString::Format("%s_Energy", GetName()).Data(),
-                                        TString::Format("energy of %s", GetTitle()).Data(),
-                                        "MeV",
-                                        nbinsE, minE, maxE, statusBits);
-        addEnergy = kTRUE;
+        fVarEnergyOrig = new FAVar<Float_t>(TString::Format("%s_EnergyOrig", GetName()).Data(),
+                                            TString::Format("original energy of %s", GetTitle()).Data(),
+                                            "MeV",
+                                            nbinsE, minE, maxE, statusBits);
+        addEnergyOrig = kTRUE;
     }
     fVarCB_TOF = new FAVar<Float_t>(TString::Format("%s_CB_TOF", GetName()).Data(),
                                     TString::Format("CB TOF of %s", GetTitle()).Data(),
@@ -160,17 +162,17 @@ void FAVarParticleA2::AddVarsTOF(Int_t nbinsTOF, Double_t minTOF, Double_t maxTO
                                       nbinsTOF, minTOF, maxTOF, statusBits);
 
     // no individual 1d-histograms of variables
-    fVarEnergy->SetBit(FAVarAbs::kNoBinned);
+    fVarEnergyOrig->SetBit(FAVarAbs::kNoBinned);
     fVarCB_TOF->SetBit(FAVarAbs::kNoBinned);
     fVarTAPS_TOF->SetBit(FAVarAbs::kNoBinned);
 
     // set up related variable
-    fVarCB_TOF->AddRelatedVariable(fVarEnergy);
-    fVarTAPS_TOF->AddRelatedVariable(fVarEnergy);
+    fVarCB_TOF->AddRelatedVariable(fVarEnergyOrig);
+    fVarTAPS_TOF->AddRelatedVariable(fVarEnergyOrig);
 
     // register variables
-    if (addEnergy)
-        AddVariable(fVarEnergy);
+    if (addEnergyOrig)
+        AddVariable(fVarEnergyOrig);
     AddVariable(fVarCB_TOF);
     AddVariable(fVarTAPS_TOF);
 }
@@ -266,7 +268,7 @@ void FAVarParticleA2::Set(const T* part)
     // check TOF filling
     if (fVarCB_TOF)
     {
-        fVarEnergy->SetVar(part->energy);
+        fVarEnergyOrig->SetVar(part->energyOrig);
         fVarCB_TOF->SetVar(part->tof);
         fVarTAPS_TOF->SetVar(part->tof);
 
