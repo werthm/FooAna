@@ -22,6 +22,7 @@
 #pragma link C++ nestedclasses;
 #pragma link C++ nestedtypedef;
 
+#pragma link C++ enum FADetectorA2_t;
 #pragma link C++ namespace FAUtils;
 #pragma link C++ namespace FAUtilsA2;
 #pragma link C++ namespace FAConfigA2;
