@@ -79,8 +79,7 @@ void FAVarParticleA2_CoincT::Set(const T* p1, const T* p2, Bool_t isMC)
         return;
 
     // CB-CB
-    if (p1->detector == FAConfigA2::kCBDetector &&
-        p2->detector == FAConfigA2::kCBDetector)
+    if ((p1->det & FAConfigA2::kCB) && (p2->det & FAConfigA2::kCB))
     {
         fVar_dT_CB_CB->SetVar(p1->time - p2->time);
         fVar_dT_CB_CB->ResetBit(FAVarAbs::kNoFill);
@@ -88,8 +87,7 @@ void FAVarParticleA2_CoincT::Set(const T* p1, const T* p2, Bool_t isMC)
         fVar_dT_TAPS_TAPS->SetBit(FAVarAbs::kNoFill);
     }
     // TAPS-TAPS
-    else if (p1->detector == FAConfigA2::kTAPSDetector &&
-             p2->detector == FAConfigA2::kTAPSDetector)
+    else if ((p1->det & FAConfigA2::kTAPS) && (p2->det & FAConfigA2::kTAPS))
     {
         if (isMC)
             fVar_dT_TAPS_TAPS->SetVar(p1->time - p2->time);
@@ -100,8 +98,7 @@ void FAVarParticleA2_CoincT::Set(const T* p1, const T* p2, Bool_t isMC)
         fVar_dT_TAPS_TAPS->ResetBit(FAVarAbs::kNoFill);
     }
     // CB-TAPS
-    else if (p1->detector == FAConfigA2::kCBDetector &&
-             p2->detector == FAConfigA2::kTAPSDetector)
+    else if ((p1->det & FAConfigA2::kCB) && (p2->det & FAConfigA2::kTAPS))
     {
         if (isMC)
             fVar_dT_CB_TAPS->SetVar(p1->time - p2->time);
@@ -112,8 +109,7 @@ void FAVarParticleA2_CoincT::Set(const T* p1, const T* p2, Bool_t isMC)
         fVar_dT_TAPS_TAPS->SetBit(FAVarAbs::kNoFill);
     }
     // TAPS-CB
-    else if (p1->detector == FAConfigA2::kTAPSDetector &&
-             p2->detector == FAConfigA2::kCBDetector)
+    else if ((p1->det & FAConfigA2::kTAPS) && (p2->det & FAConfigA2::kCB))
     {
         if (isMC)
             fVar_dT_CB_TAPS->SetVar(p1->time - p2->time);
