@@ -12,6 +12,12 @@ Yet another analysis framework
 
 ## Release notes
 
+### 0.4.0
+in beta testing
+* new event class template with general-variable array
+* new A2 detector bit pattern (not compatible with earlier versions)
+* easy enabling/disabling of binned storage
+
 ### 0.3.1
 August 6, 2019
 * added a number of small improvements
@@ -321,6 +327,22 @@ void Analysis()
     gSystem->Exit(0);
 }
 ```
+#### A2 detector codes
+The A2 detector bit pattern type `FADetector_t` is defined in the `FAConfigA2`
+namespace. The following table shows some common codes as decimal numbers for
+a quick lookup.
+
+Code        | Detectors
+:-----------|:---------------------
+4           | CB
+8           | PID
+12          | CB, PID
+20          | CB, MWPC1
+52          | CB, MWPC1, MWPC2
+60          | CB, PID, MWPC1, MWPC2
+64          | TAPS
+128         | Veto
+192         | TAPS, Veto
 
 ### Plotting and comparing analysis variables
 Analysis variables of several analyses can be compared by using `FAVarPlotter`. In the following
