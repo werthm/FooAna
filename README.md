@@ -328,7 +328,7 @@ void Analysis()
 }
 ```
 #### A2 detector codes
-The A2 detector bit pattern type `FADetector_t` is defined in the `FAConfigA2`
+The A2 detector bit pattern type `FADetectorA2_t` is defined in the `FAConfigA2`
 namespace. The following table shows some common codes as decimal numbers for
 a quick lookup.
 
