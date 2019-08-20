@@ -16,6 +16,7 @@
 #define FooAna_FAUtilsA2
 
 #include "FAVarAbs.h"
+#include "FAConfigA2.h"
 
 namespace FAUtilsA2
 {
@@ -24,6 +25,7 @@ namespace FAUtilsA2
                                 Bool_t quiet = kFALSE);
 
     void SetDetFillFlags(Int_t det, FAVarAbs& v_cb, FAVarAbs& v_taps);
+    TString DetectorsAsString(FAConfigA2::FADetectorA2_t d);
 }
 
 #endif
