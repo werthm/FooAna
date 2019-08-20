@@ -17,13 +17,17 @@
 #include "TObject.h"
 #include "TMath.h"
 
+#include "FAConfigA2.h"
 #include "FAUtils.h"
+#include "FAUtilsA2.h"
+
+using namespace FAConfigA2;
 
 class FAParticleA2_B : public TObject
 {
 
 public:
-    Int_t detector;         // detector index/pattern
+    FADetectorA2_t det;     // detector bit map
     Short_t detElem;        // detector element index
     Double32_t theta;       // polar angle [rad]
     Double32_t phi;         // azimuthal angle [rad]
@@ -36,7 +40,7 @@ public:
     Double32_t psa_r;       // PSA radius [MeV]
 
     FAParticleA2_B() : TObject(),
-                       detector(0), detElem(0),
+                       det(kEmpty), detElem(0),
                        theta(0), phi(0), energy(0), energyOrig(0), time(0),
                        deltaE(0), tof(0),
                        psa_a(0), psa_r(0) { }
@@ -56,7 +60,7 @@ public:
     }
     virtual void Print(Option_t* option = "") const
     {
-        printf("Detector               : %d\n", detector);
+        printf("Detectors              : %s\n", FAUtilsA2::DetectorsAsString(det).Data());
         printf("Detector element       : %d\n", detElem);
         printf("Theta [deg]            : %f\n", theta*TMath::RadToDeg());
         printf("Phi [deg]              : %f\n", phi*TMath::RadToDeg());
@@ -70,7 +74,7 @@ public:
     }
     virtual void Clear(Option_t* option = "")
     {
-        detector = 0;
+        det = kEmpty;
         detElem = 0;
         theta = 0;
         phi = 0;
