@@ -258,9 +258,14 @@ void FAVarParticleA2::Set(const T* part)
             fVarCB_dE->SetBit(FAVarAbs::kNoFill);
             fVarTAPS_dE->ResetBit(FAVarAbs::kNoFill);
         }
-        else
+        else if (part->det & FAConfigA2::kCB)
         {
             fVarCB_dE->ResetBit(FAVarAbs::kNoFill);
+            fVarTAPS_dE->SetBit(FAVarAbs::kNoFill);
+        }
+        else
+        {
+            fVarCB_dE->SetBit(FAVarAbs::kNoFill);
             fVarTAPS_dE->SetBit(FAVarAbs::kNoFill);
         }
     }
@@ -278,9 +283,14 @@ void FAVarParticleA2::Set(const T* part)
             fVarCB_TOF->SetBit(FAVarAbs::kNoFill);
             fVarTAPS_TOF->ResetBit(FAVarAbs::kNoFill);
         }
-        else
+        else if (part->det & FAConfigA2::kCB)
         {
             fVarCB_TOF->ResetBit(FAVarAbs::kNoFill);
+            fVarTAPS_TOF->SetBit(FAVarAbs::kNoFill);
+        }
+        else
+        {
+            fVarCB_TOF->SetBit(FAVarAbs::kNoFill);
             fVarTAPS_TOF->SetBit(FAVarAbs::kNoFill);
         }
     }
