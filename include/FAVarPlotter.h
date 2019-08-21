@@ -82,7 +82,7 @@ public:
                  const Char_t* binName1 = 0, const Char_t* binName2 = 0);
     virtual ~FAVarPlotter();
 
-    void AddEntry(const Char_t* file, const Char_t* title, const Color_t color);
+    void AddEntry(const Char_t* file, const Char_t* title, const Color_t color = kBlack);
 
     Int_t GetNEntry() const { return fEntries.size(); }
     const FAVarPlotterEntry& GetEntry(Int_t i) const { return fEntries[i]; }
