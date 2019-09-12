@@ -21,26 +21,24 @@
 #include "FAUtils.h"
 #include "FAUtilsA2.h"
 
-using namespace FAConfigA2;
-
 class FAParticleA2_B : public TObject
 {
 
 public:
-    FADetectorA2_t det;     // detector bit map
-    Short_t detElem;        // detector element index
-    Double32_t theta;       // polar angle [rad]
-    Double32_t phi;         // azimuthal angle [rad]
-    Double32_t energy;      // energy [MeV]
-    Double32_t energyOrig;  // original energy [MeV]
-    Double32_t time;        // time [ns]
-    Double32_t deltaE;      // deltaE [MeV]
-    Double32_t tof;         // normalized time-of-flight [ns]
-    Double32_t psa_a;       // PSA angle [deg]
-    Double32_t psa_r;       // PSA radius [MeV]
+    FAConfigA2::FADetectorA2_t det; // detector bit map
+    Short_t detElem;                // detector element index
+    Double32_t theta;               // polar angle [rad]
+    Double32_t phi;                 // azimuthal angle [rad]
+    Double32_t energy;              // energy [MeV]
+    Double32_t energyOrig;          // original energy [MeV]
+    Double32_t time;                // time [ns]
+    Double32_t deltaE;              // deltaE [MeV]
+    Double32_t tof;                 // normalized time-of-flight [ns]
+    Double32_t psa_a;               // PSA angle [deg]
+    Double32_t psa_r;               // PSA radius [MeV]
 
     FAParticleA2_B() : TObject(),
-                       det(kEmpty), detElem(0),
+                       det(FAConfigA2::kNoDet), detElem(0),
                        theta(0), phi(0), energy(0), energyOrig(0), time(0),
                        deltaE(0), tof(0),
                        psa_a(0), psa_r(0) { }
@@ -74,7 +72,7 @@ public:
     }
     virtual void Clear(Option_t* option = "")
     {
-        det = kEmpty;
+        det = FAConfigA2::kNoDet;
         detElem = 0;
         theta = 0;
         phi = 0;
