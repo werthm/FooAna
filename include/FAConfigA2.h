@@ -21,7 +21,7 @@ namespace FAConfigA2
     // define A2 detectors
     enum FADetectorA2_t
     {
-        kEmpty   = 0,
+        kNoDet   = 0,
         kTagger  = 1 << 0,
         kMicro   = 1 << 1,
         kCB      = 1 << 2,
