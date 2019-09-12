@@ -301,14 +301,31 @@ void FAAnalysis::WriteOutputFile(const Char_t* out)
              fResult->GetNFiles(), outfile);
 
         // merge partial output files
-        TFileMerger merger(kFALSE);
-        merger.OutputFile(outfile, "recreate");
-        for (Int_t i = 0; i < fResult->GetNFiles(); i++)
+        if (fResult->GetNFiles() < 20)
         {
-            if (!merger.AddFile(fResult->GetFile(i), kFALSE))
-                Error("WriteOutputFile", "Partial output file '%s' was not found!", fResult->GetFile(i));
+            // standard merger
+            TFileMerger merger(kFALSE);
+            merger.OutputFile(outfile, "recreate");
+            for (Int_t i = 0; i < fResult->GetNFiles(); i++)
+            {
+                if (!merger.AddFile(fResult->GetFile(i), kFALSE))
+                    Error("WriteOutputFile", "Partial output file '%s' was not found!", fResult->GetFile(i));
+            }
+            merger.Merge();
         }
-        merger.Merge();
+        else
+        {
+            // faster parallel merger
+            TString cmd = TString::Format("hadd -f -j %d %s ",
+                                          gEnv->GetValue("FA.Analysis.NWorker", 1),
+                                          outfile);
+            for (Int_t i = 0; i < fResult->GetNFiles(); i++)
+            {
+                cmd += fResult->GetFile(i);
+                cmd += " ";
+            }
+            gSystem->Exec(cmd.Data());
+        }
 
         // delete partial output files
         for (Int_t i = 0; i < fResult->GetNFiles(); i++)
