@@ -29,8 +29,6 @@
 #pragma link C++ class FAAnalysis+;
 #pragma link C++ class FAAnalysisA2+;
 #pragma link C++ class FAAnalysisResult+;
-#pragma link C++ class FAVector3+;
-#pragma link C++ class FAVector4+;
 #pragma link C++ class FAProgressServer+;
 #pragma link C++ class FAProgressClient+;
 #pragma link C++ class FAProgressMessage+;
