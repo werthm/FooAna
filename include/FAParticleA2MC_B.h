@@ -16,7 +16,7 @@
 
 #include "TLorentzVector.h"
 
-#include "FAVector4.h"
+#include "FAFooAna.h"
 
 class FAParticleA2MC_B : public TObject
 {
@@ -29,7 +29,7 @@ public:
                          pdg(0), vec4(0, 0, 0, 0) { }
     FAParticleA2MC_B(Int_t pdg, TLorentzVector& v)
         : TObject(),
-          pdg(pdg), vec4(v) { }
+          pdg(pdg), vec4(v.Px(), v.Py(), v.Pz(), v.E()) { }
     virtual ~FAParticleA2MC_B() { }
 
     const FAVector4& vector4() const { return vec4; }
@@ -37,15 +37,15 @@ public:
     virtual void Print(Option_t* option = "") const
     {
         printf("PDG index              : %d\n", pdg);
-        printf("Px                     : %f\n", vec4.x);
-        printf("Py                     : %f\n", vec4.y);
-        printf("Pz                     : %f\n", vec4.z);
-        printf("Energy                 : %f\n", vec4.t);
+        printf("Px                     : %f\n", vec4.Px());
+        printf("Py                     : %f\n", vec4.Py());
+        printf("Pz                     : %f\n", vec4.Pz());
+        printf("Energy                 : %f\n", vec4.E());
     }
     virtual void Clear(Option_t* option = "")
     {
         pdg = 0;
-        vec4.Clear();
+        vec4.SetPxPyPzE(0, 0, 0, 0);
     }
 
     ClassDef(FAParticleA2MC_B, 1)  // A2 MC particle class (basic)
