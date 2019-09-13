@@ -29,11 +29,11 @@ FAWrapPrim<VarType>* FAEventT<VarType, PartType, PartTypeMC>::variable(Int_t i)
 
 //______________________________________________________________________________
 template <class VarType, class PartType, class PartTypeMC>
-FAVector4* FAEventT<VarType, PartType, PartTypeMC>::vector4(Int_t i)
+FAVector4& FAEventT<VarType, PartType, PartTypeMC>::vector4(Int_t i)
 {
     // Return the 4-vector at index 'i'.
 
-    return (FAVector4*)vec4[i];
+    return vec4[i];
 }
 
 //______________________________________________________________________________
@@ -69,7 +69,7 @@ void FAEventT<VarType, PartType, PartTypeMC>::AddVector4(const FAVector4& v)
 {
     // Add a vector to the list of 4-vectors.
 
-    new (vec4[nVec4++]) FAVector4(v);
+    vec4.push_back(v);
 }
 
 //______________________________________________________________________________
@@ -78,7 +78,7 @@ void FAEventT<VarType, PartType, PartTypeMC>::AddVector4(const TLorentzVector& v
 {
     // Add a vector to the list of 4-vectors.
 
-    new (vec4[nVec4++]) FAVector4(v);
+    vec4.push_back(FAVector4(v.Px(), v.Py(), v.Pz(), v.E()));
 }
 
 //______________________________________________________________________________
@@ -111,11 +111,12 @@ void FAEventT<VarType, PartType, PartTypeMC>::Print(Option_t* option) const
         printf("-> variable %d\n", i+1);
         vars[i]->Print(option);
     }
-    printf("Number of 4-vectors    : %d\n", nVec4);
-    for (Int_t i = 0; i < nVec4; i++)
+    printf("Number of 4-vectors    : %lu\n", vec4.size());
+    for (UInt_t i = 0; i < vec4.size(); i++)
     {
         printf("-> 4-vector %d\n", i+1);
-        vec4[i]->Print(option);
+        printf("Px: %f  Py: %f  Pz: %f  E: %f\n",
+               vec4[i].Px(), vec4[i].Py(), vec4[i].Pz(), vec4[i].E());
     }
     printf("Number of particles    : %d\n", nPart);
     for (Int_t i = 0; i < nPart; i++)
@@ -138,11 +139,10 @@ void FAEventT<VarType, PartType, PartTypeMC>::Clear(Option_t* option)
     // Prepare class for a new event by clearing all members.
 
     nVar = 0;
-    nVec4 = 0;
     nPart = 0;
     nPartMC = 0;
     vars.Clear();
-    vec4.Clear();
+    vec4.clear();
     part.Clear();
     partMC.Clear();
 }
@@ -157,7 +157,6 @@ FAEventT<VarType, PartType, PartTypeMC>& FAEventT<VarType, PartType, PartTypeMC>
     if (this != &e)
     {
         nVar = e.nVar;
-        nVec4 = e.nVec4;
         nPart = e.nPart;
         nPartMC = e.nPartMC;
         vars = e.vars;

@@ -17,7 +17,7 @@
 #include "TClonesArray.h"
 #include "TClass.h"
 
-#include "FAVector4.h"
+#include "FAFooAna.h"
 #include "FAWrapPrim.h"
 
 class TLorentzVector;
@@ -28,24 +28,20 @@ class FAEventT
 
 public:
     Short_t nVar;                       // number of variables
-    Short_t nVec4;                      // number of 4-vectors
     Short_t nPart;                      // number of particles
     Short_t nPartMC;                    // number of MC particles
     TClonesArray vars;                  // array of variables
-    TClonesArray vec4;                  // array of 4-vectors
+    std::vector<FAVector4> vec4;        // array of 4-vectors
     TClonesArray part;                  // array of particles
     TClonesArray partMC;                // array of particles
 
     FAEventT() : nVar(0),
-                 nVec4(0),
                  nPart(0),
                  nPartMC(0),
                  vars(FAWrapPrim<VarType>::Class(), 10),
-                 vec4(FAVector4::Class(), 10),
                  part(PartType::Class(), 10),
                  partMC(PartTypeMC::Class(), 10) { }
     FAEventT(const FAEventT& orig) : nVar(orig.nVar),
-                                     nVec4(orig.nVec4),
                                      nPart(orig.nPart),
                                      nPartMC(orig.nPartMC),
                                      vars(orig.vars),
@@ -55,7 +51,7 @@ public:
     virtual ~FAEventT() { }
 
     FAWrapPrim<VarType>* variable(Int_t i);
-    FAVector4* vector4(Int_t i);
+    FAVector4& vector4(Int_t i);
     PartType* particle(Int_t i);
     PartTypeMC* particleMC(Int_t i);
 
