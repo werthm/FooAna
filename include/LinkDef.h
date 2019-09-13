@@ -11,6 +11,9 @@
 //////////////////////////////////////////////////////////////////////////
 
 
+#include "Math/GenVector/LorentzVector.h"
+#include "Math/GenVector/PxPyPzE4D.h"
+
 #ifdef __CINT__
 
 // turn everything off
@@ -29,6 +32,8 @@
 #pragma link C++ class FAAnalysis+;
 #pragma link C++ class FAAnalysisA2+;
 #pragma link C++ class FAAnalysisResult+;
+#pragma link C++ typedef FAVector4;
+#pragma link C++ class std::vector<ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<Double32_t>>>+;
 #pragma link C++ class FAProgressServer+;
 #pragma link C++ class FAProgressClient+;
 #pragma link C++ class FAProgressMessage+;
