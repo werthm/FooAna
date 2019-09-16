@@ -105,8 +105,6 @@ FAParticleA2MC_B         : A2 MC particle class (basic)
 FAVector3                : three-vector class using Double32_t
   FAVector4              : four-vector class using Double32_t
 
-FAWrapPrim               : TObject-wrapper for primitive types
-
 FAVarAbs                 : abstract base class for analysis variables
   FAVar                  : analysis variable class template
 FAVarList                : a list of analysis variables
