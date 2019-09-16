@@ -13,7 +13,6 @@
 
 #include "TRandom3.h"
 #include "TSystem.h"
-#include "TLorentzVector.h"
 #include "TObjArray.h"
 #include "TObjString.h"
 #include "TAxis.h"
@@ -313,39 +312,7 @@ Int_t FAUtils::CalcBinOverlapWeights(TAxis* axis, Double_t x, Double_t x_width,
 }
 
 //______________________________________________________________________________
-void FAUtils::Calculate4Vector(Double_t theta, Double_t phi, Double_t t, Double_t mass,
-                               TLorentzVector& p4)
-{
-    // Calculate the 4-vector of a particle using the polar angle 'th', the azimuthal
-    // angle 'ph', the kinetic energy 't', and the mass 'mass'.
-    // The components of the 4-vector will be stored in 'p4'.
-
-    Double_t tot_e = t + mass;
-    p4.SetE(tot_e);
-    Double_t p = TMath::Sqrt(tot_e*tot_e - mass*mass);
-    TVector3 v;
-    v.SetMagThetaPhi(p, theta, phi);
-    p4.SetVect(v);
-}
-
-//______________________________________________________________________________
-void FAUtils::Calculate4VectorTOF(Double_t theta, Double_t phi, Double_t tof, Double_t mass,
-                                  TLorentzVector& p4)
-{
-    // Calculate the 4-vector of a particle using the polar angle 'th', the azimuthal
-    // angle 'ph', the normalized time-of-flight 'tof', and the mass 'mass'.
-    // The components of the 4-vector will be stored in 'p4'.
-
-    Double_t tot_e = CalculateEkinTOF(tof, mass) + mass;
-    p4.SetE(tot_e);
-    Double_t p = TMath::Sqrt(tot_e*tot_e - mass*mass);
-    TVector3 v;
-    v.SetMagThetaPhi(p, theta, phi);
-    p4.SetVect(v);
-}
-
-//______________________________________________________________________________
-Double_t FAUtils::CalculateEkinTOF(Double_t tof, Double_t mass)
+Double_t FAUtils::CalcEkinTOF(Double_t tof, Double_t mass)
 {
     // Calculate the kinetic energy of a particle with normalized
     // time-of-flight 'tof' and mass 'mass'.
