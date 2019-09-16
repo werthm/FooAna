@@ -14,8 +14,6 @@
 #ifndef FooAna_FAParticleA2MC_B
 #define FooAna_FAParticleA2MC_B
 
-#include "TLorentzVector.h"
-
 #include "FAFooAna.h"
 
 class FAParticleA2MC_B
@@ -26,7 +24,7 @@ public:
     FAVector4 vec4;         // 4-vector
 
     FAParticleA2MC_B() : pdg(0), vec4(0, 0, 0, 0) { }
-    FAParticleA2MC_B(Int_t pdg, TLorentzVector& v)
+    FAParticleA2MC_B(Int_t pdg, FAVector4& v)
         : pdg(pdg), vec4(v.Px(), v.Py(), v.Pz(), v.E()) { }
     virtual ~FAParticleA2MC_B() { }
 
