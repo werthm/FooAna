@@ -14,8 +14,12 @@
 
 #include "TSystem.h"
 #include "TError.h"
+#include "TMath.h"
 
 #include "FAUtilsA2.h"
+#include "FAUtils.h"
+#include "FAParticleA2_B.h"
+#include "FAParticleA2_BF1.h"
 
 //______________________________________________________________________________
 Int_t FAUtilsA2::LoadTaggerCalibration(const Char_t* fileName, Int_t nChannel,
@@ -140,4 +144,46 @@ TString FAUtilsA2::DetectorsAsString(FAConfigA2::FADetectorA2_t d)
 
     return out;
 }
+
+//______________________________________________________________________________
+template <class PartType>
+const FAVector4 FAUtilsA2::CalcVector4(const PartType& part, Double_t mass)
+{
+    // Calculate the 4-vector of the particle 'part' using its detected position
+    // assuming the mass 'mass'.
+
+    const Double_t e = part.energy + mass;
+    const Double_t p = TMath::Sqrt(e*e - mass*mass);
+
+    FAVector4 p4;
+    p4.SetPxPyPzE(p * TMath::Sin(part.theta) * TMath::Cos(part.phi),
+                  p * TMath::Sin(part.theta) * TMath::Sin(part.phi),
+                  p * TMath::Cos(part.theta),
+                  e);
+    return p4;
+}
+
+//______________________________________________________________________________
+template <class PartType>
+const FAVector4 FAUtilsA2::CalcVector4TOF(const PartType& part, Double_t mass)
+{
+    // Calculate the 4-vector of the particle 'part' using its time-of-flight
+    // assuming the mass 'mass'.
+
+    const Double_t e = FAUtils::CalcEkinTOF(part.tof, mass) + mass;
+    const Double_t p = TMath::Sqrt(e*e - mass*mass);
+
+    FAVector4 p4;
+    p4.SetPxPyPzE(p * TMath::Sin(part.theta) * TMath::Cos(part.phi),
+                  p * TMath::Sin(part.theta) * TMath::Sin(part.phi),
+                  p * TMath::Cos(part.theta),
+                  e);
+    return p4;
+}
+
+// template instantiations
+template const FAVector4 FAUtilsA2::CalcVector4(const FAParticleA2_B&, Double_t);
+template const FAVector4 FAUtilsA2::CalcVector4(const FAParticleA2_BF1&, Double_t);
+template const FAVector4 FAUtilsA2::CalcVector4TOF(const FAParticleA2_B&, Double_t);
+template const FAVector4 FAUtilsA2::CalcVector4TOF(const FAParticleA2_BF1&, Double_t);
 
