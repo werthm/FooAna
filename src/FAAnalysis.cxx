@@ -338,11 +338,12 @@ void FAAnalysis::Print(Option_t* option) const
 {
     // Print the content of this class.
 
-    printf("########################\n");
+    printf("################################\n");
     printf("FooAna %s\n", FOOANA_VERSION);
     printf("https://github.com/werthm/FooAna\n");
+    printf("################################\n");
+    printf("\n");
     printf("FAAnalysis configuration\n");
-    printf("########################\n");
     printf("Number of workers               : %d\n", gEnv->GetValue("FA.Analysis.NWorker", 1));
     printf("Tree name                       : %s\n", fChain ? fChain->GetName() : "empty");
     printf("Files in chain                  : %d\n", fChain ? fChain->GetListOfFiles()->GetEntries() : 0);
