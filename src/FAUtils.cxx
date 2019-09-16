@@ -21,12 +21,9 @@
 #include "TH2.h"
 #include "TGraph.h"
 #include "TCutG.h"
+#include "TMath.h"
 
 #include "FAUtils.h"
-#include "FAVersion.h"
-
-// init static members
-static Int_t dummy = FAUtils::ShowBanner();
 
 //______________________________________________________________________________
 Char_t FAUtils::TreeDataTypeToChar(EDataType datatype)
@@ -62,19 +59,6 @@ Char_t FAUtils::TreeDataTypeToChar(EDataType datatype)
         default:
             return 0;
     }
-
-    return 0;
-}
-
-//______________________________________________________________________________
-Int_t FAUtils::ShowBanner()
-{
-    // Show the FooAna banner.
-
-    printf("\n");
-    printf("FooAna %s by Dominik Werthmueller, University of York (2017-2019)\n", FOOANA_VERSION);
-    printf("https://github.com/werthm/FooAna\n");
-    printf("\n");
 
     return 0;
 }

@@ -23,7 +23,6 @@ class TH1;
 namespace FAUtils
 {
     Char_t TreeDataTypeToChar(EDataType datatype);
-    Int_t ShowBanner();
     Int_t LaunchProgressServer();
 
     TString FormatTimeSec(Double_t seconds);
