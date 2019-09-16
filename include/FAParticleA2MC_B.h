@@ -18,18 +18,16 @@
 
 #include "FAFooAna.h"
 
-class FAParticleA2MC_B : public TObject
+class FAParticleA2MC_B
 {
 
 public:
     Int_t pdg;              // PDG ID
     FAVector4 vec4;         // 4-vector
 
-    FAParticleA2MC_B() : TObject(),
-                         pdg(0), vec4(0, 0, 0, 0) { }
+    FAParticleA2MC_B() : pdg(0), vec4(0, 0, 0, 0) { }
     FAParticleA2MC_B(Int_t pdg, TLorentzVector& v)
-        : TObject(),
-          pdg(pdg), vec4(v.Px(), v.Py(), v.Pz(), v.E()) { }
+        : pdg(pdg), vec4(v.Px(), v.Py(), v.Pz(), v.E()) { }
     virtual ~FAParticleA2MC_B() { }
 
     const FAVector4& vector4() const { return vec4; }

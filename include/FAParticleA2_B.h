@@ -14,14 +14,12 @@
 #ifndef FooAna_FAParticleA2_B
 #define FooAna_FAParticleA2_B
 
-#include "TObject.h"
 #include "TMath.h"
 
 #include "FAConfigA2.h"
-#include "FAUtils.h"
 #include "FAUtilsA2.h"
 
-class FAParticleA2_B : public TObject
+class FAParticleA2_B
 {
 
 public:
@@ -37,25 +35,12 @@ public:
     Double32_t psa_a;               // PSA angle [deg]
     Double32_t psa_r;               // PSA radius [MeV]
 
-    FAParticleA2_B() : TObject(),
-                       det(FAConfigA2::kNoDet), detElem(0),
+    FAParticleA2_B() : det(FAConfigA2::kNoDet), detElem(0),
                        theta(0), phi(0), energy(0), energyOrig(0), time(0),
                        deltaE(0), tof(0),
                        psa_a(0), psa_r(0) { }
     virtual ~FAParticleA2_B() { }
 
-    void Calculate4Vector(TLorentzVector& p4, Double_t mass) const
-    {
-        FAUtils::Calculate4Vector(theta, phi, energy, mass, p4);
-    }
-    void Calculate4VectorTOF(TLorentzVector& p4, Double_t mass) const
-    {
-        FAUtils::Calculate4VectorTOF(theta, phi, tof, mass, p4);
-    }
-    Double_t CalculateEkinTOF(Double_t mass) const
-    {
-        return FAUtils::CalculateEkinTOF(tof, mass);
-    }
     virtual void Print(Option_t* option = "") const
     {
         printf("Detectors              : %s\n", FAUtilsA2::DetectorsAsString(det).Data());

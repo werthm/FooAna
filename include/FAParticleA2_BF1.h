@@ -14,14 +14,12 @@
 #ifndef FooAna_FAParticleA2_BF1
 #define FooAna_FAParticleA2_BF1
 
-#include "TObject.h"
 #include "TMath.h"
 
 #include "FAConfigA2.h"
-#include "FAUtils.h"
 #include "FAUtilsA2.h"
 
-class FAParticleA2_BF1 : public TObject
+class FAParticleA2_BF1
 {
 
 public:
@@ -40,26 +38,13 @@ public:
     Double32_t pullPhi;             // phi pull
     Double32_t pullT;               // kinetic energy pull
 
-    FAParticleA2_BF1() : TObject(),
-                         det(FAConfigA2::kNoDet), detElem(0),
+    FAParticleA2_BF1() : det(FAConfigA2::kNoDet), detElem(0),
                          theta(0), phi(0), energy(0), energyOrig(0), time(0),
                          deltaE(0), tof(0),
                          psa_a(0), psa_r(0),
                          pullTheta(0), pullPhi(0), pullT(0) { }
     virtual ~FAParticleA2_BF1() { }
 
-    void Calculate4Vector(TLorentzVector& p4, Double_t mass) const
-    {
-        FAUtils::Calculate4Vector(theta, phi, energy, mass, p4);
-    }
-    void Calculate4VectorTOF(TLorentzVector& p4, Double_t mass) const
-    {
-        FAUtils::Calculate4VectorTOF(theta, phi, tof, mass, p4);
-    }
-    Double_t CalculateEkinTOF(Double_t mass) const
-    {
-        return FAUtils::CalculateEkinTOF(tof, mass);
-    }
     virtual void Print(Option_t* option = "") const
     {
         printf("Detectors              : %s\n", FAUtilsA2::DetectorsAsString(det).Data());
