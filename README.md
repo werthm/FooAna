@@ -14,7 +14,9 @@ Yet another analysis framework
 
 ### 0.4.0
 in beta testing
-* new event class template with general-variable array
+* improved performance
+* new event class template with general-variable array and using std::vector
+* using ROOT GenVector package
 * new A2 detector bit pattern (not compatible with earlier versions)
 * easy enabling/disabling of binned storage
 
@@ -101,9 +103,6 @@ FAEventT                 : base event class template
 FAParticleA2_B           : A2 particle class (basic)
 FAParticleA2_BF1         : A2 particle class (basic, kinfit type 1)
 FAParticleA2MC_B         : A2 MC particle class (basic)
-
-FAVector3                : three-vector class using Double32_t
-  FAVector4              : four-vector class using Double32_t
 
 FAVarAbs                 : abstract base class for analysis variables
   FAVar                  : analysis variable class template
@@ -213,6 +212,12 @@ filler.WriteFile("events.root");
 ```
 A complete example can be found in the `ReadCustomEvent()` method in
 `examples/event/CustomEvent.C`.
+
+### 4-vector class
+FooAna defines the type `FAVector4` in `FAFooAna.h` as
+`ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<Double32_t>>`
+using the ROOT GenVector package. This provides a faster alternative
+to `TLorentzVector` with basically the same functionality.
 
 ### Analyzing A2 data
 `FAAnalysisA2` is an analysis-wrapper for data of the A2 experiment.
