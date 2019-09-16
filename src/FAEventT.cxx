@@ -20,47 +20,11 @@ templateClassImp(FAEventT)
 
 //______________________________________________________________________________
 template <class VarType, class PartType, class PartTypeMC>
-FAWrapPrim<VarType>* FAEventT<VarType, PartType, PartTypeMC>::variable(Int_t i)
-{
-    // Return the variable at index 'i'.
-
-    return (FAWrapPrim<VarType>*)vars[i];
-}
-
-//______________________________________________________________________________
-template <class VarType, class PartType, class PartTypeMC>
-FAVector4& FAEventT<VarType, PartType, PartTypeMC>::vector4(Int_t i)
-{
-    // Return the 4-vector at index 'i'.
-
-    return vec4[i];
-}
-
-//______________________________________________________________________________
-template <class VarType, class PartType, class PartTypeMC>
-PartType* FAEventT<VarType, PartType, PartTypeMC>::particle(Int_t i)
-{
-    // Return the particle at index 'i'.
-
-    return (PartType*)part[i];
-}
-
-//______________________________________________________________________________
-template <class VarType, class PartType, class PartTypeMC>
-PartTypeMC* FAEventT<VarType, PartType, PartTypeMC>::particleMC(Int_t i)
-{
-    // Return the MC particle at index 'i'.
-
-    return (PartTypeMC*)partMC[i];
-}
-
-//______________________________________________________________________________
-template <class VarType, class PartType, class PartTypeMC>
 void FAEventT<VarType, PartType, PartTypeMC>::AddVariable(VarType v)
 {
     // Add a variable to the list of variables.
 
-    new (vars[nVar++]) FAWrapPrim<VarType>(v);
+    vars.push_back(v);
 }
 
 //______________________________________________________________________________
@@ -87,7 +51,7 @@ void FAEventT<VarType, PartType, PartTypeMC>::AddParticle(const PartType& p)
 {
     // Add a particle to the list of particles.
 
-    new (part[nPart++]) PartType(p);
+    part.push_back(p);
 }
 
 //______________________________________________________________________________
@@ -96,7 +60,7 @@ void FAEventT<VarType, PartType, PartTypeMC>::AddParticleMC(const PartTypeMC& p)
 {
     // Add a particle to the list of MC particles.
 
-    new (partMC[nPartMC++]) PartTypeMC(p);
+    partMC.push_back(p);
 }
 
 //______________________________________________________________________________
@@ -105,11 +69,10 @@ void FAEventT<VarType, PartType, PartTypeMC>::Print(Option_t* option) const
 {
     // Print the content of this class.
 
-    printf("Number of variables    : %d\n", nVar);
-    for (Int_t i = 0; i < nVar; i++)
+    printf("Number of variables    : %lu\n", vars.size());
+    for (UInt_t i = 0; i < vars.size(); i++)
     {
-        printf("-> variable %d\n", i+1);
-        vars[i]->Print(option);
+        printf("-> variable %d : %f\n", i+1, vars[i]);
     }
     printf("Number of 4-vectors    : %lu\n", vec4.size());
     for (UInt_t i = 0; i < vec4.size(); i++)
@@ -118,17 +81,17 @@ void FAEventT<VarType, PartType, PartTypeMC>::Print(Option_t* option) const
         printf("Px: %f  Py: %f  Pz: %f  E: %f\n",
                vec4[i].Px(), vec4[i].Py(), vec4[i].Pz(), vec4[i].E());
     }
-    printf("Number of particles    : %d\n", nPart);
-    for (Int_t i = 0; i < nPart; i++)
+    printf("Number of particles    : %lu\n", part.size());
+    for (UInt_t i = 0; i < part.size(); i++)
     {
         printf("-> Particle %d\n", i+1);
-        part[i]->Print(option);
+        part[i].Print(option);
     }
-    printf("Number of MC particles : %d\n", nPartMC);
-    for (Int_t i = 0; i < nPartMC; i++)
+    printf("Number of MC particles : %lu\n", partMC.size());
+    for (UInt_t i = 0; i < partMC.size(); i++)
     {
         printf("-> MC Particle %d\n", i+1);
-        partMC[i]->Print(option);
+        partMC[i].Print(option);
     }
 }
 
@@ -138,13 +101,10 @@ void FAEventT<VarType, PartType, PartTypeMC>::Clear(Option_t* option)
 {
     // Prepare class for a new event by clearing all members.
 
-    nVar = 0;
-    nPart = 0;
-    nPartMC = 0;
-    vars.Clear();
+    vars.clear();
     vec4.clear();
-    part.Clear();
-    partMC.Clear();
+    part.clear();
+    partMC.clear();
 }
 
 //______________________________________________________________________________
@@ -156,9 +116,6 @@ FAEventT<VarType, PartType, PartTypeMC>& FAEventT<VarType, PartType, PartTypeMC>
     // check self assignment
     if (this != &e)
     {
-        nVar = e.nVar;
-        nPart = e.nPart;
-        nPartMC = e.nPartMC;
         vars = e.vars;
         vec4 = e.vec4;
         part = e.part;
