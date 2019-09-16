@@ -12,7 +12,6 @@
 
 
 #include "Math/GenVector/LorentzVector.h"
-#include "Math/GenVector/PxPyPzE4D.h"
 
 #ifdef __CINT__
 
