@@ -68,7 +68,7 @@ void FAVarParticleA2_CoincT::AddVars(Int_t nbins, Double_t min, Double_t max,
 
 //______________________________________________________________________________
 template <class T>
-void FAVarParticleA2_CoincT::Set(const T* p1, const T* p2, Bool_t isMC)
+void FAVarParticleA2_CoincT::Set(const T& p1, const T& p2, Bool_t isMC)
 {
     // Set the coincidence time variables of the particles 'p1' with respect to
     // 'p2'.
@@ -79,42 +79,42 @@ void FAVarParticleA2_CoincT::Set(const T* p1, const T* p2, Bool_t isMC)
         return;
 
     // CB-CB
-    if ((p1->det & FAConfigA2::kCB) && (p2->det & FAConfigA2::kCB))
+    if ((p1.det & FAConfigA2::kCB) && (p2.det & FAConfigA2::kCB))
     {
-        fVar_dT_CB_CB->SetVar(p1->time - p2->time);
+        fVar_dT_CB_CB->SetVar(p1.time - p2.time);
         fVar_dT_CB_CB->ResetBit(FAVarAbs::kNoFill);
         fVar_dT_CB_TAPS->SetBit(FAVarAbs::kNoFill);
         fVar_dT_TAPS_TAPS->SetBit(FAVarAbs::kNoFill);
     }
     // TAPS-TAPS
-    else if ((p1->det & FAConfigA2::kTAPS) && (p2->det & FAConfigA2::kTAPS))
+    else if ((p1.det & FAConfigA2::kTAPS) && (p2.det & FAConfigA2::kTAPS))
     {
         if (isMC)
-            fVar_dT_TAPS_TAPS->SetVar(p1->time - p2->time);
+            fVar_dT_TAPS_TAPS->SetVar(p1.time - p2.time);
         else
-            fVar_dT_TAPS_TAPS->SetVar(p2->time - p1->time);
+            fVar_dT_TAPS_TAPS->SetVar(p2.time - p1.time);
         fVar_dT_CB_CB->SetBit(FAVarAbs::kNoFill);
         fVar_dT_CB_TAPS->SetBit(FAVarAbs::kNoFill);
         fVar_dT_TAPS_TAPS->ResetBit(FAVarAbs::kNoFill);
     }
     // CB-TAPS
-    else if ((p1->det & FAConfigA2::kCB) && (p2->det & FAConfigA2::kTAPS))
+    else if ((p1.det & FAConfigA2::kCB) && (p2.det & FAConfigA2::kTAPS))
     {
         if (isMC)
-            fVar_dT_CB_TAPS->SetVar(p1->time - p2->time);
+            fVar_dT_CB_TAPS->SetVar(p1.time - p2.time);
         else
-            fVar_dT_CB_TAPS->SetVar(p1->time + p2->time);
+            fVar_dT_CB_TAPS->SetVar(p1.time + p2.time);
         fVar_dT_CB_CB->SetBit(FAVarAbs::kNoFill);
         fVar_dT_CB_TAPS->ResetBit(FAVarAbs::kNoFill);
         fVar_dT_TAPS_TAPS->SetBit(FAVarAbs::kNoFill);
     }
     // TAPS-CB
-    else if ((p1->det & FAConfigA2::kTAPS) && (p2->det & FAConfigA2::kCB))
+    else if ((p1.det & FAConfigA2::kTAPS) && (p2.det & FAConfigA2::kCB))
     {
         if (isMC)
-            fVar_dT_CB_TAPS->SetVar(p1->time - p2->time);
+            fVar_dT_CB_TAPS->SetVar(p1.time - p2.time);
         else
-            fVar_dT_CB_TAPS->SetVar(-(p1->time + p2->time));
+            fVar_dT_CB_TAPS->SetVar(-(p1.time + p2.time));
         fVar_dT_CB_CB->SetBit(FAVarAbs::kNoFill);
         fVar_dT_CB_TAPS->ResetBit(FAVarAbs::kNoFill);
         fVar_dT_TAPS_TAPS->SetBit(FAVarAbs::kNoFill);
@@ -122,6 +122,6 @@ void FAVarParticleA2_CoincT::Set(const T* p1, const T* p2, Bool_t isMC)
 }
 
 // template instantiations
-template void FAVarParticleA2_CoincT::Set(const FAParticleA2_B*, const FAParticleA2_B*, Bool_t);
-template void FAVarParticleA2_CoincT::Set(const FAParticleA2_BF1*, const FAParticleA2_BF1*, Bool_t);
+template void FAVarParticleA2_CoincT::Set(const FAParticleA2_B&, const FAParticleA2_B&, Bool_t);
+template void FAVarParticleA2_CoincT::Set(const FAParticleA2_BF1&, const FAParticleA2_BF1&, Bool_t);
 

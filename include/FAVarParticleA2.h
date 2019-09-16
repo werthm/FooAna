@@ -62,9 +62,9 @@ public:
                      UInt_t statusBits = FAVarAbs::kNoUnbinned);
 
     template <class T>
-    void Set(const T* part);
+    void Set(const T& part);
     template <class T>
-    void SetKF(const T* part);
+    void SetKF(const T& part);
 
     ClassDef(FAVarParticleA2, 1)  // analysis variables of A2 particle
 };

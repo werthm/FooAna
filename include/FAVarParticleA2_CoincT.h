@@ -36,7 +36,7 @@ public:
                  UInt_t statusBits = FAVarAbs::kNoUnbinned);
 
     template <class T>
-    void Set(const T* p1, const T* p2, Bool_t isMC);
+    void Set(const T& p1, const T& p2, Bool_t isMC);
 
     ClassDef(FAVarParticleA2_CoincT, 1)  // coincidence time variables of A2 particle
 };

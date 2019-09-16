@@ -234,31 +234,31 @@ void FAVarParticleA2::AddVarsPull(Int_t nbins, Double_t min, Double_t max,
 
 //______________________________________________________________________________
 template <class T>
-void FAVarParticleA2::Set(const T* part)
+void FAVarParticleA2::Set(const T& part)
 {
     // Set the general analysis variables using the particle 'part'.
 
     // check kinematics filling
     if (fVarTheta)
     {
-        fVarEnergy->SetVar(part->energy);
-        fVarTheta->SetVar(part->theta * TMath::RadToDeg());
+        fVarEnergy->SetVar(part.energy);
+        fVarTheta->SetVar(part.theta * TMath::RadToDeg());
     }
 
     // check dE-E filling
     if (fVarCB_dE)
     {
-        fVarEnergy->SetVar(part->energy);
-        fVarCB_dE->SetVar(part->deltaE);
-        fVarTAPS_dE->SetVar(part->deltaE);
+        fVarEnergy->SetVar(part.energy);
+        fVarCB_dE->SetVar(part.deltaE);
+        fVarTAPS_dE->SetVar(part.deltaE);
 
         // check the detector and set the no-fill bits accordingly
-        if (part->det & FAConfigA2::kTAPS)
+        if (part.det & FAConfigA2::kTAPS)
         {
             fVarCB_dE->SetBit(FAVarAbs::kNoFill);
             fVarTAPS_dE->ResetBit(FAVarAbs::kNoFill);
         }
-        else if (part->det & FAConfigA2::kCB)
+        else if (part.det & FAConfigA2::kCB)
         {
             fVarCB_dE->ResetBit(FAVarAbs::kNoFill);
             fVarTAPS_dE->SetBit(FAVarAbs::kNoFill);
@@ -273,17 +273,17 @@ void FAVarParticleA2::Set(const T* part)
     // check TOF filling
     if (fVarCB_TOF)
     {
-        fVarEnergyOrig->SetVar(part->energyOrig);
-        fVarCB_TOF->SetVar(part->tof);
-        fVarTAPS_TOF->SetVar(part->tof);
+        fVarEnergyOrig->SetVar(part.energyOrig);
+        fVarCB_TOF->SetVar(part.tof);
+        fVarTAPS_TOF->SetVar(part.tof);
 
         // check the detector and set the no-fill bits accordingly
-        if (part->det & FAConfigA2::kTAPS)
+        if (part.det & FAConfigA2::kTAPS)
         {
             fVarCB_TOF->SetBit(FAVarAbs::kNoFill);
             fVarTAPS_TOF->ResetBit(FAVarAbs::kNoFill);
         }
-        else if (part->det & FAConfigA2::kCB)
+        else if (part.det & FAConfigA2::kCB)
         {
             fVarCB_TOF->ResetBit(FAVarAbs::kNoFill);
             fVarTAPS_TOF->SetBit(FAVarAbs::kNoFill);
@@ -298,11 +298,11 @@ void FAVarParticleA2::Set(const T* part)
     // check PSA filling
     if (fVarPSA_A)
     {
-        fVarPSA_A->SetVar(part->psa_a);
-        fVarPSA_R->SetVar(part->psa_r);
+        fVarPSA_A->SetVar(part.psa_a);
+        fVarPSA_R->SetVar(part.psa_r);
 
         // check the detector and set the no-fill bits for CB particles
-        if (part->det & FAConfigA2::kTAPS)
+        if (part.det & FAConfigA2::kTAPS)
         {
             fVarPSA_A->ResetBit(FAVarAbs::kNoFill);
             fVarPSA_R->ResetBit(FAVarAbs::kNoFill);
@@ -317,21 +317,21 @@ void FAVarParticleA2::Set(const T* part)
 
 //______________________________________________________________________________
 template <class T>
-void FAVarParticleA2::SetKF(const T* part)
+void FAVarParticleA2::SetKF(const T& part)
 {
     // Set the general analysis variables using the particle 'part'.
 
     // check kinfit pull filling
     if (fVarPullTheta)
     {
-        fVarPullTheta->SetVar(part->pullTheta);
-        fVarPullPhi->SetVar(part->pullPhi);
-        fVarPullT->SetVar(part->pullT);
+        fVarPullTheta->SetVar(part.pullTheta);
+        fVarPullPhi->SetVar(part.pullPhi);
+        fVarPullT->SetVar(part.pullT);
     }
 }
 
 // template instantiations
-template void FAVarParticleA2::Set(const FAParticleA2_B*);
-template void FAVarParticleA2::Set(const FAParticleA2_BF1*);
-template void FAVarParticleA2::SetKF(const FAParticleA2_BF1*);
+template void FAVarParticleA2::Set(const FAParticleA2_B&);
+template void FAVarParticleA2::Set(const FAParticleA2_BF1&);
+template void FAVarParticleA2::SetKF(const FAParticleA2_BF1&);
 
