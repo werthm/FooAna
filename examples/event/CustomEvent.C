@@ -94,7 +94,6 @@ void WriteCustomEvents(Int_t nEvent = 5000)
         for (Int_t j = 0; j < npart; j++)
         {
             FAParticleA2_B particle;
-            particle.detector = gRandom->Uniform(0, 3);
             particle.detElem = gRandom->Uniform(0, 1000);
             event.AddParticle(particle);
         }

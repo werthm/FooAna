@@ -11,8 +11,6 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#include "FAWrapPrim.h"
-
 //______________________________________________________________________________
 void WriteTree()
 {
@@ -20,13 +18,6 @@ void WriteTree()
 
     // configuration
     Int_t nEvent = 100;
-
-    // do not save uniqueID and bits
-    FAWrapPrim<Double32_t>::Class()->IgnoreTObjectStreamer();
-    FAVector3::Class()->IgnoreTObjectStreamer();
-    FAVector4::Class()->IgnoreTObjectStreamer();
-    FAParticleA2_B::Class()->IgnoreTObjectStreamer();
-    FAParticleA2MC_B::Class()->IgnoreTObjectStreamer();
 
     // create the event object
     FAEventA2_B event;
@@ -54,7 +45,7 @@ void WriteTree()
 
         // add particle to event
         FAParticleA2_B part;
-        //part.detector =
+        //part.det =
         //part.detElem =
         //part.theta =
         //part.phi =

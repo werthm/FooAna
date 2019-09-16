@@ -57,12 +57,6 @@ void Analysis()
         FAVarFiller::EFillMode fillMode = FAVarFiller::kBinned;
         filler.Init(fillMode);
 
-        // 4-vectors
-        TLorentzVector p4Beam;
-        TLorentzVector p4Photon1;
-        TLorentzVector p4Photon2;
-        TLorentzVector p4Proton;
-
         // read events
         Long64_t n = 0;
         while (reader.Next())
@@ -79,21 +73,21 @@ void Analysis()
             // primary cuts (on directly available tree data)
             // ...
 
-            // convert to TLorentzVector
-            event->particle(0)->Calculate4Vector(p4Photon1, 0);
-            event->particle(1)->Calculate4Vector(p4Photon2, 0);
-            event->particle(2)->Calculate4Vector(p4Proton, kProtonMass);
+            // set particle 4-vectors
+            FAVector4 p4Photon1 = FAUtilsA2::CalcVector4(event->part[0], 0);
+            FAVector4 p4Photon2 = FAUtilsA2::CalcVector4(event->part[1], 0);
+            FAVector4 p4Proton = FAUtilsA2::CalcVector4(event->part[2], kProtonMass);
 
             // set beam 4-vector
             Double_t eBeam = ana.GetTaggE(event->taggCh);
-            p4Beam.SetPxPyPzE(0, 0, eBeam, eBeam);
+            FAVector4 p4Beam(0, 0, eBeam, eBeam);
 
             // set analysis variables
             tagg_ch = event->taggCh;
             eg = p4Beam.E();
             im = (p4Photon1 + p4Photon2).M();
             for (Int_t i = 0; i < nPart; i++)
-                part[i]->Set(event->particle(i));
+                part[i]->Set(event->part[i]);
 
             // seconday cuts (on newly calculated variables)
             // ...
