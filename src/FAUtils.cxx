@@ -20,6 +20,7 @@
 #include "TH2.h"
 #include "TGraph.h"
 #include "TCutG.h"
+#include "TF1.h"
 #include "TMath.h"
 
 #include "FAUtils.h"
@@ -334,4 +335,5 @@ template Bool_t FAUtils::LoadObject(const Char_t*, const Char_t*, TH1*&);
 template Bool_t FAUtils::LoadObject(const Char_t*, const Char_t*, TH2*&);
 template Bool_t FAUtils::LoadObject(const Char_t*, const Char_t*, TGraph*&);
 template Bool_t FAUtils::LoadObject(const Char_t*, const Char_t*, TCutG*&);
+template Bool_t FAUtils::LoadObject(const Char_t*, const Char_t*, TF1*&);
 
