@@ -25,6 +25,7 @@ class TH1;
 class TH2;
 class TGraph;
 class TCutG;
+class TF1;
 class FAVarFiller;
 class FAAnalysisResult;
 
@@ -42,6 +43,7 @@ protected:
     std::vector<TH2*> fObj_TH2;         // vector of loaded TH2 objects
     std::vector<TGraph*> fObj_TGraph;   // vector of loaded TGraph objects
     std::vector<TCutG*> fObj_TCutG;     // vector of loaded TCutG objects
+    std::vector<TF1*> fObj_TF1;         // vector of loaded TF1 objects
 
     TAxis* CreateAxis(Int_t index);
     template <class T>
@@ -63,6 +65,7 @@ public:
     TH2* GetTH2(Int_t i) const { return fObj_TH2[i]; }
     TGraph* GetTGraph(Int_t i) const { return fObj_TGraph[i]; }
     TCutG* GetTCutG(Int_t i) const { return fObj_TCutG[i]; }
+    TF1* GetTF1(Int_t i) const { return fObj_TF1[i]; }
 
     void AddInput(const Char_t* path);
 

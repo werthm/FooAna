@@ -21,6 +21,7 @@
 #include "TH2.h"
 #include "TGraph.h"
 #include "TCutG.h"
+#include "TF1.h"
 #include "ROOT/TTreeProcessorMP.hxx"
 
 #include "FAAnalysis.h"
@@ -73,6 +74,7 @@ FAAnalysis::FAAnalysis(const Char_t* cfg, const Char_t* treeName)
     LoadObjects("TH2", fObj_TH2);
     LoadObjects("TGraph", fObj_TGraph);
     LoadObjects("TCutG", fObj_TCutG);
+    LoadObjects("TF1", fObj_TF1);
 }
 
 //______________________________________________________________________________
@@ -95,6 +97,8 @@ FAAnalysis::~FAAnalysis()
     for (TGraph* i : fObj_TGraph)
         delete i;
     for (TCutG* i : fObj_TCutG)
+        delete i;
+    for (TF1* i : fObj_TF1)
         delete i;
 }
 
@@ -368,6 +372,9 @@ void FAAnalysis::Print(Option_t* option) const
     printf("Loaded TCutG objects            : %lu\n", fObj_TCutG.size());
     for (UInt_t i = 0; i < fObj_TCutG.size(); i++)
         printf("  [%2u]  %s\n", i, fObj_TCutG[i]->GetName());
+    printf("Loaded TF1 objects              : %lu\n", fObj_TF1.size());
+    for (UInt_t i = 0; i < fObj_TF1.size(); i++)
+        printf("  [%2u]  %s\n", i, fObj_TF1[i]->GetName());
 }
 
 //______________________________________________________________________________
