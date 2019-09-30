@@ -23,12 +23,12 @@ class FAEventT
 public:
     virtual ~FAEventT() { }
 
-    std::vector<VarType> vars;      // list of variables
+    std::vector<VarType> var;       // list of variables
     std::vector<FAVector4> vec4;    // list of 4-vectors
     std::vector<PartType> part;     // list of particles
     std::vector<PartTypeMC> partMC; // list of particles
 
-    void AddVariable(VarType v) { vars.push_back(v); }
+    void AddVariable(VarType v) { var.push_back(v); }
     void AddVector4(const FAVector4& v) { vec4.push_back(v); }
     void AddParticle(const PartType& p) { part.push_back(p); }
     void AddParticleMC(const PartTypeMC& p) { partMC.push_back(p); }
@@ -38,7 +38,7 @@ public:
     {
         // Prepare class for a new event by clearing all members.
 
-        vars.clear();
+        var.clear();
         vec4.clear();
         part.clear();
         partMC.clear();
@@ -51,7 +51,7 @@ public:
         // check self assignment
         if (this != &e)
         {
-            vars = e.vars;
+            var = e.var;
             vec4 = e.vec4;
             part = e.part;
             partMC = e.partMC;

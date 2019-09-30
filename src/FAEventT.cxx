@@ -24,10 +24,10 @@ void FAEventT<VarType, PartType, PartTypeMC>::Print(Option_t* option) const
 {
     // Print the content of this class.
 
-    printf("Number of variables    : %lu\n", vars.size());
-    for (UInt_t i = 0; i < vars.size(); i++)
+    printf("Number of variables    : %lu\n", var.size());
+    for (UInt_t i = 0; i < var.size(); i++)
     {
-        printf("-> variable %d : %f\n", i+1, vars[i]);
+        printf("-> variable %d : %f\n", i+1, var[i]);
     }
     printf("Number of 4-vectors    : %lu\n", vec4.size());
     for (UInt_t i = 0; i < vec4.size(); i++)
