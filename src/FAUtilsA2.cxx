@@ -108,6 +108,39 @@ void FAUtilsA2::SetDetFillFlags(Int_t det, FAVarAbs& v_cb, FAVarAbs& v_taps)
 }
 
 //______________________________________________________________________________
+template <class PartType>
+void FAUtilsA2::FillCBSumPart(FAVarAbs& cbsum, FAVarAbs& n_cb, std::vector<PartType>& part_list,
+                              std::function<Bool_t (Int_t)> include_part)
+{
+    // Fill the analysis variables 'cbsum' and 'n_cb' using the particles in
+    // the list 'part_list'.
+    // The function 'include_part' is used to specify what particles in the
+    // list will be considered to contribute to the CB energy sum.
+
+    // loop over particles
+    Double_t sum = 0;
+    Int_t n = 0;
+    for (UInt_t i = 0; i < part_list.size(); i++)
+    {
+        // skip particles outside CB
+        if (!(part_list[i].det & FAConfigA2::kCB))
+            continue;
+
+        // check if particle should be used
+        if (!include_part(i))
+            continue;
+
+        // valid particles here
+        sum += part_list[i].energyOrig;
+        n++;
+    }
+
+    // set analysis variables
+    cbsum.SetDouble(sum);
+    n_cb.SetDouble(n);
+}
+
+//______________________________________________________________________________
 TString FAUtilsA2::DetectorsAsString(FAConfigA2::FADetectorA2_t d)
 {
     // Return a string of all detectors bit-marked in 'd'.
@@ -182,6 +215,10 @@ const FAVector4 FAUtilsA2::CalcVector4TOF(const PartType& part, Double_t mass)
 }
 
 // template instantiations
+template void FAUtilsA2::FillCBSumPart(FAVarAbs&, FAVarAbs&, std::vector<FAParticleA2_B>&,
+                                       std::function<Bool_t (Int_t)>);
+template void FAUtilsA2::FillCBSumPart(FAVarAbs&, FAVarAbs&, std::vector<FAParticleA2_BF1>&,
+                                       std::function<Bool_t (Int_t)>);
 template const FAVector4 FAUtilsA2::CalcVector4(const FAParticleA2_B&, Double_t);
 template const FAVector4 FAUtilsA2::CalcVector4(const FAParticleA2_BF1&, Double_t);
 template const FAVector4 FAUtilsA2::CalcVector4TOF(const FAParticleA2_B&, Double_t);
