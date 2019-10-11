@@ -180,13 +180,14 @@ void FAAnalysis::LoadObjects(const Char_t* objName, std::vector<T*>& list)
     Int_t n = gEnv->GetValue(Form("FA.Analysis.Load.%s.N", objName), 0);
 
     // try to load objects
+    TString last_name;
     for (Int_t i = 0; i < n; i++)
     {
         // get file and object name
         const Char_t* file = gEnv->GetValue(Form("FA.Analysis.Load.%s.%d.File",
                                                  objName, i), "null");
-        const Char_t* name = gEnv->GetValue(Form("FA.Analysis.Load.%s.%d.Name",
-                                                  objName, i), "null");
+        TString name = gEnv->GetValue(Form("FA.Analysis.Load.%s.%d.Name",
+                                           objName, i), "null");
 
         // check file name
         if (!strcmp(file, "null"))
@@ -196,22 +197,37 @@ void FAAnalysis::LoadObjects(const Char_t* objName, std::vector<T*>& list)
         }
 
         // check object name
-        if (!strcmp(name, "null"))
+        if (name == "null")
         {
-            ::Error("FAAnalysis::LoadObjects", "Name of object %d to load not found!", i);
-            continue;
+            // try last used object name
+            if (last_name != "")
+            {
+                name = last_name;
+            }
+            else
+            {
+                ::Error("FAAnalysis::LoadObjects", "Name of object %d to load not found!", i);
+                continue;
+            }
         }
+
+        // expand the path
+        TString file_ex(file);
+        gSystem->ExpandPathName(file_ex);
 
         // load object
         T* obj = 0;
-        FAUtils::LoadObject(file, name, obj);
+        FAUtils::LoadObject(file_ex.Data(), name.Data(), obj);
 
         // add to list
         if (obj)
         {
-            ::Info("FAAnalysis::LoadObjects", "Loaded %s object '%s' at index %d",
-                   objName, obj->GetName(), i);
+            ::Info("FAAnalysis::LoadObjects", "Loaded %s object '%s' from '%s' at index %d",
+                   objName, obj->GetName(), file_ex.Data(), i);
             list.push_back(obj);
+
+            // save last name
+            last_name = name;
         }
     }
 }
