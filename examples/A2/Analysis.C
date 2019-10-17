@@ -17,7 +17,7 @@ void Analysis()
     // Main method.
 
     // create analysis
-    FAAnalysisA2 ana("config.rootrc");
+    FAAnalysisA2 ana(FAAnalysis::kData, "config.rootrc");
 
     // configure analysis
     const Double_t kProtonMass = 938.27203;
