@@ -32,7 +32,15 @@ class FAAnalysisResult;
 class FAAnalysis : public TObject
 {
 
+public:
+    // analysis mode
+    enum EAnaMode {
+        kData,
+        kMC
+    };
+
 protected:
+    EAnaMode fMode;                     // analysis mode
     TDirectory* fOrigGDir;              // original gDirectory
     TChain* fChain;                     // file chain
     Int_t fProgSrvPort;                 // port of progress server
@@ -51,10 +59,11 @@ protected:
 
 public:
     FAAnalysis() : TObject(),
+                   fMode(kData),
                    fOrigGDir(0),
                    fChain(0), fProgSrvPort(0), fResult(0),
                    fAxis1(0), fAxis2(0) { }
-    FAAnalysis(const Char_t* cfg, const Char_t* treeName = 0);
+    FAAnalysis(EAnaMode mode, const Char_t* cfg, const Char_t* treeName = 0);
     virtual ~FAAnalysis();
 
     TDirectory* GetOrigGDirectory() const { return fOrigGDir; }

@@ -33,12 +33,13 @@
 ClassImp(FAAnalysis)
 
 //______________________________________________________________________________
-FAAnalysis::FAAnalysis(const Char_t* cfg, const Char_t* treeName)
+FAAnalysis::FAAnalysis(EAnaMode mode, const Char_t* cfg, const Char_t* treeName)
     : TObject()
 {
     // Constructor.
 
     // init members
+    fMode = mode;
     fOrigGDir = gDirectory;
     fChain = 0;
     fProgSrvPort = 0;
@@ -364,6 +365,16 @@ void FAAnalysis::Print(Option_t* option) const
     printf("################################\n");
     printf("\n");
     printf("FAAnalysis configuration\n");
+    printf("Analysis Mode                   : ");
+    switch (fMode)
+    {
+        case kData:
+            printf("Data\n"); break;
+        case kMC:
+            printf("MC\n"); break;
+        default:
+            printf("unknown\n");
+    }
     printf("Number of workers               : %d\n", gEnv->GetValue("FA.Analysis.NWorker", 1));
     printf("Tree name                       : %s\n", fChain ? fChain->GetName() : "empty");
     printf("Files in chain                  : %d\n", fChain ? fChain->GetListOfFiles()->GetEntries() : 0);
