@@ -178,20 +178,18 @@ void FAAnalysis::LoadObjects(const Char_t* objName, std::vector<T*>& list)
     // Load objects used in analyses.
 
     // get number of objects
-    Int_t n = gEnv->GetValue(Form("FA.Analysis.Load.%s.N", objName), 0);
+    Int_t n = LoadKeyInt(Form("FA.Analysis.Load.%s.N", objName), 0);
 
     // try to load objects
     TString last_name;
     for (Int_t i = 0; i < n; i++)
     {
         // get file and object name
-        const Char_t* file = gEnv->GetValue(Form("FA.Analysis.Load.%s.%d.File",
-                                                 objName, i), "null");
-        TString name = gEnv->GetValue(Form("FA.Analysis.Load.%s.%d.Name",
-                                           objName, i), "null");
+        TString file = FAAnalysis::LoadKeyString(Form("FA.Analysis.Load.%s.%d.File", objName, i), "null");
+        TString name = FAAnalysis::LoadKeyString(Form("FA.Analysis.Load.%s.%d.Name", objName, i), "null");
 
         // check file name
-        if (!strcmp(file, "null"))
+        if (file == "null")
         {
             ::Error("FAAnalysis::LoadObjects", "File name of object %d to load not found!", i);
             continue;
@@ -223,14 +221,77 @@ void FAAnalysis::LoadObjects(const Char_t* objName, std::vector<T*>& list)
         // add to list
         if (obj)
         {
-            ::Info("FAAnalysis::LoadObjects", "Loaded %s object '%s' from '%s' at index %d",
-                   objName, obj->GetName(), file_ex.Data(), i);
+            ::Info("FAAnalysis::LoadObjects", "Loaded %s [%2d] '%s' from '%s'",
+                   objName, i, obj->GetName(), file_ex.Data());
             list.push_back(obj);
 
             // save last name
             last_name = name;
         }
     }
+}
+
+//______________________________________________________________________________
+TString FAAnalysis::LoadKeyString(const Char_t* name, const Char_t* defValue)
+{
+    // Load the config key 'name' of type string. Use 'defValue' as the
+    // default value in case the key is undefined.
+
+    TString s = "null";
+
+    // try to load analysis mode-specific key
+    if (fMode == kData)
+        s = gEnv->GetValue(Form("%s.Data", name), "null");
+    else if (fMode == kMC)
+        s = gEnv->GetValue(Form("%s.MC", name), "null");
+
+    // load generic key if undefined
+    if (s == "null")
+        s = gEnv->GetValue(name, defValue);
+
+    return s;
+}
+
+//______________________________________________________________________________
+Int_t FAAnalysis::LoadKeyInt(const Char_t* name, Int_t defValue)
+{
+    // Load the config key 'name' of type integer. Use 'defValue' as the
+    // default value in case the key is undefined.
+
+    Int_t i = 99999;
+
+    // try to load analysis mode-specific key
+    if (fMode == kData)
+        i = gEnv->GetValue(Form("%s.Data", name), 99999);
+    else if (fMode == kMC)
+        i = gEnv->GetValue(Form("%s.MC", name), 99999);
+
+    // load generic key if undefined
+    if (i == 99999)
+        i = gEnv->GetValue(name, defValue);
+
+    return i;
+}
+
+//______________________________________________________________________________
+Double_t FAAnalysis::LoadKeyDouble(const Char_t* name, Double_t defValue)
+{
+    // Load the config key 'name' of type double. Use 'defValue' as the
+    // default value in case the key is undefined.
+
+    Double_t d = 99999.99;
+
+    // try to load analysis mode-specific key
+    if (fMode == kData)
+        d = gEnv->GetValue(Form("%s.Data", name), 99999.99);
+    else if (fMode == kMC)
+        d = gEnv->GetValue(Form("%s.MC", name), 99999.99);
+
+    // load generic key if undefined
+    if (d == 99999.99)
+        d = gEnv->GetValue(name, defValue);
+
+    return d;
 }
 
 //______________________________________________________________________________

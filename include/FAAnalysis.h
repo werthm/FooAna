@@ -55,7 +55,10 @@ protected:
 
     TAxis* CreateAxis(Int_t index);
     template <class T>
-    static void LoadObjects(const Char_t* objName, std::vector<T*>& list);
+    void LoadObjects(const Char_t* objName, std::vector<T*>& list);
+    TString LoadKeyString(const Char_t* name, const Char_t* defValue);
+    Int_t LoadKeyInt(const Char_t* name, Int_t defValue);
+    Double_t LoadKeyDouble(const Char_t* name, Double_t defValue);
 
 public:
     FAAnalysis() : TObject(),
