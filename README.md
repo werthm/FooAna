@@ -19,6 +19,7 @@ in beta testing
 * using ROOT GenVector package
 * new A2 detector bit pattern (not compatible with earlier versions)
 * easy enabling/disabling of binned storage
+* added analysis mode switch
 
 ### 0.3.1
 August 6, 2019
@@ -282,7 +283,7 @@ in the `examples` folder.
 void Analysis()
 {
     // create analysis
-    FAAnalysisA2 ana("config.rootrc");
+    FAAnalysisA2 ana(FAAnalysis::kData, "config.rootrc");
 
     // print analysis configuration
     ana.Print();
