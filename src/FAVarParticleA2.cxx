@@ -28,6 +28,7 @@ FAVarParticleA2::FAVarParticleA2(const Char_t* name, const Char_t* title)
     fVarEnergy = 0;
     fVarEnergyOrig = 0;
     fVarTheta = 0;
+    fVarPhi = 0;
     fVarCB_dE = 0;
     fVarTAPS_dE = 0;
     fVarCB_TOF = 0;
@@ -47,6 +48,7 @@ FAVarParticleA2::~FAVarParticleA2()
     if (fVarEnergy) delete fVarEnergy;
     if (fVarEnergyOrig) delete fVarEnergyOrig;
     if (fVarTheta) delete fVarTheta;
+    if (fVarPhi) delete fVarPhi;
     if (fVarCB_dE) delete fVarCB_dE;
     if (fVarTAPS_dE) delete fVarTAPS_dE;
     if (fVarCB_TOF) delete fVarCB_TOF;
@@ -61,6 +63,7 @@ FAVarParticleA2::~FAVarParticleA2()
 //______________________________________________________________________________
 void FAVarParticleA2::AddVarsKinematics(Int_t nbinsE, Double_t minE, Double_t maxE,
                                         Int_t nbinsth, Double_t minth, Double_t maxth,
+                                        Int_t nbinsph, Double_t minph, Double_t maxph,
                                         UInt_t statusBits)
 {
     // Add the kinematics variables.
@@ -79,18 +82,25 @@ void FAVarParticleA2::AddVarsKinematics(Int_t nbinsE, Double_t minE, Double_t ma
                                    TString::Format("Polar angle of %s", GetTitle()).Data(),
                                    "deg",
                                    nbinsth, minth, maxth, statusBits);
+    fVarPhi = new FAVar<Float_t>(TString::Format("%s_Phi", GetName()).Data(),
+                                 TString::Format("Azimuthal angle of %s", GetTitle()).Data(),
+                                 "deg",
+                                 nbinsph, minph, maxph, statusBits);
 
     // no individual 1d-histograms of variables
     fVarEnergy->SetBit(FAVarAbs::kNoBinned);
     fVarTheta->SetBit(FAVarAbs::kNoBinned);
+    fVarPhi->SetBit(FAVarAbs::kNoBinned);
 
     // set up related variable
     fVarEnergy->AddRelatedVariable(fVarTheta);
+    fVarTheta->AddRelatedVariable(fVarPhi);
 
     // register variables
     if (addEnergy)
         AddVariable(fVarEnergy);
     AddVariable(fVarTheta);
+    AddVariable(fVarPhi);
 }
 
 //______________________________________________________________________________
@@ -243,6 +253,7 @@ void FAVarParticleA2::Set(const T& part)
     {
         fVarEnergy->SetVar(part.energy);
         fVarTheta->SetVar(part.theta * TMath::RadToDeg());
+        fVarPhi->SetVar(part.phi * TMath::RadToDeg());
     }
 
     // check dE-E filling

@@ -24,6 +24,7 @@ protected:
     FAVar<Float_t>* fVarEnergy;     // energy
     FAVar<Float_t>* fVarEnergyOrig; // original energy
     FAVar<Float_t>* fVarTheta;      // polar angle
+    FAVar<Float_t>* fVarPhi;        // azimuthal angle
     FAVar<Float_t>* fVarCB_dE;      // deltaE for CB
     FAVar<Float_t>* fVarTAPS_dE;    // deltaE for TAPS
     FAVar<Float_t>* fVarCB_TOF;     // TOF for CB
@@ -38,7 +39,7 @@ public:
     FAVarParticleA2() : FAVarList(),
                         fVarEnergy(0),
                         fVarEnergyOrig(0),
-                        fVarTheta(0),
+                        fVarTheta(0), fVarPhi(0),
                         fVarCB_dE(0), fVarTAPS_dE(0),
                         fVarCB_TOF(0), fVarTAPS_TOF(0),
                         fVarPSA_A(0), fVarPSA_R(0),
@@ -48,6 +49,7 @@ public:
 
     void AddVarsKinematics(Int_t nbinsE = 1000, Double_t minE = 0, Double_t maxE = 1000,
                            Int_t nbinsth = 90, Double_t minth = 0, Double_t maxth = 180,
+                           Int_t nbinsph = 180, Double_t minph = -180, Double_t maxph = 180,
                            UInt_t statusBits = FAVarAbs::kNoUnbinned);
     void AddVarsDeltaEE(Int_t nbinsE = 1000, Double_t minE = 0, Double_t maxE = 1000,
                         Int_t nbinsdE = 400, Double_t mindE = 0, Double_t maxdE = 10,
