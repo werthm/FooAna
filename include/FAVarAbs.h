@@ -76,6 +76,8 @@ public:
     void DisableFillBinned() { SetBit(FAVarAbs::kNoFill); }
     void EnableStorageBinned() { ResetBit(FAVarAbs::kNoBinned); }
     void DisableStorageBinned() { SetBit(FAVarAbs::kNoBinned); }
+    void EnableStorageUnbinned() { ResetBit(FAVarAbs::kNoUnbinned); }
+    void DisableStorageUnbinned() { SetBit(FAVarAbs::kNoUnbinned); }
 
     virtual Double_t AsDouble() const = 0;
     virtual void* GetVarPtr() const = 0;
