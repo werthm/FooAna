@@ -85,6 +85,8 @@ public:
     void DisableFillBinned();
     void EnableStorageBinned();
     void DisableStorageBinned();
+    void EnableStorageUnbinned();
+    void DisableStorageUnbinned();
 
     void AddObjectsToList(TList* list);
     void WriteFile(const Char_t* filename, Bool_t flat = kFALSE);

@@ -503,6 +503,24 @@ void FAVarFiller::DisableStorageBinned()
 }
 
 //______________________________________________________________________________
+void FAVarFiller::EnableStorageUnbinned()
+{
+    // Enable unbinned storage for all analysis variables.
+
+    for (FAVarAbs* v : fVar)
+        v->EnableStorageUnbinned();
+}
+
+//______________________________________________________________________________
+void FAVarFiller::DisableStorageUnbinned()
+{
+    // Disable unbinned storage for all analysis variables.
+
+    for (FAVarAbs* v : fVar)
+        v->DisableStorageUnbinned();
+}
+
+//______________________________________________________________________________
 void FAVarFiller::AddObjectsToList(TList* list)
 {
     // Add all fill objects to the list 'list'.
