@@ -59,6 +59,8 @@
 #pragma link C++ class FAEventA2_BF2+;
 #pragma link C++ class FAEventA2_BF3+;
 #pragma link C++ class FAEventA2_BF4+;
+#pragma link C++ class FAEventA2_BIF1+;
+#pragma link C++ class FAEventA2_BIF2+;
 #pragma link C++ class FAEventA2_BIF3+;
 #pragma link C++ class FAEventA2_BIF4+;
 

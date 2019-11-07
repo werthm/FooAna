@@ -98,6 +98,9 @@ FAEventT                 : base event class template
   FAEventA2_BF1          : A2 event class (basic, kinfit type 1)
   FAEventA2_BF2          : A2 event class (basic, kinfit type 2)
   FAEventA2_BF3          : A2 event class (basic, kinfit type 3)
+  FAEventA2_BF4          : A2 event class (basic, kinfit type 4)
+  FAEventA2_BIF1         : A2 event class (basic, event info, kinfit type 1)
+  FAEventA2_BIF2         : A2 event class (basic, event info, kinfit type 2)
   FAEventA2_BIF3         : A2 event class (basic, event info, kinfit type 3)
   FAEventA2_BIF4         : A2 event class (basic, event info, kinfit type 4)
 
