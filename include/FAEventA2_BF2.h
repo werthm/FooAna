@@ -33,7 +33,6 @@ public:
     Double32_t zVertex;         // z-vertex
     Double32_t pullZVertex;     // z-vertex pull
 
-
     FAEventA2_BF2() : FAEventT(),
                       weight(0), taggCh(-1), cbSum(0),
                       nComb(0), comb(0), retCode(1),
