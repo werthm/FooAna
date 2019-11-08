@@ -36,6 +36,7 @@ FAVarFiller::FAVarFiller(const Char_t* name, const Char_t* title, Bool_t doClean
     fBins2 = 0;
     fVarWeight = 0;
     fMode= kNone;
+    fEntries = 0;
     fIsCleanup = doCleanup;
     fTree = 0;
 }
@@ -73,6 +74,7 @@ void FAVarFiller::Init(EFillMode mode)
 
     // set filling mode
     fMode = mode;
+    fEntries = 0;
 
     // prepare histograms for binned filling
     if (fMode == kBinned || fMode == kBoth)
@@ -355,6 +357,9 @@ void FAVarFiller::FillBin(Double_t weight, Int_t bin1, Int_t bin2)
     // unbinned filling
     if (fMode == kUnbinned || fMode == kBoth)
         fTree[bin1][bin2]->Fill();
+
+    // count entry
+    fEntries++;
 }
 
 //______________________________________________________________________________
@@ -464,6 +469,9 @@ void FAVarFiller::FillOverlap(std::function<Double_t(void)> wFunc, Double_t axis
             fTree[p.first-1][bin2]->Fill();
         }
     }
+
+    // count entry (as a whole)
+    fEntries++;
 }
 
 //______________________________________________________________________________

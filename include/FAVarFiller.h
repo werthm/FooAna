@@ -44,6 +44,7 @@ protected:
     std::vector<FAVarAbs*> fVar;        // vector of analysis variables (elements not owned)
     FAVarAbs* fVarWeight;               // pointer to weighting variable for unbinned (overlap) filling
     EFillMode fMode;                    // filling mode
+    Long64_t fEntries;                  // number of filled entries
     Bool_t fIsCleanup;                  // clean-up flag
     std::vector<FAVarHistogram*> fHist; // vector of histograms
     TTree*** fTree;                     // output trees for unbinned filling
@@ -54,6 +55,7 @@ public:
     FAVarFiller() : TNamed(),
                     fBins1(0), fBins2(0),
                     fVar(), fVarWeight(0),
+                    fMode(kNone), fEntries(0),
                     fIsCleanup(kTRUE),
                     fHist(),
                     fTree(0) { }
@@ -61,6 +63,7 @@ public:
     virtual ~FAVarFiller();
 
     EFillMode GetMode() const { return fMode; }
+    Long64_t GetEntries() const { return fEntries; }
 
     void SetBins1(TAxis* axis) { fBins1 = axis; }
     void SetBins2(TAxis* axis) { fBins2 = axis; }
@@ -75,6 +78,7 @@ public:
     void Init(EFillMode mode);
 
     Bool_t FindBin(Double_t axisVar1, Double_t axisVar2, Int_t& bin1, Int_t& bin2);
+
     void Fill(Double_t weight = 1, Double_t axisVar1 = 0, Double_t axisVar2 = 0);
     void Fill(std::function<Double_t(void)> wFunc, Double_t axisVar1 = 0, Double_t axisVar2 = 0);
     void FillBin(Double_t weight = 1, Int_t bin1 = 0, Int_t bin2 = 0);
