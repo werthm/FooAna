@@ -341,8 +341,18 @@ void FAAnalysis::Process(std::function<FAAnalysisResult* (TTreeReader&)> func)
     };
 
     // process events
-    ROOT::TTreeProcessorMP workers(nWorkers);
-    fResult = workers.Process(*fChain, funcWrapper);
+    if (nWorkers == 1)
+    {
+        // single-thread processing
+        TTreeReader reader(fChain);
+        fResult = funcWrapper(reader);
+    }
+    else
+    {
+        // multiprocess processing
+        ROOT::TTreeProcessorMP workers(nWorkers);
+        fResult = workers.Process(*fChain, funcWrapper);
+    }
 
     // stop progress monitoring
     if (progress)
