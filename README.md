@@ -92,6 +92,7 @@ root [1] .x FooAnaMacro.C++
 FAAnalysis               : base analysis wrapper
   FAAnalysisA2           : A2 analysis wrapper
 FAAnalysisResult         : analysis result
+FAReaderSWeights         : reader for sWeights stored in a tree
 
 FAEventT                 : base event class template
   FAEventA2_B            : A2 event class (basic)

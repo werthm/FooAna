@@ -31,6 +31,7 @@
 #pragma link C++ class FAAnalysis+;
 #pragma link C++ class FAAnalysisA2+;
 #pragma link C++ class FAAnalysisResult+;
+#pragma link C++ class FAReaderSWeights+;
 #pragma link C++ typedef FAVector4;
 #pragma link C++ class std::vector<ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<Double32_t>>>+;
 #pragma link C++ class FAProgressServer+;
