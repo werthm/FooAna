@@ -33,6 +33,7 @@
 #pragma link C++ namespace FAUtilsCLAS12;
 #pragma link C++ class FAAnalysis+;
 #pragma link C++ class FAAnalysisA2+;
+#pragma link C++ class FAAnalysisCLAS12+;
 #pragma link C++ class FAAnalysisResult+;
 #pragma link C++ class FAReaderSWeights+;
 #pragma link C++ typedef FAVector4;

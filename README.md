@@ -91,6 +91,7 @@ root [1] .x FooAnaMacro.C++
 ```
 FAAnalysis               : base analysis wrapper
   FAAnalysisA2           : A2 analysis wrapper
+  FAAnalysisCLAS12       : CLAS12 analysis wrapper
 FAAnalysisResult         : analysis result
 FAReaderSWeights         : reader for sWeights stored in a tree
 
