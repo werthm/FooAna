@@ -104,10 +104,13 @@ FAEventT                 : base event class template
   FAEventA2_BIF2         : A2 event class (basic, event info, kinfit type 2)
   FAEventA2_BIF3         : A2 event class (basic, event info, kinfit type 3)
   FAEventA2_BIF4         : A2 event class (basic, event info, kinfit type 4)
+  FAEventCLAS12_B        : CLAS12 event class (basic)
 
 FAParticleA2_B           : A2 particle class (basic)
 FAParticleA2_BF1         : A2 particle class (basic, kinfit type 1)
 FAParticleA2MC_B         : A2 MC particle class (basic)
+FAParticleCLAS12_B       : CLAS12 particle class (basic)
+FAParticleCLAS12MC_B     : CLAS12 MC particle class (basic)
 
 FAVarAbs                 : abstract base class for analysis variables
   FAVar                  : analysis variable class template
@@ -124,8 +127,10 @@ FAProgressClient         : processing progress monitoring client
 FAProgressMessage        : progress message object
 
 FAUtils                  : namespace with utility functions
+FAConfigA2               : namespace with constants and definitions for the A2 experiment
 FAUtilsA2                : namespace with utility functions related to the A2 experiment
-FAConfigA2               : namespace with constants and definitions
+FAConfigCLAS12           : namespace with constants and definitions for the CLAS12 experiment
+FAUtilsCLAS12            : namespace with utility functions related to the CLAS12 experiment
 ```
 
 ## User Guide
