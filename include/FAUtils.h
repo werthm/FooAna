@@ -37,6 +37,9 @@ namespace FAUtils
     Int_t CalcBinOverlapWeights(TAxis* axis, Double_t x, Double_t x_width,
                                 std::vector<std::pair<Int_t, Double_t>>& out);
 
+    const FAVector4 CalcVector4(Double_t px, Double_t py, Double_t pz,
+                                Double_t mass);
+
     Double_t CalcEkinTOF(Double_t tof, Double_t mass);
 }
 

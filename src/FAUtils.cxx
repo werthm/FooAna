@@ -313,6 +313,23 @@ Int_t FAUtils::CalcBinOverlapWeights(TAxis* axis, Double_t x, Double_t x_width,
 }
 
 //______________________________________________________________________________
+const FAVector4 FAUtils::CalcVector4(Double_t px, Double_t py, Double_t pz,
+                                     Double_t mass)
+{
+    // Calculate a 4-vector using the momentum components 'px', 'pz', 'pz'
+    // assuming the mass 'mass'.
+
+    FAVector4 p4;
+
+    if (mass >= 0)
+        p4.SetPxPyPzE(px, py, pz, TMath::Sqrt(px*px + py*py + pz*pz + mass*mass));
+    else
+        p4.SetXYZT(px, py, pz, TMath::Sqrt(TMath::Max((px*px + py*py + pz*pz - mass*mass), 0.)));
+
+    return p4;
+}
+
+//______________________________________________________________________________
 Double_t FAUtils::CalcEkinTOF(Double_t tof, Double_t mass)
 {
     // Calculate the kinetic energy of a particle with normalized
