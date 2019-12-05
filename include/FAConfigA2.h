@@ -6,7 +6,8 @@
 //                                                                      //
 // FAConfigA2                                                           //
 //                                                                      //
-// This namespace contains some often used constants and definitions.   //
+// This namespace contains some often used constants and definitions    //
+// for the A2 experiment.                                               //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
