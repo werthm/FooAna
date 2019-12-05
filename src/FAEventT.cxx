@@ -15,6 +15,8 @@
 #include "FAParticleA2_B.h"
 #include "FAParticleA2_BF1.h"
 #include "FAParticleA2MC_B.h"
+#include "FAParticleCLAS12_B.h"
+#include "FAParticleCLAS12MC_B.h"
 
 templateClassImp(FAEventT)
 
@@ -53,4 +55,5 @@ void FAEventT<VarType, PartType, PartTypeMC>::Print(Option_t* option) const
 // template instantiations
 template class FAEventT<Double32_t, FAParticleA2_B, FAParticleA2MC_B>;
 template class FAEventT<Double32_t, FAParticleA2_BF1, FAParticleA2MC_B>;
+template class FAEventT<Double32_t, FAParticleCLAS12_B, FAParticleCLAS12MC_B>;
 
