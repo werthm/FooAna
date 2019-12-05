@@ -25,9 +25,12 @@
 #pragma link C++ nestedtypedef;
 
 #pragma link C++ enum FADetectorA2_t;
+#pragma link C++ enum FADetectorCLAS12_t;
 #pragma link C++ namespace FAUtils;
-#pragma link C++ namespace FAUtilsA2;
 #pragma link C++ namespace FAConfigA2;
+#pragma link C++ namespace FAUtilsA2;
+#pragma link C++ namespace FAConfigCLAS12;
+#pragma link C++ namespace FAUtilsCLAS12;
 #pragma link C++ class FAAnalysis+;
 #pragma link C++ class FAAnalysisA2+;
 #pragma link C++ class FAAnalysisResult+;
@@ -53,8 +56,11 @@
 #pragma link C++ class FAParticleA2_B+;
 #pragma link C++ class FAParticleA2_BF1+;
 #pragma link C++ class FAParticleA2MC_B+;
+#pragma link C++ class FAParticleCLAS12_B+;
+#pragma link C++ class FAParticleCLAS12MC_B+;
 #pragma link C++ class FAEventT<Double32_t, FAParticleA2_B, FAParticleA2MC_B>+;
 #pragma link C++ class FAEventT<Double32_t, FAParticleA2_BF1, FAParticleA2MC_B>+;
+#pragma link C++ class FAEventT<Double32_t, FAParticleCLAS12_B, FAParticleCLAS12MC_B>+;
 #pragma link C++ class FAEventA2_B+;
 #pragma link C++ class FAEventA2_BF1+;
 #pragma link C++ class FAEventA2_BF2+;
@@ -64,6 +70,7 @@
 #pragma link C++ class FAEventA2_BIF2+;
 #pragma link C++ class FAEventA2_BIF3+;
 #pragma link C++ class FAEventA2_BIF4+;
+#pragma link C++ class FAEventCLAS12_B+;
 
 #endif
 
