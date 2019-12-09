@@ -118,6 +118,7 @@ FAVarAbs                 : abstract base class for analysis variables
 FAVarList                : a list of analysis variables
   FAVarParticleA2        : a list of analysis variables for A2 particles
   FAVarParticleA2_CoincT : a list of coincidence time variables for A2 particles
+  FAVarParticleCLAS12    : a list of analysis variables for CLAS12 particles
 FAVarHistogram           : a histogram to be filled with analysis variables
 FAVarFiller              : the histogram/tree filler class for analysis variables
 FAVarPlotter             : the histogram plotter class for analysis variables
