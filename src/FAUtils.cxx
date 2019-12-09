@@ -313,18 +313,18 @@ Int_t FAUtils::CalcBinOverlapWeights(TAxis* axis, Double_t x, Double_t x_width,
 }
 
 //______________________________________________________________________________
-const FAVector4 FAUtils::CalcVector4(Double_t px, Double_t py, Double_t pz,
-                                     Double_t mass)
+const FAVector4 FAUtils::CalcVector4(const FAVector3& mom, Double_t mass)
 {
-    // Calculate a 4-vector using the momentum components 'px', 'pz', 'pz'
-    // assuming the mass 'mass'.
+    // Calculate a 4-vector using the momentum 'mom' assuming the mass 'mass'.
 
     FAVector4 p4;
 
     if (mass >= 0)
-        p4.SetPxPyPzE(px, py, pz, TMath::Sqrt(px*px + py*py + pz*pz + mass*mass));
+        p4.SetPxPyPzE(mom.X(), mom.Y(), mom.Z(),
+                      TMath::Sqrt(mom.Mag2() + mass*mass));
     else
-        p4.SetXYZT(px, py, pz, TMath::Sqrt(TMath::Max((px*px + py*py + pz*pz - mass*mass), 0.)));
+        p4.SetXYZT(mom.X(), mom.Y(), mom.Z(),
+                   TMath::Sqrt(TMath::Max((mom.Mag2() - mass*mass), 0.)));
 
     return p4;
 }
