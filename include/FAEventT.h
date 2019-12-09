@@ -43,6 +43,10 @@ public:
         part.clear();
         partMC.clear();
     }
+    void ClearVariable() { var.clear(); }
+    void ClearVector4() { vec4.clear(); }
+    void ClearParticle() { part.clear(); }
+    void ClearParticleMC() { partMC.clear(); }
 
     virtual FAEventT& operator=(const FAEventT& e)
     {
