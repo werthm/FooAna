@@ -106,6 +106,7 @@ FAEventT                 : base event class template
   FAEventA2_BIF3         : A2 event class (basic, event info, kinfit type 3)
   FAEventA2_BIF4         : A2 event class (basic, event info, kinfit type 4)
   FAEventCLAS12_B        : CLAS12 event class (basic)
+  FAEventCLAS12_BI       : CLAS12 event class (basic, event info)
 
 FAParticleA2_B           : A2 particle class (basic)
 FAParticleA2_BF1         : A2 particle class (basic, kinfit type 1)
