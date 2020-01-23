@@ -12,6 +12,7 @@
 
 
 #include "TEnv.h"
+#include "TDatabasePDG.h"
 
 #include "FAAnalysisCLAS12.h"
 
@@ -25,6 +26,11 @@ FAAnalysisCLAS12::FAAnalysisCLAS12(EAnaMode mode, const Char_t* cfg, const Char_
 
     // init members
     fBeamE = gEnv->GetValue("FA.Analysis.CLAS12.Beam.Energy", 10.6);
+
+    // extend particle database
+    TDatabasePDG* db = TDatabasePDG::Instance();
+    db->AddParticle("deuteron", "deuteron", 1.875612914, kTRUE,
+                    0., 3., "deuteron", 45, -1, 45);
 }
 
 //______________________________________________________________________________
