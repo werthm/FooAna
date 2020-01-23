@@ -20,6 +20,7 @@ in beta testing
 * new A2 detector bit pattern (not compatible with earlier versions)
 * easy enabling/disabling of binned storage
 * added analysis mode switch
+* basic support for CLAS12
 
 ### 0.3.1
 August 6, 2019
