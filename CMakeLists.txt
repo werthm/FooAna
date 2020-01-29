@@ -18,7 +18,7 @@ endif(APPLE)
 
 # find ROOT
 list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
-find_package(ROOT REQUIRED COMPONENTS RIO Tree)
+find_package(ROOT REQUIRED COMPONENTS RIO Tree EG)
 include(${ROOT_USE_FILE})
 
 # source file globbing
